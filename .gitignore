@@ -1,0 +1,10 @@
+/venv
+/poubelle
+/test
+/tuto
+xAPIConnector_US100.py
+streamSaveData.py
+/save
+.idea
+/back
+__pycache__
