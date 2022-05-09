@@ -140,7 +140,7 @@ class Order():
 
         print("------------- buyLimit -----------------")
         tp = round(tp, 1)
-        sl = round(sl - 1.0, 1)
+        sl = round(sl, 1)
 
         h = self.client.commandExecute('getServerTime')
         timeExpiration = h['returnData']['time'] + 3600000
@@ -169,7 +169,7 @@ class Order():
     def movebuyLimit(self,trade, sl , tp, price):
         print("------------- movebuyLimit -----------------")
         tp = round(tp, 1)
-        sl = round(sl - 1.0, 1)
+        sl = round(sl, 1)
 
         h = self.client.commandExecute('getServerTime')
         timeExpiration = h['returnData']['time'] + 3600000
@@ -194,7 +194,7 @@ class Order():
     def movebuyLimitWait(self,trade, sl , tp, price):
         print("------------- movebuyLimitWait ************************-----------------")
         tp = round(tp, 1)
-        sl = round(sl - 1.0, 1)
+        sl = round(sl, 1)
         print("trade :", trade)
 
         balance = self.dbStreaming["Balance"].find_one({"_id": Config.USER_ID})
@@ -234,6 +234,7 @@ class Order():
             print("resp :", resp)
 
     def moveStopSell(self, trade, sl):
+        print("*********** moveStopSell *************")
         print("new sl :", sl)
         print("old sl", trade["sl"])
         if sl < trade["sl"]:
@@ -256,7 +257,7 @@ class Order():
     def sellLimit(self, sl, tp, price):
         print("------------- sellLimit -----------------")
         tp = round(tp, 1)
-        sl = round(sl + 1.0, 1)
+        sl = round(sl, 1)
 
         h = self.client.commandExecute('getServerTime')
         timeExpiration = h['returnData']['time'] + 3600000
@@ -285,7 +286,7 @@ class Order():
     def moveSellLimitWait(self,trade, sl , tp, price):
         print("------------- moveSellLimit ************************-----------------")
         tp = round(tp, 1)
-        sl = round(sl + 1.0, 1)
+        sl = round(sl, 1)
 
         balance = self.dbStreaming["Balance"].find_one({"_id": Config.USER_ID})
         nbrelot = self.NbrLot(balance, price, sl)

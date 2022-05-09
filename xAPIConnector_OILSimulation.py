@@ -21,7 +21,8 @@ from Indicators.Supertrend import Supertrend
 from Service.TransactionSide import TransactionSide
 
 # import datetime
-
+startSimultion = 0
+endSimultion = 0
 
 # Variables perso--------------------------------------------------------------------------------------------------------
 # horaire---------------
@@ -65,7 +66,6 @@ def startEA_Horaire():
         return True
     else:
         return False
-
 
 async def insertData(collection, dataDownload, listDataDB):
     '''
@@ -122,7 +122,6 @@ def findopenOrder(client):
     tradeOpenString = client.commandExecute('getTrades', {"openedOnly": True})
     tradeOpenJson = json.dumps(tradeOpenString)
     return json.loads(tradeOpenJson)
-
 async def majData(client, startTime, symbol, db):
     '''
     Mise à jour de la base de données
@@ -176,7 +175,6 @@ async def majData(client, startTime, symbol, db):
     newTime = await insertData(db["M05"], dataM05Download, listDataDBM05)
 
     return newTime
-
 async def majDatAall(client, startTime, symbol, db):
     '''
     Mise à jour de la base de données
@@ -273,7 +271,6 @@ async def majDatAall(client, startTime, symbol, db):
 
     # on retourne le dernier temps "ctm" enregistré
     return newTime
-
 def NbrLot(balance, position, stp):
     '''
     Calcul le nombre de posible à prendre
@@ -304,7 +301,6 @@ def NbrLot(balance, position, stp):
         return round(nbrelot, 2)
     except (RuntimeError, TypeError, NameError):
         pass
-
 def round_up(n, decimals=0):
     '''
     Arrondi au superieur
@@ -314,7 +310,6 @@ def round_up(n, decimals=0):
     '''
     multiplier = 10 ** decimals
     return math.ceil(n * multiplier) / multiplier
-
 def round_down(n, decimals=0):
     '''
     Arrondi à l inférieur
@@ -324,228 +319,149 @@ def round_down(n, decimals=0):
     '''
     multiplier = 10 ** decimals
     return math.floor(n * multiplier) / multiplier
-
 def zoneSoutien2(close, zone):
     arrayT = sorted(zone)
     print("close:", close)
     print("pîvot down:", arrayT)
-    supportDown = 0
+    support_down = 0
     supportHigt = 0
     for v in arrayT:
         if v < close:
-            supportDown = v
+            support_down = v
         if v > close:
             if supportHigt == 0:
                 supportHigt = v
                 print("pîvot up calcul:", supportHigt)
         
 
-    print(supportDown, " / ",supportHigt)
-    return supportDown, supportHigt
+    print(support_down, " / ",supportHigt)
+    return support_down, supportHigt
 
 async def main():
-    # 4 threads de dispo
     client = APIClient()  # create & connect to RR socket
     loginResponse = client.identification()  # connect to RR socket, login
-    # print(str(loginResponse))
     logger.info(str(loginResponse))
 
     # check if user logged in correctly
     if (loginResponse['status'] == False):
         print('Login failed. Error code: {0}'.format(loginResponse['errorCode']))
         return
-
-
     try:
-        c = Command()
-        ssid = loginResponse['streamSessionId']
-        sclient = APIStreamClient(
-            ssId=ssid,
-            tickFun=c.procTickExample,
-            tradeFun=c.procTradeExample,
-            profitFun=c.procProfitExample,
-            tradeStatusFun=c.procTradeStatusExample,
-            balanceFun=c.procBalanceExample
-        )
-
-        # subscribe for profits
-        # sclient.subscribeProfits()
-        sclient.subscribePrice("OIL")
-        sclient.subscribeProfits()
-        sclient.subscribeTradeStatus()
-        sclient.subscribeTrades()
-        sclient.subscribeBalance()
-
         connection = MongoClient('localhost', 27017)
         db = connection[SYMBOL]
         dbStreaming = connection["STREAMING"]
-
-        startTime = int(round(time.time() * 1000)) - (
-                60 * 60 * 30 * 1) * 1000  # reculer de 30 jours : (60*60*24*30)*1000
-
-        # print("************************** calcul balance******************************************")
-        json_balance1 = json.dumps(client.commandExecute('getMarginLevel'))
-        dict_balance = json.loads(json_balance1)
-        # print(dict_balance)
-        # BALANCE = dict_balance["returnData"]['balance']
-        BALANCE = dict_balance["returnData"]
-        # print("tick : ", TICK)
-        # print("profit : ", PROFIT)
-        # print("BALANCE: ", BALANCE)
-
-        print("mise à jour en cours de l ensemble .......")
-        startTime = await majDatAall(client, startTime, SYMBOL, db)
-        # print("mise à jour des données : ", SYMBOL, " fini !")
-
-        # # pivot##################################################################################################
-        print('mise à jour du pivot -------------------------')
-        P = Pivot(SYMBOL, "D")
-        PPF, R1F, R2F, R3F, S1F, S2F, S3F = await P.fibonacci()  # valeurs ok
-        PPW, R1W, R2W, S1W, S2W = await P.woodie()  # valeurs ok
-        PPC, R1C, R2C, R3C, R4C, S1C, S2C, S3C, S4C = await P.camarilla()  # valeurs ok
-        R1D, S1D = await P.demark()  # valeurs ok
-
-        zone = np.array(
-            [PPC, R1C, R2C, R3C, R4C, S1C, S2C, S3C, S4C, R1W, R2W, S1W, S2W, R1D, S1D])
-        zone = np.sort(zone)
-        print('zone :', zone)
-        #exit(0)
-        print('calcul du Pivot fini')
-        # print("----------------------------------------------")
-        # print("calcul de moyenne mobile")
-
-        moyMobil_01_120 = MM(SYMBOL, "M01", 0)
-        moyMobil_01_120.calculSMA(120)
+        c = Command()
+        # ssid = loginResponse['streamSessionId']
+        # sclient = APIStreamClient(
+        #     ssId=ssid,
+        #     tickFun=c.procTickExample,
+        #     tradeFun=c.procTradeExample,
+        #     profitFun=c.procProfitExample,
+        #     tradeStatusFun=c.procTradeStatusExample,
+        #     balanceFun=c.procBalanceExample
+        # )
+        # sclient.subscribePrice("OIL")
+        # sclient.subscribeProfits()
+        # sclient.subscribeTradeStatus()
+        # sclient.subscribeTrades()
+        # sclient.subscribeBalance()
         #
-        moyMobil_05_120 = MM(SYMBOL, "M05", 0)
-        moyMobil_05_120.calculSMA(120)
 
-        moyMobil_05_120.EMA(120)
+        #
+        # startTime = int(round(time.time() * 1000)) - (
+        #         60 * 60 * 30 * 1) * 1000  # reculer de 30 jours : (60*60*24*30)*1000
+        #
+        # # print("************************** calcul balance******************************************")
+        # json_balance1 = json.dumps(client.commandExecute('getMarginLevel'))
+        # dict_balance = json.loads(json_balance1)
+        # BALANCE = dict_balance["returnData"]
+        #
+        # print("mise à jour en cours de l ensemble .......")
+        # startTime = await majDatAall(client, startTime, SYMBOL, db)
+        #
+        # # # pivot##################################################################################################
+        # print('mise à jour du pivot -------------------------')
+        # P = Pivot(SYMBOL, "D")
+        # PPF, R1F, R2F, R3F, S1F, S2F, S3F = await P.fibonacci()  # valeurs ok
+        # PPW, R1W, R2W, S1W, S2W = await P.woodie()  # valeurs ok
+        # PPC, R1C, R2C, R3C, R4C, S1C, S2C, S3C, S4C = await P.camarilla()  # valeurs ok
+        # R1D, S1D = await P.demark()  # valeurs ok
+        #
+        # zone = np.array(
+        #     [PPC, R1C, R2C, R3C, R4C, S1C, S2C, S3C, S4C, R1W, R2W, S1W, S2W, R1D, S1D])
+        # zone = np.sort(zone)
+        # print('zone :', zone)
+        # #exit(0)
+        # print('calcul du Pivot fini')
+        # moy_mobil_01_120 = MM(SYMBOL, "M01", 0)
+        # moy_mobil_01_120.calculSMA(120)
+        # #
+        # moy_mobil_05_120 = MM(SYMBOL, "M05", 0)
+        # moy_mobil_05_120.calculSMA(120)
+        # moy_mobil_05_120.EMA(120)
+        #
+        # ao05 = Awesome(SYMBOL, "M05")
+        # await ao05.calculAllCandles()
+        # ao01 = Awesome(SYMBOL, "M01")
+        # await ao01.calculAllCandles()
+        #
+        # # supertrend ###################################################################################
+        # sp_m05 = Supertrend(SYMBOL, "M05", 30, 5)
+        # super_m05_t0, super_t1, super_t2 = sp_m05.getST()
+        # super_m05T0 = round(float(super_m05_t0), 2)
+        # # print("super_m01T0 :", super_m05T0)
+        # superT1 = round(float(super_t1), 1)
+        # # print("superT1 :", superT1)
+        # sp_m05 = Supertrend(SYMBOL, "M05", 10, 4)
+        # super_m05T0, super_m05T1, super_m05T2 = sp_m05.getST()
+        # # print("super_m05T0 :", super_m05T0)
+        #
+        # print("fini *********************************")
+        #
+        # o = Order(SYMBOL, dbStreaming, client)
 
-        ao05 = Awesome(SYMBOL, "M05")
-        await ao05.calculAllCandles()
-        ao01 = Awesome(SYMBOL, "M01")
-        await ao01.calculAllCandles()
 
-        # supertrend ###################################################################################
-        spM05 = Supertrend(SYMBOL, "M05", 30, 5)
-        superM05T0, superT1, superT2 = spM05.getST()
-        superM05T0 = round(float(superM05T0), 2)
-        # print("superM01T0 :", superM05T0)
-        superT1 = round(float(superT1), 1)
-        # print("superT1 :", superT1)
-        spM05 = Supertrend(SYMBOL, "M05", 10, 4)
-        superM05T0, superM05T1, superM05T2 = spM05.getST()
-        # print("superM05T0 :", superM05T0)
+        # Charger les bougies
+        bougies_m01 = db["M01"].find({"ctm" : {"$gt" : 1648828380000, "$lt" : 1651769400000},"SMA120": {"$exists": True}})
 
-        print("fini *********************************")
-
-        o = Order(SYMBOL, dbStreaming, client)
-        while True:
-
-
-            print(
-                "\n\n******************************************************************************************************")
-            print(
-                "************************************** start *******************************************************")
-            print(
-                "******************************************************************************************************")
-            print("mise à jour en cours de l ensemble .......")
-            startTime = await majData(client, startTime, SYMBOL, db)
-
-            moyMobil_01_120 = MM(SYMBOL, "M01", 0)
-            moyMobil_01_120.calculSMA(120)
-            #
-            moyMobil_05_120 = MM(SYMBOL, "M05", 0)
-            moyMobil_05_120.calculSMA(120)
-            moyMobil_05_120.EMA(120)
-
-            await ao05.calculAllCandles()
-            await ao01.calculAllCandles()
-
-            ###############################################################################################################
-            # order
-            ###############################################################################################################
-            tradeOpenDic = findopenOrder(client)
-            tradeOpen = json.loads(json.dumps(tradeOpenDic))
-            tick = dbStreaming["Tick"].find_one({"symbol": SYMBOL})
-
-            ###############################################################################################################
-            # balance
-            ###############################################################################################################
-            balance = dbStreaming["Balance"].find_one({"_id": Config.USER_ID})
-            print("balance :", balance)
-
-            ###############################################################################################################
-            # bougie
-            ###############################################################################################################
-            # minutes-------------------------------------------------------
-            bougie0 = db["M01"].find({}, sort=[('ctm', -1)]).limit(1).skip(0)[0]
-            bougie1 = db["M01"].find({}, sort=[('ctm', -1)]).limit(1).skip(1)[0]
-            bougieM05_1 = db["M05"].find({}, sort=[('ctm', -1)]).limit(1).skip(1)[0]
-
-            print(bougie1)
-            sma_01_120 = bougie1['SMA120']
-
-            supportDown, supportHight = zoneSoutien2(sma_01_120, zone)
-            print("calcul fini *************")
-
-            if tick is not None:
-                if len(tradeOpen['returnData']) == 0:
-                    print(
-                        "**************************************** aucun ordre ****************************************")
-                    # strategie---------------------------------------------------------
-
-                    if bougieM05_1['close'] > bougieM05_1['SMA120']:
-                        supportDown, supportHight = zoneSoutien2(bougieM05_1['SMA120'], zone)
-                        support = supportDown
-                        objectif = supportHight
-                        price = bougieM05_1['SMA120'] + SPREAD
-                        o.buyLimit(support, objectif, round(price, 2))
-
-                    if bougieM05_1['close'] < bougieM05_1['SMA120']:
-                        supportDown, supportHight = zoneSoutien2(sma_01_120, zone)
-                        # TODO: deffinir l objectif selon le % souhaité et la volatilité
-                        support = supportHight
-                        objectif = supportDown
-                        price = bougieM05_1['SMA120'] - SPREAD
-                        o.sellLimit(support, objectif, round(price, 2))
+        trade_open = 0
+        type_order = 0
+        db["simulation"]
+        print(type(bougies_m01))
+        i = 0
+        for b in bougies_m01:
+            if i > 0:
+                trade_open = db["simulation"].find_one({"close": 0})
+                if trade_open is None:
+                    if b["low"] < b["SMA120"] > b["high"] :
+                        type_order = TransactionSide.BUY_LIMIT
+                        newvalues = {
+                            "type_order" : type_order,
+                            "ctm": b['ctm'],
+                            "ctmString": b['ctmString'],
+                            "open": b["open"],
+                            "close": 0
+                        }
+                        print(b)
+                        db["simulation"].insert_one(newvalues)
                 else:
-                    print("un ordre existe")
-                    for trade in tradeOpenDic['returnData']:
-                        if TransactionSide.BUY_LIMIT == trade['cmd']:
-                            print("\n\n*************************************************************")
-                            print("***************** Move buy en attente *********************")
-                            support = supportDown
-                            objectif = supportHight
-                            price = bougieM05_1['SMA120'] + SPREAD
-                            o.movebuyLimitWait(trade, support, objectif, round(price, 2))
+                    if type_order == TransactionSide.BUY_LIMIT:
+                        pass
 
-                        if TransactionSide.SELL_LIMIT == trade['cmd']:
-                            print("\n\n*************************************************************")
-                            print("***************** Move vente en attente *********************")
-                            support = supportHight
-                            objectif = supportDown
-                            price = bougieM05_1['SMA120'] - SPREAD
-                            o.moveSellLimitWait(trade, support, objectif, round(price, 2))
+            i = i+1
 
-            time.sleep(5)
-
+        print(db["simulation"].find_one())
 
     except Exception as exc:
         print("le programe a déclenché une erreur")
         print("exception de mtype ", exc.__class__)
         print("message", exc)
-        client.disconnect()
-
+        # client.disconnect()
     except OSError as err:
         print("OS error: {0}".format(err))
-        client.disconnect()
-
+        # client.disconnect()
     print("exit")
-    client.disconnect()
-    sclient.disconnect()
-
-
+    # client.disconnect()
+    # sclient.disconnect()
 if __name__ == "__main__":
     asyncio.run(main())
