@@ -32,7 +32,7 @@ TradeStopTime = 22
 Risk = 2.00  # risk %
 TakeProfit = 50
 StopLoss = 10
-ObjectfDay = 3.00 # %
+ObjectfDay = 3.00  # %
 # communication---------
 SignalMail = False
 
@@ -66,6 +66,7 @@ def startEA_Horaire():
         return True
     else:
         return False
+
 
 async def insertData(collection, dataDownload, listDataDB):
     '''
@@ -113,6 +114,7 @@ async def insertData(collection, dataDownload, listDataDB):
 
     return ctm
 
+
 def findopenOrder(client):
     '''
     Selectionner les ordres ouverts
@@ -122,6 +124,8 @@ def findopenOrder(client):
     tradeOpenString = client.commandExecute('getTrades', {"openedOnly": True})
     tradeOpenJson = json.dumps(tradeOpenString)
     return json.loads(tradeOpenJson)
+
+
 async def majData(client, startTime, symbol, db):
     '''
     Mise à jour de la base de données
@@ -175,6 +179,8 @@ async def majData(client, startTime, symbol, db):
     newTime = await insertData(db["M05"], dataM05Download, listDataDBM05)
 
     return newTime
+
+
 async def majDatAall(client, startTime, symbol, db):
     '''
     Mise à jour de la base de données
@@ -271,6 +277,8 @@ async def majDatAall(client, startTime, symbol, db):
 
     # on retourne le dernier temps "ctm" enregistré
     return newTime
+
+
 def NbrLot(balance, position, stp):
     '''
     Calcul le nombre de posible à prendre
@@ -280,7 +288,7 @@ def NbrLot(balance, position, stp):
     :return:
     '''
     try:
-        perteAcceptable = round(balance["equityFX"] * Risk/100, 0)
+        perteAcceptable = round(balance["equityFX"] * Risk / 100, 0)
         ecartPip = abs((position - stp))
         print("ecartPip :", ecartPip)
         nbrelot = perteAcceptable / ecartPip / (1000 / 100) / 100
@@ -301,6 +309,8 @@ def NbrLot(balance, position, stp):
         return round(nbrelot, 2)
     except (RuntimeError, TypeError, NameError):
         pass
+
+
 def round_up(n, decimals=0):
     '''
     Arrondi au superieur
@@ -310,6 +320,8 @@ def round_up(n, decimals=0):
     '''
     multiplier = 10 ** decimals
     return math.ceil(n * multiplier) / multiplier
+
+
 def round_down(n, decimals=0):
     '''
     Arrondi à l inférieur
@@ -319,33 +331,27 @@ def round_down(n, decimals=0):
     '''
     multiplier = 10 ** decimals
     return math.floor(n * multiplier) / multiplier
-def zoneSoutien2(close, zone):
+
+
+def zoneSoutien(close, zone):
     arrayT = sorted(zone)
-    print("close:", close)
-    print("pîvot down:", arrayT)
     support_down = 0
-    supportHigt = 0
+    support_higt = 0
     for v in arrayT:
         if v < close:
-            support_down = v
+            if close - v > 0.5:
+                support_down = v
         if v > close:
-            if supportHigt == 0:
-                supportHigt = v
-                print("pîvot up calcul:", supportHigt)
-        
+            if support_higt == 0:
+                #print("support_higt - close :", v, "-", close)
+                if v - close > 0.5:  # remplacer 0.50 par l'écart type d'environ 5 bougire
+                    support_higt = v
 
-    print(support_down, " / ",supportHigt)
-    return support_down, supportHigt
+    # print(support_down, " / ",supportHigt)
+    return support_down, support_higt
 
-async def main():
-    client = APIClient()  # create & connect to RR socket
-    loginResponse = client.identification()  # connect to RR socket, login
-    logger.info(str(loginResponse))
 
-    # check if user logged in correctly
-    if (loginResponse['status'] == False):
-        print('Login failed. Error code: {0}'.format(loginResponse['errorCode']))
-        return
+def main():
     try:
         connection = MongoClient('localhost', 27017)
         db = connection[SYMBOL]
@@ -379,7 +385,7 @@ async def main():
         # print("mise à jour en cours de l ensemble .......")
         # startTime = await majDatAall(client, startTime, SYMBOL, db)
         #
-        # # # pivot##################################################################################################
+        # # pivot##################################################################################################
         # print('mise à jour du pivot -------------------------')
         # P = Pivot(SYMBOL, "D")
         # PPF, R1F, R2F, R3F, S1F, S2F, S3F = await P.fibonacci()  # valeurs ok
@@ -393,8 +399,11 @@ async def main():
         # print('zone :', zone)
         # #exit(0)
         # print('calcul du Pivot fini')
-        # moy_mobil_01_120 = MM(SYMBOL, "M01", 0)
-        # moy_mobil_01_120.calculSMA(120)
+        #moy_mobil_01_120 = MM(SYMBOL, "M01", 0)
+        #moy_mobil_01_120.calculSMA(120)
+        #moy_mobil_01_360 = MM(SYMBOL, "M01", 0)
+        #moy_mobil_01_360.calculSMA(360)
+        #print("calcul sma120 fini")
         # #
         # moy_mobil_05_120 = MM(SYMBOL, "M05", 0)
         # moy_mobil_05_120.calculSMA(120)
@@ -404,53 +413,324 @@ async def main():
         # await ao05.calculAllCandles()
         # ao01 = Awesome(SYMBOL, "M01")
         # await ao01.calculAllCandles()
-        #
+
         # # supertrend ###################################################################################
-        # sp_m05 = Supertrend(SYMBOL, "M05", 30, 5)
-        # super_m05_t0, super_t1, super_t2 = sp_m05.getST()
+        #sp_m05 = Supertrend(SYMBOL, "M05", 20, 9)
+        #super_m05_t0, super_t1, super_t2 = sp_m05.getST()
         # super_m05T0 = round(float(super_m05_t0), 2)
         # # print("super_m01T0 :", super_m05T0)
         # superT1 = round(float(super_t1), 1)
         # # print("superT1 :", superT1)
         # sp_m05 = Supertrend(SYMBOL, "M05", 10, 4)
         # super_m05T0, super_m05T1, super_m05T2 = sp_m05.getST()
+
+
+        # sp_m01 = Supertrend(SYMBOL, "M01", 20, 9)
+        # super_m01T0, super_m01T1, super_m01T2 = sp_m01.getST()
+
         # # print("super_m05T0 :", super_m05T0)
         #
         # print("fini *********************************")
         #
         # o = Order(SYMBOL, dbStreaming, client)
 
-
         # Charger les bougies
-        bougies_m01 = db["M01"].find({"ctm" : {"$gt" : 1648828380000, "$lt" : 1651769400000},"SMA120": {"$exists": True}})
+        bougies0_m01 = False
+        bougies_m01 = db["M01"].find({"ctm": {"$gt": 1652220000000, "$lt": 1652470800000}, "SMA120": {"$exists": True}})
 
         trade_open = 0
         type_order = 0
         db["simulation"]
-        print(type(bougies_m01))
         i = 0
-        for b in bougies_m01:
+        import sys
+
+        sp_m01 = Supertrend(SYMBOL, "M01", 20, 5)
+        super_t0, super_t1, super_t2 = sp_m01.getST()
+
+        import re
+        for b_m01 in bougies_m01:
+            order = db["simulation"].find_one({"close": 0})
+            if order is not None:
+                if b_m01["low"] < order["stop"] < b_m01["high"]:
+                    # verifier si le stop est touché
+                    filter_order= {'ctm': order["ctm"]}
+                    gain = 0
+                    if order["type_order"] == 2:
+                        gain = order["stop"] - order["open"]
+                    elif order["type_order"] == 3:
+                        gain = order["open"] - order["stop"]
+
+                    newvalues = { "$set": {
+                        "type_order": order["type_order"],
+                        "ctm": order["ctm"],
+                        "openCtmString": order['openCtmString'],
+                        "closeCtmString": b_m01["ctmString"],
+                        "open": order["open"],
+                        "close": order["stop"],
+                        "stop": order["stop"],
+                        "objectif": order["objectif"],
+                        "type": order["type"],
+                        "Awesome": order["Awesome"],
+                        "gain" : round(gain,1)
+                    }}
+                    db["simulation"].update_one(filter_order, newvalues)
+                    print("stop touch")
+
+                if b_m01["low"] < order["objectif"] < b_m01["high"]:
+                    # verifier si objectiof est touché
+                    filter_order = {'ctm': order["ctm"]}
+                    gain = 0
+                    if order["type_order"] == 2:
+                        gain = order["objectif"] - order["open"]
+                    elif order["type_order"] == 3:
+                        gain = order["open"] - order["objectif"]
+
+                    newvalues = { "$set": {
+                        "type_order": order["type_order"],
+                        "ctm": order["ctm"],
+                        "openCtmString": order['openCtmString'],
+                        "closeCtmString": b_m01["ctmString"],
+                        "open": order["open"],
+                        "close": order["objectif"],
+                        "stop": order["stop"],
+                        "objectif": order["objectif"],
+                        "type": order["type"],
+                        "Awesome": order["Awesome"],
+                        "gain" : round(gain,1)
+                    }}
+                    print("-----------------------------------------------------------------")
+                    print(order)
+                    print(b_m01)
+                    print("-----------------------------------------------------------------")
+                    db["simulation"].update_one(filter_order, newvalues)
+                    #sys.exit()
             if i > 0:
                 trade_open = db["simulation"].find_one({"close": 0})
-                if trade_open is None:
-                    if b["low"] < b["SMA120"] > b["high"] :
+                # if trade_open is None and bougies0_m01 is not False:
+                #     bougies_d = db["D"].find_one({"ctmString": {"$regex": b_m01["ctmString"][:12]}})
+                #     if b_m01["SMA120"] > bougies0_m01["SMA120"]  and bougies0_m01["low"] > bougies0_m01["SMA120"]:  # condition strategique
+                #         if b_m01["low"] < b_m01["SMA120"] < b_m01["high"]:  # check if touch
+                #             type_order = TransactionSide.BUY_LIMIT
+                #             ####################################"
+                #             zone = np.array(
+                #                 [
+                #                     bougies_d["PCamarilla_PP"],
+                #                     bougies_d["PCamarilla_r1"],
+                #                     bougies_d["PCamarilla_r2"],
+                #                     bougies_d["PCamarilla_r3"],
+                #                     bougies_d["PCamarilla_r4"],
+                #                     bougies_d["PCamarilla_s1"],
+                #                     bougies_d["PCamarilla_s2"],
+                #                     bougies_d["PCamarilla_s3"],
+                #                     bougies_d["PCamarilla_s4"],
+                #                     bougies_d["PWoodie_PP"],
+                #                     bougies_d["PWoodie_r1"],
+                #                     bougies_d["PWoodie_r2"],
+                #                     bougies_d["PWoodie_s1"],
+                #                     bougies_d["PWoodie_s2"],
+                #                     bougies_d["demark_r1"],
+                #                     bougies_d["demark_s1"]
+                #                 ])
+                #             zone = np.sort(zone)
+                #
+                #             supportDown, supportHight = zoneSoutien(b_m01["SMA120"], zone)
+                #             support = supportDown
+                #             objectif = supportHight
+                #             if objectif == 0 :
+                #                 # print("zone:",zone)
+                #                 # print("b_m01:", b_m01)
+                #                 # sys.exit()
+                #                 objectif = b_m01["open"] + 0.50
+                #             ######################################################""
+                #
+                #             newvalues = {
+                #                 "type_order": type_order,
+                #                 "ctm": b_m01['ctm'],
+                #                 "openCtmString": b_m01['ctmString'],
+                #                 "open": b_m01["SMA120"],
+                #                 "close": 0,
+                #                 "stop": support,
+                #                 "objectif": objectif,
+                #                 "type": "achat"
+                #             }
+                #             print(newvalues)
+                #             #sys.exit()
+                #
+                #             db["simulation"].insert_one(newvalues)
+                #     elif b_m01["SMA120"] < bougies0_m01["SMA120"]  and bougies0_m01["low"] < bougies0_m01["SMA120"]:  # condition strategique
+                #         if b_m01["low"] < b_m01["SMA120"] < b_m01["high"]:  # check if touch
+                #             type_order = TransactionSide.SELL_LIMIT
+                #
+                #             ####################################"
+                #             zone = np.array(
+                #                 [
+                #                     bougies_d["PCamarilla_PP"],
+                #                     bougies_d["PCamarilla_r1"],
+                #                     bougies_d["PCamarilla_r2"],
+                #                     bougies_d["PCamarilla_r3"],
+                #                     bougies_d["PCamarilla_r4"],
+                #                     bougies_d["PCamarilla_s1"],
+                #                     bougies_d["PCamarilla_s2"],
+                #                     bougies_d["PCamarilla_s3"],
+                #                     bougies_d["PCamarilla_s4"],
+                #                     bougies_d["PWoodie_PP"],
+                #                     bougies_d["PWoodie_r1"],
+                #                     bougies_d["PWoodie_r2"],
+                #                     bougies_d["PWoodie_s1"],
+                #                     bougies_d["PWoodie_s2"],
+                #                     bougies_d["demark_r1"],
+                #                     bougies_d["demark_s1"]
+                #                 ])
+                #             zone = np.sort(zone)
+                #             supportDown, supportHight = zoneSoutien(b_m01["SMA120"], zone)
+                #             support = supportHight
+                #             objectif = supportDown
+                #             if objectif == 0 :
+                #                 # print("zone:",zone)
+                #                 # print("b_m01:", b_m01)
+                #                 # sys.exit()
+                #                 objectif = b_m01["close"] - 1.00
+                #             ######################################################""
+                #
+                #             newvalues = {
+                #                 "type_order": type_order,
+                #                 "ctm": b_m01['ctm'],
+                #                 "openCtmString": b_m01['ctmString'],
+                #                 "open": b_m01["open"],
+                #                 "close": 0,
+                #                 "stop": support,
+                #                 "objectif": objectif,
+                #                 "type": "vente"
+                #             }
+                #
+                #             db["simulation"].insert_one(newvalues)
+                #
+                # else:
+                #     if type_order == TransactionSide.BUY_LIMIT:
+                #         pass
+                if trade_open is None and bougies0_m01 is not False:
+                    bougies_d = db["D"].find_one({"ctmString": {"$regex": b_m01["ctmString"][:12]}})
+                    if b_m01["close"] > bougies_d["PWoodie_PP"] and b_m01["Awesome"] > bougies0_m01["Awesome"] and b_m01["Awesome"] > 0.50:  # condition strategique
                         type_order = TransactionSide.BUY_LIMIT
+                        ####################################"
+                        zone = np.array(
+                            [
+                                bougies_d["PCamarilla_PP"],
+                                bougies_d["PCamarilla_r1"],
+                                bougies_d["PCamarilla_r2"],
+                                bougies_d["PCamarilla_r3"],
+                                bougies_d["PCamarilla_r4"],
+                                bougies_d["PCamarilla_s1"],
+                                bougies_d["PCamarilla_s2"],
+                                bougies_d["PCamarilla_s3"],
+                                bougies_d["PCamarilla_s4"],
+                                bougies_d["PWoodie_PP"],
+                                bougies_d["PWoodie_r1"],
+                                bougies_d["PWoodie_r2"],
+                                bougies_d["PWoodie_s1"],
+                                bougies_d["PWoodie_s2"],
+                                bougies_d["demark_r1"],
+                                bougies_d["demark_s1"]
+                            ])
+                        zone = np.sort(zone)
+
+                        supportDown, supportHight = zoneSoutien(b_m01["close"], zone)
+                        support = supportDown
+                        objectif = supportHight
+                        if objectif == 0:
+                            # print("zone:",zone)
+                            # print("b_m01:", b_m01)
+                            # sys.exit()
+                            objectif = b_m01["open"] + 0.50
+                        ######################################################""
+
                         newvalues = {
-                            "type_order" : type_order,
-                            "ctm": b['ctm'],
-                            "ctmString": b['ctmString'],
-                            "open": b["open"],
-                            "close": 0
+                            "type_order": type_order,
+                            "ctm": b_m01['ctm'],
+                            "openCtmString": b_m01['ctmString'],
+                            "open": b_m01["close"],
+                            "close": 0,
+                            "stop": support,
+                            "objectif": objectif,
+                            "type": "achat",
+                            "Awesome": b_m01["Awesome"]
                         }
-                        print(b)
+                        print("----------achat------------------")
+                        print(zone)
+                        print(newvalues)
+                        print("--------------------------------")
+                        # sys.exit()
+
                         db["simulation"].insert_one(newvalues)
+                    elif b_m01["close"] < bougies_d["PWoodie_PP"] and b_m01["Awesome"] < bougies0_m01["Awesome"] and b_m01["Awesome"] < -0.50:  # check if touch
+                        type_order = TransactionSide.SELL_LIMIT
+
+                        ####################################"
+                        zone = np.array(
+                            [
+                                bougies_d["PCamarilla_PP"],
+                                bougies_d["PCamarilla_r1"],
+                                bougies_d["PCamarilla_r2"],
+                                bougies_d["PCamarilla_r3"],
+                                bougies_d["PCamarilla_r4"],
+                                bougies_d["PCamarilla_s1"],
+                                bougies_d["PCamarilla_s2"],
+                                bougies_d["PCamarilla_s3"],
+                                bougies_d["PCamarilla_s4"],
+                                bougies_d["PWoodie_PP"],
+                                bougies_d["PWoodie_r1"],
+                                bougies_d["PWoodie_r2"],
+                                bougies_d["PWoodie_s1"],
+                                bougies_d["PWoodie_s2"],
+                                bougies_d["demark_r1"],
+                                bougies_d["demark_s1"]
+                            ])
+                        zone = np.sort(zone)
+                        supportDown, supportHight = zoneSoutien(b_m01["close"], zone)
+                        support = supportHight
+                        objectif = supportDown
+                        if objectif == 0:
+                            # print("zone:",zone)
+                            # print("b_m01:", b_m01)
+                            # sys.exit()
+                            objectif = b_m01["close"] - 1.00
+                        ######################################################""
+
+                        newvalues = {
+                            "type_order": type_order,
+                            "ctm": b_m01['ctm'],
+                            "openCtmString": b_m01['ctmString'],
+                            "open": b_m01["close"],
+                            "close": 0,
+                            "stop": support,
+                            "objectif": objectif,
+                            "type": "vente",
+                            "Awesome": b_m01["Awesome"]
+                        }
+
+                        print("----------vente------------------")
+                        print(zone)
+                        print(newvalues)
+                        print("--------------------------------")
+                        db["simulation"].insert_one(newvalues)
+
                 else:
                     if type_order == TransactionSide.BUY_LIMIT:
                         pass
 
-            i = i+1
+            bougies0_m01 = b_m01
+            i = i + 1
 
-        print(db["simulation"].find_one())
+
+        print("debut du calcul du gain")
+        bilan= 0
+
+        for order in db["simulation"].find({"gain": {"$exists": True}}):
+            print(order)
+            if order["gain"] is not None:
+                bilan= bilan + order["gain"]
+
+        print("bilan :", bilan)
 
     except Exception as exc:
         print("le programe a déclenché une erreur")
@@ -461,7 +741,6 @@ async def main():
         print("OS error: {0}".format(err))
         # client.disconnect()
     print("exit")
-    # client.disconnect()
-    # sclient.disconnect()
+
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()

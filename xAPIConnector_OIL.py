@@ -79,6 +79,7 @@ async def insertData(collection, dataDownload, listDataDB):
     ctm = ''
     if dataDownload['status'] and len(dataDownload["returnData"]['rateInfos']) > 0:
         for value in dataDownload["returnData"]['rateInfos']:
+            print(value['ctmString'])
             open = value['open'] / 100.0
             close = (value['open'] + value['close']) / 100.0
             high = (value['open'] + value['high']) / 100.0
@@ -141,6 +142,8 @@ async def majData(client, startTime, symbol, db):
     dataM01 = json.dumps(json_data_M01)
     dataM01Download = json.loads(dataM01)
     listDataDBM01 = db["M01"].find_one({}, sort=[('ctm', -1)])
+
+    print("====>insertion des minutes")
     await insertData(db["M01"], dataM01Download, listDataDBM01)
 
     # MAJ H4 ------------------------------------------------------------------------
@@ -405,8 +408,7 @@ async def main():
         PPC, R1C, R2C, R3C, R4C, S1C, S2C, S3C, S4C = await P.camarilla()  # valeurs ok
         R1D, S1D = await P.demark()  # valeurs ok
 
-        zone = np.array(
-            [PPC, R1C, R2C, R3C, R4C, S1C, S2C, S3C, S4C, R1W, R2W, S1W, S2W, R1D, S1D])
+        zone = np.array( [PPC, R1C, R2C, R3C, R4C, S1C, S2C, S3C, S4C, R1W, R2W, S1W, S2W, R1D, S1D])
         zone = np.sort(zone)
         print('zone :', zone)
         #exit(0)
@@ -480,12 +482,13 @@ async def main():
             # bougie
             ###############################################################################################################
             # minutes-------------------------------------------------------
-            bougie0 = db["M01"].find({}, sort=[('ctm', -1)]).limit(1).skip(0)[0]
-            bougie1 = db["M01"].find({}, sort=[('ctm', -1)]).limit(1).skip(1)[0]
+            bougie0M01 = db["M01"].find({}, sort=[('ctm', -1)]).limit(1).skip(0)[0]
+            bougie1M01 = db["M01"].find({}, sort=[('ctm', -1)]).limit(1).skip(1)[0]
+            bougie2M01 = db["M01"].find({}, sort=[('ctm', -1)]).limit(1).skip(2)[0]
             bougieM05_1 = db["M05"].find({}, sort=[('ctm', -1)]).limit(1).skip(1)[0]
 
-            print(bougie1)
-            sma_01_120 = bougie1['SMA120']
+            print(bougie1M01)
+            sma_01_120 = bougie1M01['SMA120']
 
             supportDown, supportHight = zoneSoutien2(sma_01_120, zone)
             print("calcul fini *************")
@@ -495,7 +498,18 @@ async def main():
                     print(
                         "**************************************** aucun ordre ****************************************")
                     # strategie---------------------------------------------------------
+                    print("bougie0M01:",bougie0M01)
+                    print("bougie1M01 :",bougie1M01)
+                    if bougie1M01["close"] > PPW and \
+                            bougie1M01["Awesome"] > bougie2M01["Awesome"] and \
+                            bougie1M01["Awesome"] > 0.50:
+                        supportDown, supportHight = zoneSoutien2(bougieM05_1['SMA120'], zone)
+                        support = supportDown
+                        objectif = supportHight
+                        price = bougieM05_1['SMA120'] + SPREAD
+                        o.buyLimit(support, objectif, round(price, 2))
 
+                        '''
                     if bougieM05_1['close'] > bougieM05_1['SMA120']:
                         supportDown, supportHight = zoneSoutien2(bougieM05_1['SMA120'], zone)
                         support = supportDown
@@ -510,6 +524,7 @@ async def main():
                         objectif = supportDown
                         price = bougieM05_1['SMA120'] - SPREAD
                         o.sellLimit(support, objectif, round(price, 2))
+                        '''
                 else:
                     print("un ordre existe")
                     for trade in tradeOpenDic['returnData']:

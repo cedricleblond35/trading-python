@@ -52,7 +52,7 @@ class MM(Price):
                     }}
 
                 myquery = {"ctm": v["ctm"]}
-                #print(newvalues)
+                print(v["ctmString"]," ",newvalues)
                 self._db[self.__timeframe].update_one(myquery, newvalues)
 
         #return sma
