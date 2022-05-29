@@ -136,7 +136,7 @@ class Order():
         detailString = json.dumps(detail)
         #self.sendMail(respString, detailString)
 
-    def buyLimit(self, sl, tp, price):
+    def buyLimit(self, sl, tp, price, balance):
 
         print("------------- buyLimit -----------------")
         tp = round(tp, 1)
@@ -145,7 +145,6 @@ class Order():
         h = self.client.commandExecute('getServerTime')
         timeExpiration = h['returnData']['time'] + 3600000
 
-        balance = self.dbStreaming["Balance"].find_one({"_id": Config.USER_ID})
         nbrelot = self.NbrLot(balance, price, sl)
         detail = {
             "cmd": 2,
@@ -166,7 +165,7 @@ class Order():
         detailString = json.dumps(detail)
         #self.sendMail(respString, detailString)
 
-    def movebuyLimit(self,trade, sl , tp, price):
+    def movebuyLimit(self,trade, sl , tp, price, balance):
         print("------------- movebuyLimit -----------------")
         tp = round(tp, 1)
         sl = round(sl, 1)
@@ -174,7 +173,6 @@ class Order():
         h = self.client.commandExecute('getServerTime')
         timeExpiration = h['returnData']['time'] + 3600000
 
-        balance = self.dbStreaming["Balance"].find_one({"_id": Config.USER_ID})
         nbrelot = self.NbrLot(balance, price, sl)
         detail = {
               "cmd": 2,
@@ -191,13 +189,12 @@ class Order():
         resp = self.client.commandExecute('tradeTransaction',  {"tradeTransInfo": detail })
         print("resp :", resp)
 
-    def movebuyLimitWait(self,trade, sl , tp, price):
+    def movebuyLimitWait(self,trade, sl , tp, price, balance):
         print("------------- movebuyLimitWait ************************-----------------")
         tp = round(tp, 1)
         sl = round(sl, 1)
         print("trade :", trade)
 
-        balance = self.dbStreaming["Balance"].find_one({"_id": Config.USER_ID})
         nbrelot = self.NbrLot(balance, price, sl)
         detail = {
                                                       "cmd": 2,
@@ -254,7 +251,7 @@ class Order():
                                               })
             print("resp :", resp)
 
-    def sellLimit(self, sl, tp, price):
+    def sellLimit(self, sl, tp, price, balance):
         print("------------- sellLimit -----------------")
         tp = round(tp, 1)
         sl = round(sl, 1)
@@ -262,9 +259,7 @@ class Order():
         h = self.client.commandExecute('getServerTime')
         timeExpiration = h['returnData']['time'] + 3600000
 
-        balance = self.dbStreaming["Balance"].find_one({"_id": Config.USER_ID})
         nbrelot = self.NbrLot(balance, price, sl)
-        nbrelot = 0.10
         detail = {
             "cmd": 3,
             "customComment": "vente limit",
@@ -283,12 +278,11 @@ class Order():
         detailString = json.dumps(detail)
         #self.sendMail(respString, detailString)
 
-    def moveSellLimitWait(self,trade, sl , tp, price):
+    def moveSellLimitWait(self,trade, sl , tp, price, balance):
         print("------------- moveSellLimit ************************-----------------")
         tp = round(tp, 1)
         sl = round(sl, 1)
 
-        balance = self.dbStreaming["Balance"].find_one({"_id": Config.USER_ID})
         nbrelot = self.NbrLot(balance, price, sl)
         resp = self.client.commandExecute('tradeTransaction',
                                      {

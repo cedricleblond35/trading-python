@@ -73,7 +73,7 @@ class Command:
         # print(PROFIT)
 
         # TICK = dataDownload['data']
-        print("---------------->profit ordre :", dataDownload['data'])
+        #print("---------------->profit ordre :", dataDownload['data'])
 
     # example function for processing news from Streaming socket
     def procNewsExample(self, msg):

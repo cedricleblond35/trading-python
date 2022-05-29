@@ -23,11 +23,11 @@ class Awesome(Price):
 
     async def calculAllCandles(self):
         self._prepareListData(0, 1)
-        print("calculAllCandles")
+        #print("calculAllCandles")
         await self.__calcul("all")
 
     async def __calcul(self, typeCalcul):
-        print("calcul Awesome :", typeCalcul)
+        #print("calcul Awesome :", typeCalcul)
         if typeCalcul is "last":
             if "Awesome" not in list(self._listData)[-1]:
                 pointMedian = 0
@@ -51,12 +51,12 @@ class Awesome(Price):
                         "Awesome": ao
                     }}
                 myquery = {"ctm": list(self._listData)[-1]["ctm"]}
-
                 self._db[self.__timeframe].update_one(myquery, newvalues)
                 return ao
             else:
                 return list(self._listData)[-1]["Awesome"]
         elif typeCalcul == "all":
+            #print("ema :", self.__MMS2, "  last :",  len(self._listData))
             for i in range(self.__MMS2, len(self._listData)):
                 list1 = self._listData.copy()[i - self.__MMS2 + 1: i + 1]
                 if "Awesome" not in list(list1)[-1]:
@@ -75,7 +75,7 @@ class Awesome(Price):
                     # print(f'Moyenne mobile simple MM{self.__MMS1} :', MMS1)
                     ao = round(MMS1 - MMS2, 3)
 
-                    print("Awesome ", self.__timeframe," :", list(list1)[-1]["ctmString"])
+                    #print("Awesome ", self.__timeframe," :", list(list1)[-1]["ctmString"])
                     # mise à jour du document
                     newvalues = {
                         "$set": {

@@ -14,31 +14,23 @@ class MM(Price):
         self.__duration = duration
         self._prepareListData(self.__duration)
 
-
     def calculSMA(self, duration):
-        print("**************** start calcul SMA *********************")
-        print("duration :", duration)
         nb = 0
         name = "SMA" + str(duration)
-        # print("count :", len(self._listData))
         self._prepareListDataLast(0, 0, name)
 
         if (len(self._listData) - len(self._listDataLast)) == 0:
             start = 0
-            print("calcul complet")
         else:
             start = len(self._listData) - len(self._listDataLast) - duration
-            print("calcul partiel : ", start)
 
-        print("calcul en cours ...  ")
-        list = self._listData[start:len(self._listData)-1]
-        print("nbre :", len(list))
+        list = self._listData[start:len(self._listData) - 1]
 
         for v in list:
             nb = nb + 1  # numero necessaire pour debuter la moyenne  , ex : sma25 debute à partir de 26
-            if nb >= duration and nb <= len(self._listData):
+            if duration <= nb <= len(self._listData):
                 somme = 0.00
-                list1 = list.copy()[nb - duration : nb]
+                list1 = list.copy()[nb - duration: nb]
                 b = 0
                 for v1 in list1:
                     b = b + 1
@@ -52,10 +44,10 @@ class MM(Price):
                     }}
 
                 myquery = {"ctm": v["ctm"]}
-                print(v["ctmString"]," ",newvalues)
+                #print(v["ctmString"], " ", newvalues)
                 self._db[self.__timeframe].update_one(myquery, newvalues)
 
-        #return sma
+        # return sma
 
     def EMA(self, duration):
         """
@@ -68,8 +60,6 @@ class MM(Price):
         α = 2 / (n + 1)
         :return:
         """
-       #print("**************** start calcul EMA *********************")
-
         name = "EMA" + str(duration)
         nameSMA = "SMA" + str(duration)
         α = round(2 / (duration + 1), 5)
@@ -77,27 +67,27 @@ class MM(Price):
 
         #print("calcul nombre ema :", len(self._listDataLast))
 
-        #configurer le start et EMAPrecedent
+        # configurer le start et EMAPrecedent
         if len(self._listData) - len(self._listDataLast) == 0:
-            #rien de rempli
+            # rien de rempli
             EMAPrecedent = 0
             start = 0
             # print("calcul complet :", start)
         else:
-            #Des ema existant, on configure le EMAPrecedent et le start correctement
+            # Des ema existant, on configure le EMAPrecedent et le start correctement
             # la 1ere ligne contient le sma ou ema precedent pour le calcul
-            start = duration + len(self._listData) - len(self._listDataLast) -2
+            start = duration + len(self._listData) - len(self._listDataLast) - 2
             idLastEma = start - 1
             EMAPrecedent = self._listData[idLastEma][name]
             # print("calcul partiel : ", start)
 
-        #print("calcul en cours ...  ")
-        list = self._listData[start:len(self._listData)-1]
-        #print("nbre :", len(list))
+        # print("calcul en cours ...  ")
+        list = self._listData[start:len(self._listData) - 1]
+        # print("nbre. :", len(list))
         for i in range(0, len(list)):
             if EMAPrecedent > 0:
                 close = list[i]["close"]
-                ema = round( (close * α ) + ( EMAPrecedent * (1-α)) , 2)
+                ema = round((close * α) + (EMAPrecedent * (1 - α)), 2)
 
                 newvalues = {
                     "$set": {
@@ -117,34 +107,3 @@ class MM(Price):
                 self._db[self.__timeframe].update_one(myquery, newvalues)
 
                 EMAPrecedent = list[i][nameSMA]
-
-        #return ema
-
-        # if typeCalcul is "all":
-        #     EMAPrecedent = 0
-        #     for i in range(0, len(self._listData)):
-        #         #nb = nb + 1  # numero necessaire pour debuter la moyenne  , ex : sma25 debute à partir de 26
-        #         #if i > 1:
-        #         if EMAPrecedent > 0:
-        #             #print("------------------------------ EMA precedent trouvé")
-        #             close = self._listData[i]["close"]
-        #             ema = round( (close * α ) + ( EMAPrecedent * (1-α)) , 2)
-        #
-        #             newvalues = {
-        #                 "$set": {
-        #                     name: round(ema, 2)
-        #                 }}
-        #             myquery = {"ctm": self._listData[i]["ctm"]}
-        #             self._db[self.__timeframe].update_one(myquery, newvalues)
-        #
-        #             EMAPrecedent = ema
-        #
-        #         elif nameSMA in self._listData[i]:
-        #             newvalues = {
-        #                 "$set": {
-        #                     name: self._listData[i][nameSMA]
-        #                 }}
-        #             myquery = {"ctm": self._listData[i]["ctm"]}
-        #             self._db[self.__timeframe].update_one(myquery, newvalues)
-        #
-        #             EMAPrecedent = self._listData[i][nameSMA]
