@@ -225,8 +225,8 @@ async def majDatAall(client, symbol, db):
 
     #on recupere les 4 dernieres heures pour eviter de tt scanner afin que le traitement soit plus rapide
     ctmRefStart = db["H4"].find().sort("ctm", -1).skip(1).limit(1)
-    countH4 = ctmRefStart.count()
-    if ctmRefStart.count() == 0:
+    countH4 = db["H4"].find().sort("ctm", -1).skip(1).limit(1).count()
+    if countH4 == 0:
         startTimeH4 = int(round(time.time() * 1000)) - (60 * 60 * 24 * 30 * 13) * 1000
     else:
         startTimeH4 = ctmRefStart[0]['ctm']
