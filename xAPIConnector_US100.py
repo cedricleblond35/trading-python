@@ -477,12 +477,16 @@ async def main():
             startTime = await majData(client, startTime, SYMBOL, db)
 
             moyMobil_01_120 = MM(SYMBOL, "M01", 0)
+            moyMobil_01_120.calculSMA(45)
+            moyMobil_01_120.calculSMA(70)
             moyMobil_01_120.calculSMA(120)
             moyMobil_01_120.EMA(45)
             moyMobil_01_120.EMA(70)
             moyMobil_01_120.EMA(120)
             #
             moyMobil_05_120 = MM(SYMBOL, "M05", 0)
+            moyMobil_05_120.calculSMA(45)
+            moyMobil_05_120.calculSMA(70)
             moyMobil_05_120.calculSMA(120)
             moyMobil_05_120.EMA(45)
             moyMobil_05_120.EMA(70)
