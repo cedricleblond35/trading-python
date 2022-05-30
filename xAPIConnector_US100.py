@@ -209,99 +209,108 @@ async def majDatAall(client, symbol, db):
     :return:
     '''
     print("**************************************** mise à jour majDatAall ****************************************")
-    #ctmRefStart = db["D"].find().sort("ctm", -1).skip(1).limit(1)
-    endTime = int(round(time.time() * 1000)) + (6 * 60 * 1000)
+    try:
 
-    # MAJ DAY : 13 mois------------------------------------------------------------------------
-    startTimeDay = int(round(time.time() * 1000)) - (60 * 60 * 24 * 30 * 13) * 1000
-    arguments = {
-        "info": {"start": startTimeDay, "end": endTime, "period": 1440,
-                 "symbol": symbol,
-                 "ticks": 0}}
-    json_data_Day = client.commandExecute('getChartRangeRequest', arguments)
-    dataDAY = json.dumps(json_data_Day)
-    dataDAYDownload = json.loads(dataDAY)
-    listDataDBDAY = db["D"].find_one({}, sort=[('ctm', -1)])
-    await insertData(db["D"], dataDAYDownload, listDataDBDAY)
+        #ctmRefStart = db["D"].find().sort("ctm", -1).skip(1).limit(1)
+        endTime = int(round(time.time() * 1000)) + (6 * 60 * 1000)
+
+        # MAJ DAY : 13 mois------------------------------------------------------------------------
+        startTimeDay = int(round(time.time() * 1000)) - (60 * 60 * 24 * 30 * 13) * 1000
+        arguments = {
+            "info": {"start": startTimeDay, "end": endTime, "period": 1440,
+                     "symbol": symbol,
+                     "ticks": 0}}
+        json_data_Day = client.commandExecute('getChartRangeRequest', arguments)
+        dataDAY = json.dumps(json_data_Day)
+        dataDAYDownload = json.loads(dataDAY)
+        listDataDBDAY = db["D"].find_one({}, sort=[('ctm', -1)])
+        await insertData(db["D"], dataDAYDownload, listDataDBDAY)
 
 
-    #on recupere les 4 dernieres heures pour eviter de tt scanner afin que le traitement soit plus rapide
-    ctmRefStart = db["H4"].find().sort("ctm", -1).skip(1).limit(1)
-    start = ctmRefStart[0]['ctm']
-    countH4 = 0
-    for n in ctmRefStart:
-        startTime = n['ctm']
-        countH4 = 1
+        #on recupere les 4 dernieres heures pour eviter de tt scanner afin que le traitement soit plus rapide
+        ctmRefStart = db["H4"].find().sort("ctm", -1).skip(1).limit(1)
+        start = ctmRefStart[0]['ctm']
+        countH4 = 0
+        for n in ctmRefStart:
+            startTime = n['ctm']
+            countH4 = 1
 
-    if countH4 == 0:
-        startTime = int(round(time.time() * 1000)) - (60 * 60 * 24 * 30 * 13) * 1000
+        if countH4 == 0:
+            startTime = int(round(time.time() * 1000)) - (60 * 60 * 24 * 30 * 13) * 1000
 
-    # MAJ H4 : 13 mois max------------------------------------------------------------------------
-    json_data_H4 = client.commandExecute('getChartRangeRequest', {
-        "info": {"start": startTime, "end": endTime, "period": 240,
-                 "symbol": symbol,
-                 "ticks": 0}})
-    data_H4 = json.dumps(json_data_H4)
-    dataH4Download = json.loads(data_H4)
-    listDataDB = db["H4"].find_one({}, sort=[('ctm', -1)])
-    await insertData(db["H4"], dataH4Download, listDataDB)
-    # MAJ H1 : 13 mois max------------------------------------------------------------------------
-    if countH4 == 0:
-        startTimeH1 = int(round(time.time() * 1000)) - (60 * 60 * 24 * 30 * 13) * 1000
-    else:
-        startTimeH1 = start
+        # MAJ H4 : 13 mois max------------------------------------------------------------------------
+        json_data_H4 = client.commandExecute('getChartRangeRequest', {
+            "info": {"start": startTime, "end": endTime, "period": 240,
+                     "symbol": symbol,
+                     "ticks": 0}})
+        data_H4 = json.dumps(json_data_H4)
+        dataH4Download = json.loads(data_H4)
+        listDataDB = db["H4"].find_one({}, sort=[('ctm', -1)])
+        await insertData(db["H4"], dataH4Download, listDataDB)
+        # MAJ H1 : 13 mois max------------------------------------------------------------------------
+        if countH4 == 0:
+            startTimeH1 = int(round(time.time() * 1000)) - (60 * 60 * 24 * 30 * 13) * 1000
+        else:
+            startTimeH1 = start
 
-    json_data_H1 = client.commandExecute('getChartRangeRequest', {
-        "info": {"start": startTimeH1, "end": endTime, "period": 60,
-                 "symbol": symbol,
-                 "ticks": 0}})
-    data_H1 = json.dumps(json_data_H1)
-    dataH1Download = json.loads(data_H1)
-    listDataDB = db["H1"].find_one({}, sort=[('ctm', -1)])
-    await insertData(db["H1"], dataH1Download, listDataDB)
+        json_data_H1 = client.commandExecute('getChartRangeRequest', {
+            "info": {"start": startTimeH1, "end": endTime, "period": 60,
+                     "symbol": symbol,
+                     "ticks": 0}})
+        data_H1 = json.dumps(json_data_H1)
+        dataH1Download = json.loads(data_H1)
+        listDataDB = db["H1"].find_one({}, sort=[('ctm', -1)])
+        await insertData(db["H1"], dataH1Download, listDataDB)
 
-    # MAJ 15 min ------------------------------------------------------------------------
-    if countH4 == 0:
-        startTimeM15 = int(round(time.time() * 1000)) - (60 * 60 * 24 * 30 * 15) * 1000
-    else:
-        startTimeM15 = start
-    json_data_M15 = client.commandExecute('getChartRangeRequest', {
-        "info": {"start": startTimeM15, "end": endTime, "period": 15,
-                 "symbol": symbol,
-                 "ticks": 0}})
-    dataM15 = json.dumps(json_data_M15)
-    dataM15Download = json.loads(dataM15)
-    listDataDBM15 = db["M15"].find_one({}, sort=[('ctm', -1)])
-    await insertData(db["M15"], dataM15Download, listDataDBM15)
+        # MAJ 15 min ------------------------------------------------------------------------
+        if countH4 == 0:
+            startTimeM15 = int(round(time.time() * 1000)) - (60 * 60 * 24 * 30 * 15) * 1000
+        else:
+            startTimeM15 = start
+        json_data_M15 = client.commandExecute('getChartRangeRequest', {
+            "info": {"start": startTimeM15, "end": endTime, "period": 15,
+                     "symbol": symbol,
+                     "ticks": 0}})
+        dataM15 = json.dumps(json_data_M15)
+        dataM15Download = json.loads(dataM15)
+        listDataDBM15 = db["M15"].find_one({}, sort=[('ctm', -1)])
+        await insertData(db["M15"], dataM15Download, listDataDBM15)
 
-    # MAJ Minute : 1 mois max------------------------------------------------------------------------
-    if countH4 == 0:
-        startTimeM01 = int(round(time.time() * 1000)) - (60 * 60 * 24 * 30) * 1000
-    else:
-        startTimeM01 = start
-    json_data_M01 = client.commandExecute('getChartRangeRequest', {
-        "info": {"start": startTimeM01, "end": endTime, "period": 1,
-                 "symbol": symbol,
-                 "ticks": 0}})
-    dataM01 = json.dumps(json_data_M01)
-    dataM01Download = json.loads(dataM01)
-    listDataDBM01 = db["M01"].find_one({}, sort=[('ctm', -1)])
-    await insertData(db["M01"], dataM01Download, listDataDBM01)
+        # MAJ Minute : 1 mois max------------------------------------------------------------------------
+        if countH4 == 0:
+            startTimeM01 = int(round(time.time() * 1000)) - (60 * 60 * 24 * 30) * 1000
+        else:
+            startTimeM01 = start
+        json_data_M01 = client.commandExecute('getChartRangeRequest', {
+            "info": {"start": startTimeM01, "end": endTime, "period": 1,
+                     "symbol": symbol,
+                     "ticks": 0}})
+        dataM01 = json.dumps(json_data_M01)
+        dataM01Download = json.loads(dataM01)
+        listDataDBM01 = db["M01"].find_one({}, sort=[('ctm', -1)])
+        await insertData(db["M01"], dataM01Download, listDataDBM01)
 
-    # MAJ 5 min ------------------------------------------------------------------------
-    if countH4 == 0:
-        startTimeM05 = int(round(time.time() * 1000)) - (60 * 60 * 24 * 30) * 1000
-    else:
-        startTimeM05 = start
-    json_data_M05 = client.commandExecute('getChartRangeRequest', {
-        "info": {"start": startTimeM05, "end": endTime, "period": 5,
-                 "symbol": symbol,
-                 "ticks": 0}})
-    dataM05 = json.dumps(json_data_M05)
-    dataM05Download = json.loads(dataM05)
-    listDataDBM05 = db["M05"].find_one({}, sort=[('ctm', -1)])
-    newTime = await insertData(db["M05"], dataM05Download, listDataDBM05)
-
+        # MAJ 5 min ------------------------------------------------------------------------
+        if countH4 == 0:
+            startTimeM05 = int(round(time.time() * 1000)) - (60 * 60 * 24 * 30) * 1000
+        else:
+            startTimeM05 = start
+        json_data_M05 = client.commandExecute('getChartRangeRequest', {
+            "info": {"start": startTimeM05, "end": endTime, "period": 5,
+                     "symbol": symbol,
+                     "ticks": 0}})
+        dataM05 = json.dumps(json_data_M05)
+        dataM05Download = json.loads(dataM05)
+        listDataDBM05 = db["M05"].find_one({}, sort=[('ctm', -1)])
+        newTime = await insertData(db["M05"], dataM05Download, listDataDBM05)
+    except Exception as exc:
+        print("le programe a déclenché une erreur")
+        print("exception de mtype ", exc.__class__)
+        print("message", exc)
+        exc_type, exc_obj, exc_tb = sys.exc_info()
+        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+        print(exc_type, fname, exc_tb.tb_lineno)
+        
     # on retourne le dernier temps "ctm" enregistré
     return newTime
 
