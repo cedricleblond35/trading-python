@@ -3,6 +3,8 @@
 
 import json
 import time
+import os
+import sys
 import asyncio
 import math as math
 import numpy as np
@@ -566,6 +568,10 @@ async def main():
         print("le programe a déclenché une erreur")
         print("exception de mtype ", exc.__class__)
         print("message", exc)
+        exc_type, exc_obj, exc_tb = sys.exc_info()
+        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+        print(exc_type, fname, exc_tb.tb_lineno)
+
         client.disconnect()
         exit(0)
 
