@@ -225,26 +225,29 @@ async def majDatAall(client, symbol, db):
 
     #on recupere les 4 dernieres heures pour eviter de tt scanner afin que le traitement soit plus rapide
     ctmRefStart = db["H4"].find().sort("ctm", -1).skip(1).limit(1)
-    countH4 = ctmRefStart.count()
-    if ctmRefStart.count() == 0:
-        startTimeH4 = int(round(time.time() * 1000)) - (60 * 60 * 24 * 30 * 13) * 1000
-    else:
-        startTimeH4 = ctmRefStart[0]['ctm']
+    start = ctmRefStart[0]['ctm']
+    countH4 = 0
+    for n in ctmRefStart:
+        startTime = n['ctm']
+        countH4 = 1
+
+    if countH4 == 0:
+        startTime = int(round(time.time() * 1000)) - (60 * 60 * 24 * 30 * 13) * 1000
+
     # MAJ H4 : 13 mois max------------------------------------------------------------------------
     json_data_H4 = client.commandExecute('getChartRangeRequest', {
-        "info": {"start": startTimeH4, "end": endTime, "period": 240,
+        "info": {"start": startTime, "end": endTime, "period": 240,
                  "symbol": symbol,
                  "ticks": 0}})
     data_H4 = json.dumps(json_data_H4)
     dataH4Download = json.loads(data_H4)
     listDataDB = db["H4"].find_one({}, sort=[('ctm', -1)])
     await insertData(db["H4"], dataH4Download, listDataDB)
-
     # MAJ H1 : 13 mois max------------------------------------------------------------------------
     if countH4 == 0:
         startTimeH1 = int(round(time.time() * 1000)) - (60 * 60 * 24 * 30 * 13) * 1000
     else:
-        startTimeH1 = ctmRefStart[0]['ctm']
+        startTimeH1 = start
 
     json_data_H1 = client.commandExecute('getChartRangeRequest', {
         "info": {"start": startTimeH1, "end": endTime, "period": 60,
@@ -259,7 +262,7 @@ async def majDatAall(client, symbol, db):
     if countH4 == 0:
         startTimeM15 = int(round(time.time() * 1000)) - (60 * 60 * 24 * 30 * 15) * 1000
     else:
-        startTimeM15 = ctmRefStart[0]['ctm']
+        startTimeM15 = start
     json_data_M15 = client.commandExecute('getChartRangeRequest', {
         "info": {"start": startTimeM15, "end": endTime, "period": 15,
                  "symbol": symbol,
@@ -273,7 +276,7 @@ async def majDatAall(client, symbol, db):
     if countH4 == 0:
         startTimeM01 = int(round(time.time() * 1000)) - (60 * 60 * 24 * 30) * 1000
     else:
-        startTimeM01 = ctmRefStart[0]['ctm']
+        startTimeM01 = start
     json_data_M01 = client.commandExecute('getChartRangeRequest', {
         "info": {"start": startTimeM01, "end": endTime, "period": 1,
                  "symbol": symbol,
@@ -287,7 +290,7 @@ async def majDatAall(client, symbol, db):
     if countH4 == 0:
         startTimeM05 = int(round(time.time() * 1000)) - (60 * 60 * 24 * 30) * 1000
     else:
-        startTimeM05 = ctmRefStart[0]['ctm']
+        startTimeM05 = start
     json_data_M05 = client.commandExecute('getChartRangeRequest', {
         "info": {"start": startTimeM05, "end": endTime, "period": 5,
                  "symbol": symbol,
@@ -463,6 +466,7 @@ async def main():
         # print("superM05T0 :", superM05T0)
 
         o = Order(SYMBOL, dbStreaming, client)
+        print("calcul fini")
         while True:
             json_balance1 = json.dumps(client.commandExecute('getMarginLevel'))
             dict_balance = json.loads(json_balance1)
@@ -473,11 +477,13 @@ async def main():
             startTime = await majData(client, startTime, SYMBOL, db)
 
             moyMobil_01_120 = MM(SYMBOL, "M01", 0)
+            moyMobil_01_120.calculSMA(120)
             moyMobil_01_120.EMA(45)
             moyMobil_01_120.EMA(70)
             moyMobil_01_120.EMA(120)
             #
             moyMobil_05_120 = MM(SYMBOL, "M05", 0)
+            moyMobil_05_120.calculSMA(120)
             moyMobil_05_120.EMA(45)
             moyMobil_05_120.EMA(70)
             moyMobil_05_120.EMA(120)
