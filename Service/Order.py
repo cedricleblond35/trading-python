@@ -55,27 +55,34 @@ class Order():
             nbrelot = self.NbrLot(balance, price, sl)
             self.sellNow(self.client, timeExpiration, price, sl, self.symbol, tp, nbrelot)
 
-    def NbrLot(self, balance, position, stp):
+    def NbrLot(self, balance, position, stp, vnl):
         '''
         Calcul le nombre de posible à prendre
-        :param balance:
-        :param position:
-        :param stp:
-        :return:
+        GER30 : 2,5 € de perte max, Stop loss : 10, valeur nominale du lot : 25 €
+        calcul: 2,5 / 10 / 25 = 0,01 lot
+
+        NASDAQ : 2,5 de perte, Stop loss : 10, vaLeur nominale du lot : 20 $  mettre 35
+        calcul : 2,5 / 10 / 35 =
+
         '''
         try:
-            perteAcceptable = round(balance["equityFX"] * 0.01, 0)
-            # ecartPip = position - (position - stp)
+            print("_____________ cal du lot ")
+            print( "bal :",balance, " position:", position," stp:", stp)
+            perteAcceptable = round(balance * 0.01, 0)
+            print("perteAcceptable :", perteAcceptable)
             ecartPip = abs((position - stp))
-            # print("ecartPip :", ecartPip)
-            nbrelot = perteAcceptable / ecartPip / (1000 / 100) / 100
-            # print("nbre de lot :", nbrelot)
+
+            print("ecart pip :", ecartPip)
+            nbrelot = perteAcceptable / ecartPip / vnl
+            print("nbre de lot :", nbrelot)
+
+            """
             qtMax = self.round_down((balance["equityFX"] / 20000), 2)
             if nbrelot > qtMax:
                 nbrelot = qtMax
-
+            """
             print('//////////////////////////////////// NbrLot ////////////////////////////////////')
-            print('balance :', balance["equityFX"])
+            print('balance :', balance)
             print('position :', position)
             print('stp :', stp)
             print('perteAcceptable :', perteAcceptable)
@@ -87,36 +94,38 @@ class Order():
         except (RuntimeError, TypeError, NameError):
             pass
 
-    def sellNow(self, client, timeExpiration, price, sl, symbol, tp, nbrelot):
-        detail = {"tradeTransInfo": {
+    def sellNow(self, sl, tp, price, balance, vnl):
+        tp = round(tp, 1)
+        sl = round(sl, 1)
+
+        h = self.client.commandExecute('getServerTime')
+        timeExpiration = h['returnData']['time'] + 3600000
+        print("balance:", balance, " price:", price, " sl:", sl)
+        nbrelot = self.NbrLot(balance, price, sl, vnl)
+        detail = {
             "cmd": 1,
-            "customComment": "Vente direct",
+            "customComment": "vente direct",
             "expiration": timeExpiration,
             "offset": 0,
             "price": price,
             "sl": sl,
-            "symbol": symbol,
+            "symbol": self.symbol,
             "tp": tp,
             "type": 0,
             "volume": nbrelot
-        }}
-        resp = client.commandExecute('tradeTransaction', detail)
-        respString = json.dumps(resp) + "forex robot Action"
-        detailString = json.dumps(detail)
-        #self.sendMail(respString, detailString)
+        }
+        print(detail)
+        resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
+        print(resp)
 
-    def buyNow(self, client, timeExpiration, price, sl, symbol, tp, nbrelot):
-        '''
-        Achat immediat
-        :param client:
-        :param time:
-        :param price:
-        :param sl:
-        :param symbol:
-        :param tp:
-        :param nbrelot:
-        :return:
-        '''
+    def buyNow(self, sl, tp, price, balance, vnl):
+        tp = round(tp, 1)
+        sl = round(sl, 1)
+
+        h = self.client.commandExecute('getServerTime')
+        timeExpiration = h['returnData']['time'] + 3600000
+
+        nbrelot = self.NbrLot(balance, price, sl, vnl)
         detail = {
             "cmd": 0,
             "customComment": "Achat direct",
@@ -124,13 +133,13 @@ class Order():
             "offset": 0,
             "price": price,
             "sl": sl,
-            "symbol": symbol,
+            "symbol": self.symbol,
             "tp": tp,
             "type": 0,
             "volume": nbrelot
         }
-        # print(detail)
-        resp = client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
+        print(detail)
+        resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
         # print("|||||||||||||||||||| resp :", resp)
         respString = json.dumps(resp) + "forex robot Action"
         detailString = json.dumps(detail)

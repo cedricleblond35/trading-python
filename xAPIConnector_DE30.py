@@ -30,7 +30,9 @@ import concurrent.futures
 # Variables perso--------------------------------------------------------------------------------------------------------
 # horaire---------------
 TradeStartTime = 4
-TradeStopTime = 22
+TradeStopTime = 23
+VNL = 25
+
 # gestion managment-----
 Risk = 2.00  # risk %
 TakeProfit = 50
@@ -46,8 +48,7 @@ PROFIT = False
 # GE30 le cout d un pip = 25€ * 0.01 --------------------------
 PRICE = 6.95
 PIP = 0.01
-SYMBOL = "US100"
-VNL = 35
+SYMBOL = "DE30"
 SPREAD = 0.04
 
 # logger properties
@@ -316,7 +317,6 @@ async def majDatAall(client, symbol, db):
     # on retourne le dernier temps "ctm" enregistré
     return newTime
 
-
 def round_up(n, decimals=0):
     '''
     Arrondi au superieur
@@ -499,63 +499,65 @@ async def main():
             #sma_01_120 = bougie1M01['SMA120']
             #supportDown, supportHight = zoneSoutien2(sma_01_120, zone)
 
-            if tick is not None:
-                if len(tradeOpen['returnData']) == 0:
-                    if bougie1M01["Awesome"] > bougie2M01["Awesome"]:
-                        print("achat !!!!!!!!!!!!")
-                        supportDown, supportHight = zoneSoutien2(bougieM05_1["low"], zone)
-                        support = supportDown
-                        objectif = supportHight
-                        price = bougie0M01["open"]
-                        o.buyNow(support, objectif, round(price, 2), BALANCE["margin_free"], VNL)
+            if len(tradeOpen['returnData']) == 0:
+                print("_____________________________________________________________")
+                print(bougie1M01)
+                print(bougie2M01)
+                if bougie1M01["Awesome"] > bougie2M01["Awesome"]:
+                    print("achat !!!!!!!!!!!!")
+                    supportDown, supportHight = zoneSoutien2(bougieM05_1["low"], zone)
+                    support = supportDown*10
+                    objectif = supportHight*10
+                    price = bougie0M01["open"]*10
+                    o.buyNow(support, objectif, round(price, 2), BALANCE["margin_free"], VNL)
 
-                    if bougie1M01["Awesome"] < bougie2M01["Awesome"]:
-                        print("vente !!!!!!!!!!!!")
-                        supportDown, supportHight = zoneSoutien2(bougie1M01["high"], zone)
-                        support = supportHight
-                        objectif = supportDown
-                        price = bougie0M01["open"]
-                        o.sellNow(support, objectif, round(price, 2), BALANCE["margin_free"], VNL)
+                if bougie1M01["Awesome"] < bougie2M01["Awesome"]:
+                    print("vente !!!!!!!!!!!!")
+                    supportDown, supportHight = zoneSoutien2(bougie1M01["high"], zone)
+                    support = supportHight*10
+                    objectif = supportDown*10
+                    price = bougie0M01["open"]*10
+                    o.sellNow(support, objectif, round(price, 2), BALANCE["margin_free"], VNL)
+                '''
+                if bougie1M01["close"] > PPW and \
+                        bougie1M01["Awesome"] > bougie2M01["Awesome"] and \
+                        bougie1M01["Awesome"] > 0.50:
+                    supportDown, supportHight = zoneSoutien2(bougieM05_1['SMA120'], zone)
+                    support = supportDown
+                    objectif = supportHight
+                    price = bougieM05_1['SMA120'] + SPREAD
+                    o.buyLimit(support, objectif, round(price, 2), BALANCE["margin_free"])
+
+                    
+                if bougieM05_1['close'] > bougieM05_1['SMA120']:
+                    supportDown, supportHight = zoneSoutien2(bougieM05_1['SMA120'], zone)
+                    support = supportDown
+                    objectif = supportHight
+                    price = bougieM05_1['SMA120'] + SPREAD
+                    o.buyLimit(support, objectif, round(price, 2))
+
+                if bougieM05_1['close'] < bougieM05_1['SMA120']:
+                    supportDown, supportHight = zoneSoutien2(sma_01_120, zone)
+                    # TODO: deffinir l objectif selon le % souhaité et la volatilité
+                    support = supportHight
+                    objectif = supportDown
+                    price = bougieM05_1['SMA120'] - SPREAD
+                    o.sellLimit(support, objectif, round(price, 2))
                     '''
-                    if bougie1M01["close"] > PPW and \
-                            bougie1M01["Awesome"] > bougie2M01["Awesome"] and \
-                            bougie1M01["Awesome"] > 0.50:
-                        supportDown, supportHight = zoneSoutien2(bougieM05_1['SMA120'], zone)
+            else:
+                #print("un ordre existe")
+                for trade in tradeOpenDic['returnData']:
+                    if TransactionSide.BUY_LIMIT == trade['cmd']:
                         support = supportDown
                         objectif = supportHight
                         price = bougieM05_1['SMA120'] + SPREAD
-                        o.buyLimit(support, objectif, round(price, 2), BALANCE["margin_free"])
+                        o.movebuyLimitWait(trade, support, objectif, round(price, 2), BALANCE["margin_free"])
 
-                        
-                    if bougieM05_1['close'] > bougieM05_1['SMA120']:
-                        supportDown, supportHight = zoneSoutien2(bougieM05_1['SMA120'], zone)
-                        support = supportDown
-                        objectif = supportHight
-                        price = bougieM05_1['SMA120'] + SPREAD
-                        o.buyLimit(support, objectif, round(price, 2))
-
-                    if bougieM05_1['close'] < bougieM05_1['SMA120']:
-                        supportDown, supportHight = zoneSoutien2(sma_01_120, zone)
-                        # TODO: deffinir l objectif selon le % souhaité et la volatilité
+                    if TransactionSide.SELL_LIMIT == trade['cmd']:
                         support = supportHight
                         objectif = supportDown
                         price = bougieM05_1['SMA120'] - SPREAD
-                        o.sellLimit(support, objectif, round(price, 2))
-                        '''
-                else:
-                    #print("un ordre existe")
-                    for trade in tradeOpenDic['returnData']:
-                        if TransactionSide.BUY_LIMIT == trade['cmd']:
-                            support = supportDown
-                            objectif = supportHight
-                            price = bougieM05_1['SMA120'] + SPREAD
-                            o.movebuyLimitWait(trade, support, objectif, round(price, 2), BALANCE["margin_free"])
-
-                        if TransactionSide.SELL_LIMIT == trade['cmd']:
-                            support = supportHight
-                            objectif = supportDown
-                            price = bougieM05_1['SMA120'] - SPREAD
-                            o.moveSellLimitWait(trade, support, objectif, round(price, 2), BALANCE["margin_free"])
+                        o.moveSellLimitWait(trade, support, objectif, round(price, 2), BALANCE["margin_free"])
 
             time.sleep(5)
 
