@@ -229,10 +229,11 @@ async def majDatAall(client, symbol, db):
 
         #on recupere les 4 dernieres heures pour eviter de tt scanner afin que le traitement soit plus rapide
         ctmRefStart = db["H4"].find().sort("ctm", -1).skip(1).limit(1)
-        start = ctmRefStart[0]['ctm']
+        start = 0
         countH4 = 0
         for n in ctmRefStart:
             startTime = n['ctm']
+            start =  n['ctm']
             countH4 = 1
 
         if countH4 == 0:
@@ -310,7 +311,7 @@ async def majDatAall(client, symbol, db):
         exc_type, exc_obj, exc_tb = sys.exc_info()
         fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
         print(exc_type, fname, exc_tb.tb_lineno)
-        
+
     # on retourne le dernier temps "ctm" enregistré
     return newTime
 
