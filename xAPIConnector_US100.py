@@ -359,9 +359,7 @@ def subscribe(loginResponse):
     sclient = APIStreamClient(
         ssId=ssid,
         tickFun=c.procTickExample,
-        tradeFun=c.procTradeExample,
         profitFun=c.procProfitExample,
-        tradeStatusFun=c.procTradeStatusExample,
         balanceFun=c.procBalanceExample
     )
     sclient.subscribePrice("US100")
@@ -405,7 +403,7 @@ async def main():
 
         zone = np.array([PPC, R1C, R2C, R3C, R4C, S1C, S2C, S3C, S4C, R1W, R2W, S1W, S2W, R1D, S1D])
         zone = np.sort(zone)
-        # print('zone :', zone)
+        print('zone :', zone)
         # exit(0)
         # print('calcul du Pivot fini')
         # print("----------------------------------------------")
@@ -440,13 +438,13 @@ async def main():
         o = Order(SYMBOL, dbStreaming, client)
         print("calcul fini")
         while True:
-            print("balance ===>",c.getBalance())
             print("profit ===>",c.getProfit())
+            balance = c.getBalance()
             if c.getBalance() == 0:
                 resp = client.commandExecute('getMarginLevel')
-                BALANCE = resp["returnData"]
+                balance = resp["returnData"]
 
-
+            print("balance :",balance)
             """
             startTime = await majData(client, startTime, SYMBOL, db)
             moyMobil_01_120 = MM(SYMBOL, "M01", 0)
@@ -475,7 +473,6 @@ async def main():
             ###############################################################################################################
             tradeOpenDic = findopenOrder(client)
             tradeOpen = json.loads(json.dumps(tradeOpenDic))
-            tick = dbStreaming["Tick"].find_one({"symbol": SYMBOL})
 
             ###############################################################################################################
             # bougie
@@ -486,7 +483,6 @@ async def main():
             bougie2M01 = db["M01"].find({}, sort=[('ctm', -1)]).limit(1).skip(2)[0]
             bougieM05_1 = db["M05"].find({}, sort=[('ctm', -1)]).limit(1).skip(1)[0]
 
-            print(bougie1M01)
 
             # sma_01_120 = bougie1M01['SMA120']
             # supportDown, supportHight = zoneSoutien2(sma_01_120, zone)
@@ -494,22 +490,25 @@ async def main():
             if c.getTick() is not None:
                 if len(tradeOpen['returnData']) == 0:
                     tick = c.getTick()["ask"]
-                    print(tick)
                     if bougie1M01["Awesome"] > bougie2M01["Awesome"]:
-                        print("achat !!!!!!!!!!!!")
+                        print("achat !!!!!!!!!!!!" , bougie1M01["Awesome"] ,">", bougie2M01["Awesome"])
                         supportDown, supportHight = zoneSoutien2(tick, zone)
                         support = supportDown
                         objectif = supportHight
                         price = tick
-                        o.buyNow(support, objectif, round(price, 2), BALANCE["margin_free"], VNL)
+
+                        print("balance :", balance)
+                        o.buyNow(support, objectif, round(price, 2), balance["margin_free"], VNL)
 
                     if bougie1M01["Awesome"] < bougie2M01["Awesome"]:
-                        print("vente !!!!!!!!!!!!")
+                        print("vente !!!!!!!!!!!!", bougie1M01["Awesome"] ,"<", bougie2M01["Awesome"])
                         supportDown, supportHight = zoneSoutien2(tick, zone)
                         support = supportHight
                         objectif = supportDown
                         price = tick
-                        o.sellNow(support, objectif, round(price, 2), BALANCE["margin_free"], VNL)
+                        print("balance :", balance)
+                        print("[margin_free] :", balance["margin_free"])
+                        o.sellNow(support, objectif, round(price, 2), balance["margin_free"], VNL)
                     '''
                     if bougie1M01["close"] > PPW and \
                             bougie1M01["Awesome"] > bougie2M01["Awesome"] and \
