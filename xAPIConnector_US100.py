@@ -33,8 +33,6 @@ TradeStartTime = 4
 TradeStopTime = 22
 # gestion managment-----
 Risk = 2.00  # risk %
-TakeProfit = 50
-StopLoss = 10
 ObjectfDay = 3.00  # %
 # communication---------
 SignalMail = False
@@ -83,11 +81,11 @@ async def insertData(collection, dataDownload, listDataDB):
 
     ctm = ''
     if dataDownload['status'] and len(dataDownload["returnData"]['rateInfos']) > 0:
-        #import time
-        #tps1 = time.clock()
-        #tps2 = time.clock()
-        #print("time : ",tps2 - tps1)
-        #exit(0)
+        # import time
+        # tps1 = time.clock()
+        # tps2 = time.clock()
+        # print("time : ",tps2 - tps1)
+        # exit(0)
 
         for value in dataDownload["returnData"]['rateInfos']:
             if (listDataDB is None) or (value['ctm'] > listDataDB["ctm"]):
@@ -212,7 +210,7 @@ async def majDatAall(client, symbol, db):
     print("**************************************** mise à jour majDatAall ****************************************")
     try:
 
-        #ctmRefStart = db["D"].find().sort("ctm", -1).skip(1).limit(1)
+        # ctmRefStart = db["D"].find().sort("ctm", -1).skip(1).limit(1)
         endTime = int(round(time.time() * 1000)) + (6 * 60 * 1000)
 
         # MAJ DAY : 13 mois------------------------------------------------------------------------
@@ -227,14 +225,13 @@ async def majDatAall(client, symbol, db):
         listDataDBDAY = db["D"].find_one({}, sort=[('ctm', -1)])
         await insertData(db["D"], dataDAYDownload, listDataDBDAY)
 
-
-        #on recupere les 4 dernieres heures pour eviter de tt scanner afin que le traitement soit plus rapide
+        # on recupere les 4 dernieres heures pour eviter de tt scanner afin que le traitement soit plus rapide
         ctmRefStart = db["H4"].find().sort("ctm", -1).skip(1).limit(1)
         start = 0
         countH4 = 0
         for n in ctmRefStart:
             startTime = n['ctm']
-            start =  n['ctm']
+            start = n['ctm']
             countH4 = 1
 
         if countH4 == 0:
@@ -341,19 +338,18 @@ def round_down(n, decimals=0):
 
 def zoneSoutien2(close, zone):
     arrayT = sorted(zone)
-    #print("close:", close)
-    #print("pîvot down:", arrayT)
+    minimumPIP = 15
     supportDown = 0
     supportHigt = 0
     for v in arrayT:
-        if v < close:
+        if v < close-minimumPIP:
             supportDown = v
-        if v > close:
+        if v > close+minimumPIP:
             if supportHigt == 0:
                 supportHigt = v
-                #print("pîvot up calcul:", supportHigt)
+                # print("pîvot up calcul:", supportHigt)
 
-    #print(supportDown, " / ", supportHigt)
+    # print(supportDown, " / ", supportHigt)
     return supportDown, supportHigt
 
 
@@ -374,12 +370,14 @@ def subscribe(loginResponse):
     sclient.subscribeTrades()
     sclient.subscribeBalance()
 
-    return sclient
+    return sclient, c
 
 
 async def main():
     client = APIClient()  # create & connect to RR socket
     loginResponse = client.identification()  # connect to RR socket, login
+    # get ssId from login response
+    ssid = loginResponse['streamSessionId']
     logger.info(str(loginResponse))
 
     # check if user logged in correctly
@@ -388,17 +386,10 @@ async def main():
         return
 
     try:
-        sclient = subscribe(loginResponse)
+        sclient, c = subscribe(loginResponse)
         connection = MongoClient('localhost', 27017)
         db = connection[SYMBOL]
         dbStreaming = connection["STREAMING"]
-        # print("************************** calcul balance******************************************")
-        json_balance1 = json.dumps(client.commandExecute('getMarginLevel'))
-        dict_balance = json.loads(json_balance1)
-        # BALANCE = dict_balance["returnData"]['balance']
-        BALANCE = dict_balance["returnData"]
-        print(BALANCE)
-        print(BALANCE["margin_free"])
 
         startTime = await majDatAall(client, SYMBOL, db)
 
@@ -449,10 +440,13 @@ async def main():
         o = Order(SYMBOL, dbStreaming, client)
         print("calcul fini")
         while True:
-            json_balance1 = json.dumps(client.commandExecute('getMarginLevel'))
-            dict_balance = json.loads(json_balance1)
-            # BALANCE = dict_balance["returnData"]['balance']
-            BALANCE = dict_balance["returnData"]
+            print("balance ===>",c.getBalance())
+            print("profit ===>",c.getProfit())
+            if c.getBalance() == 0:
+                resp = client.commandExecute('getMarginLevel')
+                BALANCE = resp["returnData"]
+
+
             """
             startTime = await majData(client, startTime, SYMBOL, db)
             moyMobil_01_120 = MM(SYMBOL, "M01", 0)
@@ -483,8 +477,6 @@ async def main():
             tradeOpen = json.loads(json.dumps(tradeOpenDic))
             tick = dbStreaming["Tick"].find_one({"symbol": SYMBOL})
 
-
-
             ###############################################################################################################
             # bougie
             ###############################################################################################################
@@ -496,25 +488,27 @@ async def main():
 
             print(bougie1M01)
 
-            #sma_01_120 = bougie1M01['SMA120']
-            #supportDown, supportHight = zoneSoutien2(sma_01_120, zone)
+            # sma_01_120 = bougie1M01['SMA120']
+            # supportDown, supportHight = zoneSoutien2(sma_01_120, zone)
 
-            if tick is not None:
+            if c.getTick() is not None:
                 if len(tradeOpen['returnData']) == 0:
+                    tick = c.getTick()["ask"]
+                    print(tick)
                     if bougie1M01["Awesome"] > bougie2M01["Awesome"]:
                         print("achat !!!!!!!!!!!!")
-                        supportDown, supportHight = zoneSoutien2(bougieM05_1["low"], zone)
+                        supportDown, supportHight = zoneSoutien2(tick, zone)
                         support = supportDown
                         objectif = supportHight
-                        price = bougie0M01["open"]
+                        price = tick
                         o.buyNow(support, objectif, round(price, 2), BALANCE["margin_free"], VNL)
 
                     if bougie1M01["Awesome"] < bougie2M01["Awesome"]:
                         print("vente !!!!!!!!!!!!")
-                        supportDown, supportHight = zoneSoutien2(bougie1M01["high"], zone)
+                        supportDown, supportHight = zoneSoutien2(tick, zone)
                         support = supportHight
                         objectif = supportDown
-                        price = bougie0M01["open"]
+                        price = tick
                         o.sellNow(support, objectif, round(price, 2), BALANCE["margin_free"], VNL)
                     '''
                     if bougie1M01["close"] > PPW and \
@@ -543,7 +537,7 @@ async def main():
                         o.sellLimit(support, objectif, round(price, 2))
                         '''
                 else:
-                    #print("un ordre existe")
+                    # print("un ordre existe")
                     for trade in tradeOpenDic['returnData']:
                         if TransactionSide.BUY_LIMIT == trade['cmd']:
                             support = supportDown
