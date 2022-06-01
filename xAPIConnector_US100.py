@@ -359,8 +359,10 @@ def subscribe(loginResponse):
     sclient = APIStreamClient(
         ssId=ssid,
         tickFun=c.procTickExample,
-        profitFun=c.procProfitExample,
-        balanceFun=c.procBalanceExample
+        tradeFun=c.procTradeExample,
+        balanceFun=c.procBalanceExample,
+        tradeStatusFun=c.procTradeStatusExample,
+        profitFun=c.procProfitExample
     )
     sclient.subscribePrice("US100")
     sclient.subscribeProfits()
@@ -408,6 +410,11 @@ async def main():
         # print('calcul du Pivot fini')
         # print("----------------------------------------------")
         print("calcul de moyenne mobile")
+        moyMobil_01_120 = MM(SYMBOL, "M01", 0)
+        moyMobil_05_120 = MM(SYMBOL, "M05", 0)
+        moyMobil_01_120.EMA(120)
+        moyMobil_01_120.EMA(70)
+        moyMobil_05_120.EMA(120)
         """
         moyMobil_01_120 = MM(SYMBOL, "M01", 0)
         moyMobil_01_120.EMA(45)
@@ -424,50 +431,33 @@ async def main():
         ao01 = Awesome(SYMBOL, "M01")
         await ao01.calculAllCandles()
 
-        # supertrend ###################################################################################
-        spM05 = Supertrend(SYMBOL, "M05", 30, 5)
-        superM05T0, superT1, superT2 = spM05.getST()
-        superM05T0 = round(float(superM05T0), 2)
-        # print("superM01T0 :", superM05T0)
-        superT1 = round(float(superT1), 1)
-        # print("superT1 :", superT1)
-        spM05 = Supertrend(SYMBOL, "M05", 10, 4)
-        superM05T0, superM05T1, superM05T2 = spM05.getST()
-        # print("superM05T0 :", superM05T0)
-
         o = Order(SYMBOL, dbStreaming, client)
         print("calcul fini")
         while True:
-            print("profit ===>",c.getProfit())
+            ###################################################################################################
             balance = c.getBalance()
             if c.getBalance() == 0:
                 resp = client.commandExecute('getMarginLevel')
-                balance = resp["returnData"]
+                balance = resp["returnData"]["margin_free"]
+            else:
+                balance = balance["marginFree"]
 
-            print("balance :",balance)
-            """
+            ####################################################################################################
             startTime = await majData(client, startTime, SYMBOL, db)
-            moyMobil_01_120 = MM(SYMBOL, "M01", 0)
-            moyMobil_01_120.calculSMA(45)
-            moyMobil_01_120.calculSMA(70)
-            moyMobil_01_120.calculSMA(120)
-            moyMobil_01_120.EMA(45)
-            moyMobil_01_120.EMA(70)
+            ####################################################################################################
             moyMobil_01_120.EMA(120)
-            #
-            moyMobil_05_120 = MM(SYMBOL, "M05", 0)
-            moyMobil_05_120.calculSMA(45)
-            moyMobil_05_120.calculSMA(70)
-            moyMobil_05_120.calculSMA(120)
-            moyMobil_05_120.EMA(45)
-            moyMobil_05_120.EMA(70)
+            moyMobil_01_120.EMA(70)
             moyMobil_05_120.EMA(120)
-            """
-            ao05 = Awesome(SYMBOL, "M05")
-            await ao05.calculAllCandles()
-            ao01 = Awesome(SYMBOL, "M01")
-            await ao01.calculAllCandles()
-
+            # AO ###################################################################################
+            await ao05.calculLastCandle(10)
+            await ao01.calculLastCandle(10)
+            # supertrend ###################################################################################
+            spM05 = Supertrend(SYMBOL, "M05", 30, 5)
+            superM05T0, superT1, superT2 = spM05.getST()
+            superM05T0 = round(float(superM05T0), 2)
+            spM01 = Supertrend(SYMBOL, "M01", 30, 12)
+            superM01T0, superM01T1, superM01T2 = spM01.getST()
+            superM05T0 = round(float(superM01T0), 2)
             ###############################################################################################################
             # order
             ###############################################################################################################
@@ -486,10 +476,12 @@ async def main():
 
             # sma_01_120 = bougie1M01['SMA120']
             # supportDown, supportHight = zoneSoutien2(sma_01_120, zone)
-
             if c.getTick() is not None:
+                print("trade :", c.getTrade() )
+                print("trade status:", c.getTradeStatus() )
                 if len(tradeOpen['returnData']) == 0:
                     tick = c.getTick()["ask"]
+                    print(tick)
                     if bougie1M01["Awesome"] > bougie2M01["Awesome"]:
                         print("achat !!!!!!!!!!!!" , bougie1M01["Awesome"] ,">", bougie2M01["Awesome"])
                         supportDown, supportHight = zoneSoutien2(tick, zone)
@@ -497,8 +489,7 @@ async def main():
                         objectif = supportHight
                         price = tick
 
-                        print("balance :", balance)
-                        o.buyNow(support, objectif, round(price, 2), balance["margin_free"], VNL)
+                        o.buyNow(support, objectif, round(price, 2), balance, VNL)
 
                     if bougie1M01["Awesome"] < bougie2M01["Awesome"]:
                         print("vente !!!!!!!!!!!!", bougie1M01["Awesome"] ,"<", bougie2M01["Awesome"])
@@ -506,9 +497,7 @@ async def main():
                         support = supportHight
                         objectif = supportDown
                         price = tick
-                        print("balance :", balance)
-                        print("[margin_free] :", balance["margin_free"])
-                        o.sellNow(support, objectif, round(price, 2), balance["margin_free"], VNL)
+                        o.sellNow(support, objectif, round(price, 2), balance, VNL)
                     '''
                     if bougie1M01["close"] > PPW and \
                             bougie1M01["Awesome"] > bougie2M01["Awesome"] and \

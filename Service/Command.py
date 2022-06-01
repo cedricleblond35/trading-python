@@ -9,8 +9,10 @@ class Command:
         self.balance = 0
         self.profit = None
         self.news = None
+        self.trade = None
+        self.tradeStatus = None
 
-    # Command templates
+        # Command templates
     def baseCommand(self, commandName, arguments=None):
         if arguments == None:
             arguments = dict()
@@ -25,8 +27,8 @@ class Command:
         self.tick = dataDownload['data']
 
     def procTradeExample(self, msg):
-        print("procTradeExample: ", msg)
-        pass
+        dataDownload = json.loads(json.dumps(msg))
+        self.trade = dataDownload['data']
 
     def procBalanceExample(self, msg):
         dataDownload = json.loads(json.dumps(msg))
@@ -34,8 +36,8 @@ class Command:
 
 
     def procTradeStatusExample(self, msg):
-        # print("TRADE STATUS: ", msg)
-        pass
+        dataDownload = json.loads(json.dumps(msg))
+        self.tradeStatus = dataDownload['data']
 
     def procProfitExample(self, msg):
         dataDownload = json.loads(json.dumps(msg))
@@ -56,3 +58,9 @@ class Command:
 
     def getNews(self):
         return self.news
+
+    def getTrade(self):
+        return self.trade
+
+    def getTradeStatus(self):
+        return self.tradeStatus
