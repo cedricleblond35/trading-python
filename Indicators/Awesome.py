@@ -28,7 +28,7 @@ class Awesome(Price):
     async def __calcul(self):
         for i in range(self.__MMS2, len(self._listData)):
             list1 = self._listData.copy()[i - self.__MMS2 + 1: i + 1]
-            if "Awesome" not in list(list1)[-1]:
+            if "AW" not in list(list1)[-1]:
                 pointMedian = 0
                 for v in list1:
                     pointMedian = pointMedian + v["pointMedian"]
@@ -43,7 +43,7 @@ class Awesome(Price):
                 # mise à jour du document
                 newvalues = {
                     "$set": {
-                        "Awesome": ao
+                        "AW": ao
                     }}
                 myquery = {"ctm": list(list1)[-1]["ctm"]}
                 self._db[self.__timeframe].update_one(myquery, newvalues)

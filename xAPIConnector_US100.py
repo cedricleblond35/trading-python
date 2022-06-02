@@ -448,6 +448,7 @@ async def main():
             moyMobil_01_120.EMA(120)
             moyMobil_01_120.EMA(70)
             moyMobil_05_120.EMA(120)
+            moyMobil_05_120.EMA(120)
             # AO ###################################################################################
             await ao05.calculLastCandle(10)
             await ao01.calculLastCandle(10)
@@ -482,8 +483,8 @@ async def main():
                 if len(tradeOpen['returnData']) == 0:
                     tick = c.getTick()["ask"]
                     print(tick)
-                    if bougie1M01["Awesome"] > bougie2M01["Awesome"]:
-                        print("achat !!!!!!!!!!!!" , bougie1M01["Awesome"] ,">", bougie2M01["Awesome"])
+                    if bougie1M01["AW"] > bougie2M01["AW"]:
+                        print("achat !!!!!!!!!!!!" , bougie1M01["AW"] ,">", bougie2M01["AW"])
                         supportDown, supportHight = zoneSoutien2(tick, zone)
                         support = supportDown
                         objectif = supportHight
@@ -491,8 +492,8 @@ async def main():
 
                         o.buyNow(support, objectif, round(price, 2), balance, VNL)
 
-                    if bougie1M01["Awesome"] < bougie2M01["Awesome"]:
-                        print("vente !!!!!!!!!!!!", bougie1M01["Awesome"] ,"<", bougie2M01["Awesome"])
+                    if bougie1M01["AW"] < bougie2M01["AW"]:
+                        print("vente !!!!!!!!!!!!", bougie1M01["AW"] ,"<", bougie2M01["AW"])
                         supportDown, supportHight = zoneSoutien2(tick, zone)
                         support = supportHight
                         objectif = supportDown
@@ -500,8 +501,8 @@ async def main():
                         o.sellNow(support, objectif, round(price, 2), balance, VNL)
                     '''
                     if bougie1M01["close"] > PPW and \
-                            bougie1M01["Awesome"] > bougie2M01["Awesome"] and \
-                            bougie1M01["Awesome"] > 0.50:
+                            bougie1M01["AW"] > bougie2M01["AW"] and \
+                            bougie1M01["AW"] > 0.50:
                         supportDown, supportHight = zoneSoutien2(bougieM05_1['SMA120'], zone)
                         support = supportDown
                         objectif = supportHight

@@ -71,32 +71,35 @@ class MM(Price):
         :return:
         """
         try:
-            self._prepareListData(self.__duration)
-            moyenne = self._avgClose(2)
-            print("moyenne :", moyenne)
             name = "EMA" + str(duration)
             nameSMA = "SMA" + str(duration)
             α = round(2 / (duration + 1), 5)
-            #self._prepareListDataLast(0, 0, name)
-            self._prepareListEMA(0, duration, name)
-            print("************ EMA **************")
+
+            self._prepareListData()                         #toutes les bougies
+            print("duration:", duration, " name:", name)
+            self._prepareListEMA(0, duration, name)         #toutes les bougies ne possédant pas EMA (HORS LES X PREMIÈRES)
+            moyenne = self._avgClose(duration)
+            print("moyenne :", moyenne)
+
+
+            print("************ EMA ", duration," **************")
             print(len(self._listData), "      ", len(self._listDataLast))
 
             if len(self._listDataLast) > 1:
-                #print("calcul nombre ema :", len(self._listDataLast))
-
+                #1 ou plusieurs bougies sont à traiter
                 # configurer le start et EMAPrecedent
-                if len(self._listData) - len(self._listDataLast) == 0:
+                if len(self._listData) - len(self._listDataLast) == duration:
                     # rien de rempli
                     EMAPrecedent = 0
-                    start = 0
+                    start = duration
                     print("calcul complet :", start)
                 else:
                     # Des ema existant, on configure le EMAPrecedent et le start correctement
                     # la 1ere ligne contient le sma ou ema precedent pour le calcul
-                    start = len(self._listData) - len(self._listDataLast) - 2
+                    start = len(self._listData) - len(self._listDataLast)
                     idLastEma = start - 1
-                    print("idLastEma :", idLastEma, "  name:", name)
+                    print("start :", start ,"idLastEma :", idLastEma, "  name:", name)
+                    print("EMAPrecedent: ", self._listData[idLastEma])
                     EMAPrecedent = self._listData[idLastEma][name]
                     print("calcul partiel : ", start)
 
@@ -116,7 +119,6 @@ class MM(Price):
                         self._db[self.__timeframe].update_one(myquery, newvalues)
 
                         EMAPrecedent = ema
-
                     elif nameSMA in list[i]:
                         newvalues = {
                             "$set": {
@@ -126,13 +128,15 @@ class MM(Price):
                         self._db[self.__timeframe].update_one(myquery, newvalues)
                         EMAPrecedent = list[i][nameSMA]
                     else:
+                        mm = round(self._avgClose(duration), 2)
+                        print("mm : ", mm)
                         newvalues = {
                             "$set": {
-                                name: round(self._agv(duration), 2)
+                                name: mm
                             }}
                         myquery = {"ctm": list[i]["ctm"]}
                         self._db[self.__timeframe].update_one(myquery, newvalues)
-                        EMAPrecedent = list[i][nameSMA]
+                        EMAPrecedent = mm
         except Exception as exc:
             print("le programe a déclenché une erreur")
             print("exception de mtype ", exc.__class__)
