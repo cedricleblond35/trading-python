@@ -47,7 +47,6 @@ class Order():
         sl = round(superM01T0 + 5.0, 1)
         tp = round(supportDown, 1)
         price = tick["ask"]
-
         h = self.client.commandExecute('getServerTime')
         timeExpiration = h['returnData']['time'] + 3600000
 
@@ -145,7 +144,7 @@ class Order():
         detailString = json.dumps(detail)
         #self.sendMail(respString, detailString)
 
-    def buyLimit(self, sl, tp, price, balance):
+    def buyLimit(self,  sl, tp, price, balance, vnl):
 
         print("------------- buyLimit -----------------")
         tp = round(tp, 1)
@@ -154,7 +153,7 @@ class Order():
         h = self.client.commandExecute('getServerTime')
         timeExpiration = h['returnData']['time'] + 3600000
 
-        nbrelot = self.NbrLot(balance, price, sl)
+        nbrelot = self.NbrLot(balance, price, sl, vnl)
         detail = {
             "cmd": 2,
             "customComment": "Achat limit",

@@ -76,14 +76,7 @@ class MM(Price):
             α = round(2 / (duration + 1), 5)
 
             self._prepareListData()                         #toutes les bougies
-            print("duration:", duration, " name:", name)
             self._prepareListEMA(0, duration, name)         #toutes les bougies ne possédant pas EMA (HORS LES X PREMIÈRES)
-            moyenne = self._avgClose(duration)
-            print("moyenne :", moyenne)
-
-
-            print("************ EMA ", duration," **************")
-            print(len(self._listData), "      ", len(self._listDataLast))
 
             if len(self._listDataLast) > 1:
                 #1 ou plusieurs bougies sont à traiter
@@ -98,14 +91,10 @@ class MM(Price):
                     # la 1ere ligne contient le sma ou ema precedent pour le calcul
                     start = len(self._listData) - len(self._listDataLast)
                     idLastEma = start - 1
-                    print("start :", start ,"idLastEma :", idLastEma, "  name:", name)
-                    print("EMAPrecedent: ", self._listData[idLastEma])
                     EMAPrecedent = self._listData[idLastEma][name]
-                    print("calcul partiel : ", start)
 
                 # print("calcul en cours ...  ")
                 list = self._listData[start:len(self._listData) - 1]
-                # print("nbre. :", len(list))
                 for i in range(0, len(list)):
                     if EMAPrecedent > 0:
                         close = list[i]["close"]

@@ -398,34 +398,25 @@ async def main():
         # # pivot##################################################################################################
         # print('mise à jour du pivot -------------------------')
         P = Pivot(SYMBOL, "D")
-        PPF, R1F, R2F, R3F, S1F, S2F, S3F = await P.fibonacci()  # valeurs ok
+        #PPF, R1F, R2F, R3F, S1F, S2F, S3F = await P.fibonacci()  # valeurs ok
+        #R1D, S1D = await P.demark()  # valeurs ok
+
         PPW, R1W, R2W, S1W, S2W = await P.woodie()  # valeurs ok
         PPC, R1C, R2C, R3C, R4C, S1C, S2C, S3C, S4C = await P.camarilla()  # valeurs ok
-        R1D, S1D = await P.demark()  # valeurs ok
 
-        zone = np.array([PPC, R1C, R2C, R3C, R4C, S1C, S2C, S3C, S4C, R1W, R2W, S1W, S2W, R1D, S1D])
+        print("wondie: ", PPW," / ", R1W," / ", R2W," / ", S1W," / ", S2W )
+
+        zone = np.array([PPC, R1C, R2C, R3C, R4C, S1C, S2C, S3C, S4C, R1W, R2W, S1W, S2W])
         zone = np.sort(zone)
         print('zone :', zone)
-        # exit(0)
-        # print('calcul du Pivot fini')
-        # print("----------------------------------------------")
-        print("calcul de moyenne mobile")
+
         moyMobil_01_120 = MM(SYMBOL, "M01", 0)
         moyMobil_05_120 = MM(SYMBOL, "M05", 0)
         moyMobil_01_120.EMA(120)
         moyMobil_01_120.EMA(70)
+        moyMobil_01_120.EMA(26)
         moyMobil_05_120.EMA(120)
-        """
-        moyMobil_01_120 = MM(SYMBOL, "M01", 0)
-        moyMobil_01_120.EMA(45)
-        moyMobil_01_120.EMA(70)
-        moyMobil_01_120.EMA(120)
-        #
-        moyMobil_05_120 = MM(SYMBOL, "M05", 0)
-        moyMobil_05_120.EMA(45)
-        moyMobil_05_120.EMA(70)
-        moyMobil_05_120.EMA(120)
-        """
+
         ao05 = Awesome(SYMBOL, "M05")
         await ao05.calculAllCandles()
         ao01 = Awesome(SYMBOL, "M01")
@@ -447,6 +438,7 @@ async def main():
             ####################################################################################################
             moyMobil_01_120.EMA(120)
             moyMobil_01_120.EMA(70)
+            moyMobil_01_120.EMA(26)
             moyMobil_05_120.EMA(120)
             moyMobil_05_120.EMA(120)
             # AO ###################################################################################
@@ -476,21 +468,24 @@ async def main():
 
 
             # sma_01_120 = bougie1M01['SMA120']
-            # supportDown, supportHight = zoneSoutien2(sma_01_120, zone)
+            supportDown, supportHight = zoneSoutien2(tick, zone)
+            print(c.getTick())
             if c.getTick() is not None:
-                print("trade :", c.getTrade() )
-                print("trade status:", c.getTradeStatus() )
                 if len(tradeOpen['returnData']) == 0:
                     tick = c.getTick()["ask"]
-                    print(tick)
-                    if bougie1M01["AW"] > bougie2M01["AW"]:
-                        print("achat !!!!!!!!!!!!" , bougie1M01["AW"] ,">", bougie2M01["AW"])
-                        supportDown, supportHight = zoneSoutien2(tick, zone)
-                        support = supportDown
-                        objectif = supportHight
+                    print(bougie1M01["EMA120"] ," ", bougie1M01["EMA70"] ," ", bougie1M01["EMA26"])
+                    if bougie1M01["EMA120"] > bougie1M01["EMA70"] > bougie1M01["EMA26"] \
+                            and bougie1M01["EMA70"] > bougie2M01["EMA70"] \
+                            and bougie2M01["EMA120"] > bougie2M01["EMA120"] \
+                            and  bougie1M01["EMA26"] > supportDown \
+                            and bougie1M01["EMA120"] < supportDown:
+                        print("achat !!!!!!!!!!!!")
+                        support = supportDown -15
+                        objectif = supportHight-5
                         price = tick
 
-                        o.buyNow(support, objectif, round(price, 2), balance, VNL)
+                        #o.buyNow(support, objectif, round(price, 2), balance, VNL)
+                        o.buyLimit(support, objectif, round(supportDown, 2), balance, VNL)
 
                     if bougie1M01["AW"] < bougie2M01["AW"]:
                         print("vente !!!!!!!!!!!!", bougie1M01["AW"] ,"<", bougie2M01["AW"])
