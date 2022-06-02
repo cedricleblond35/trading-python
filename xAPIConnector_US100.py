@@ -448,6 +448,7 @@ async def main():
             spM05 = Supertrend(SYMBOL, "M05", 30, 5)
             superM05T0, superT1, superT2 = spM05.getST()
             superM05T0 = round(float(superM05T0), 2)
+
             spM01 = Supertrend(SYMBOL, "M01", 30, 12)
             superM01T0, superM01T1, superM01T2 = spM01.getST()
             superM05T0 = round(float(superM01T0), 2)
@@ -473,27 +474,29 @@ async def main():
             if c.getTick() is not None:
                 if len(tradeOpen['returnData']) == 0:
                     tick = c.getTick()["ask"]
-                    print(bougie1M01["EMA120"] ," ", bougie1M01["EMA70"] ," ", bougie1M01["EMA26"])
-                    if bougie1M01["EMA120"] > bougie1M01["EMA70"] > bougie1M01["EMA26"] \
+                    if bougie1M01["EMA120"] < bougie1M01["EMA70"] < bougie1M01["EMA26"] \
                             and bougie1M01["EMA70"] > bougie2M01["EMA70"] \
-                            and bougie2M01["EMA120"] > bougie2M01["EMA120"] \
+                            and bougie1M01["EMA120"] > bougie2M01["EMA120"] \
                             and  bougie1M01["EMA26"] > supportDown \
-                            and bougie1M01["EMA120"] < supportDown:
-                        print("achat !!!!!!!!!!!!")
+                            and bougie1M01["EMA120"] < supportDown \
+                            and bougie1M01["EMA26"] > superM01T1:
                         support = supportDown -15
                         objectif = supportHight-5
                         price = tick
-
                         #o.buyNow(support, objectif, round(price, 2), balance, VNL)
                         o.buyLimit(support, objectif, round(supportDown, 2), balance, VNL)
 
-                    if bougie1M01["AW"] < bougie2M01["AW"]:
-                        print("vente !!!!!!!!!!!!", bougie1M01["AW"] ,"<", bougie2M01["AW"])
-                        supportDown, supportHight = zoneSoutien2(tick, zone)
-                        support = supportHight
-                        objectif = supportDown
+                    if bougie1M01["EMA120"] > bougie1M01["EMA70"] > bougie1M01["EMA26"] \
+                            and bougie1M01["EMA70"] < bougie2M01["EMA70"] \
+                            and bougie1M01["EMA120"] < bougie2M01["EMA120"] \
+                            and  bougie1M01["EMA26"] < supportHight \
+                            and bougie1M01["EMA120"] > supportHight \
+                            and bougie1M01["EMA26"] < superM01T1:
+                        support = supportHight+15
+                        objectif = supportDown+5
                         price = tick
                         o.sellNow(support, objectif, round(price, 2), balance, VNL)
+                        o.sellLimit(support, objectif, round(supportHight, 2), balance, VNL)
                     '''
                     if bougie1M01["close"] > PPW and \
                             bougie1M01["AW"] > bougie2M01["AW"] and \
