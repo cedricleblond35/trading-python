@@ -1,12 +1,11 @@
 from Configuration.Config import Config
-
 import json
 import math as math
-
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-
+import os
+import sys
 from Service.Email import Email
 
 
@@ -18,9 +17,6 @@ class Order():
         self.client = client
 
     def achatDirect(self, tp, sl):
-        print(
-            "------------------------------- achat direct 1--------------------------------------------")
-
         balance = self.dbStreaming["Balance"].find_one({"_id": Config.USER_ID})
         self.email.sendMail("forex robot Action", "Prise de postion -- Achat 1")
         # print("ask :", float(TICK["ask"]), ">", superT1, " and ", bougie2['close'], "<", superT1)
@@ -38,8 +34,6 @@ class Order():
             self.buyNow(self.client, timeExpiration, price, sl, self.symbol, tp, nbrelot)
 
     def venteDirect(self, supportDown, supportHight, superM01T0):
-        print(
-                "------------------------------- vente direct 1 --------------------------------------------")
         balance = self.dbStreaming["Balance"].find_one({"_id": Config.USER_ID})
         #self.sendMail("forex robot Action", "Prise de postion -- Vente 1")
         tick = self.dbStreaming["Tick"].find_one({"symbol": self.symbol})
@@ -65,20 +59,14 @@ class Order():
 
         '''
         try:
-            print("_____________ cal du lot ")
-            print( "bal :",balance, " position:", position," stp:", stp)
             perteAcceptable = round(balance * 0.01, 0)
-            print("perteAcceptable :", perteAcceptable)
             ecartPip = abs((position - stp))
-
-            print("ecart pip :", ecartPip)
             nbrelot = perteAcceptable / ecartPip / vnl
-            print("nbre de lot :", nbrelot)
-
             """
             qtMax = self.round_down((balance["equityFX"] / 20000), 2)
             if nbrelot > qtMax:
                 nbrelot = qtMax
+            """
             """
             print('//////////////////////////////////// NbrLot ////////////////////////////////////')
             print('balance :', balance)
@@ -88,7 +76,7 @@ class Order():
             print('ecartPip :', ecartPip)
             print('nbrelot :', nbrelot)
             print('//////////////////////////////////// NbrLot ////////////////////////////////////')
-
+            """
             return round(nbrelot, 2)
         except (RuntimeError, TypeError, NameError):
             pass
@@ -99,7 +87,6 @@ class Order():
 
         h = self.client.commandExecute('getServerTime')
         timeExpiration = h['returnData']['time'] + 3600000
-        print("balance:", balance, " price:", price, " sl:", sl)
         nbrelot = self.NbrLot(balance, price, sl, vnl)
         detail = {
             "cmd": 1,
@@ -113,17 +100,13 @@ class Order():
             "type": 0,
             "volume": nbrelot
         }
-        print(detail)
         resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
-        print(resp)
 
     def buyNow(self, sl, tp, price, balance, vnl):
         tp = round(tp, 1)
         sl = round(sl, 1)
-
         h = self.client.commandExecute('getServerTime')
         timeExpiration = h['returnData']['time'] + 3600000
-
         nbrelot = self.NbrLot(balance, price, sl, vnl)
         detail = {
             "cmd": 0,
@@ -137,7 +120,6 @@ class Order():
             "type": 0,
             "volume": nbrelot
         }
-        print(detail)
         resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
         # print("|||||||||||||||||||| resp :", resp)
         respString = json.dumps(resp) + "forex robot Action"
@@ -145,8 +127,6 @@ class Order():
         #self.sendMail(respString, detailString)
 
     def buyLimit(self,  sl, tp, price, balance, vnl):
-
-        print("------------- buyLimit -----------------")
         tp = round(tp, 1)
         sl = round(sl, 1)
 
@@ -166,7 +146,6 @@ class Order():
             "type": 0,
             "volume": nbrelot
         }
-        print("detail :", detail)
         resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
         # print("|||||||||||||||||||| resp :", resp)
         respString = json.dumps(resp) + "forex robot Action"
@@ -219,8 +198,6 @@ class Order():
         print("resp :", resp)
 
     def moveStopBuy(self, trade, sl):
-        print("new sl :", sl)
-        print("old sl", trade["sl"])
         if sl > trade["sl"]:
             tick = self.dbStreaming["Tick"].find_one({"symbol": self.symbol})
             resp = self.client.commandExecute('tradeTransaction',
@@ -238,53 +215,59 @@ class Order():
                                          })
             print("resp :", resp)
 
-    def moveStopSell(self, trade, sl):
-        print("*********** moveStopSell *************")
-        print("new sl :", sl)
-        print("old sl", trade["sl"])
-        if sl < trade["sl"]:
-            tick = self.dbStreaming["Tick"].find_one({"symbol": self.symbol})
-            resp = self.client.commandExecute('tradeTransaction',
-                                              {
-                                                  "tradeTransInfo":
-                                                      {
-                                                          "order": trade['order'],
-                                                          "sl": sl,
-                                                          "price": tick["ask"],
-                                                          "symbol": trade["symbol"],
-                                                          "volume": trade["volume"],
-                                                          "tp": trade["tp"],
-                                                          "type": 3
-                                                      }
-                                              })
-            print("resp :", resp)
+    def moveStopSell(self, trade, sl, tick):
+        try:
+            if sl < trade["sl"]:
+                detail = {
+                     "order": trade['order'],
+                     "sl": sl,
+                     "price": tick,  # TICK["bid"],
+                     "symbol": self.symbol,
+                     "volume": trade["volume"],
+                     "tp": trade["tp"],
+                     "type": 3
+                }
 
-    def sellLimit(self, sl, tp, price, balance):
-        print("------------- sellLimit -----------------")
-        tp = round(tp, 1)
-        sl = round(sl, 1)
+                resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
 
-        h = self.client.commandExecute('getServerTime')
-        timeExpiration = h['returnData']['time'] + 3600000
+                print("resp :", resp)
+        except Exception as exc:
+            print("le programe a déclenché une erreur")
+            print("exception de mtype ", exc.__class__)
+            print("message", exc)
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            print(exc_type, fname, exc_tb.tb_lineno)
 
-        nbrelot = self.NbrLot(balance, price, sl)
-        detail = {
-            "cmd": 3,
-            "customComment": "vente limit",
-            "expiration": timeExpiration,
-            "offset": 0,
-            "price": price,
-            "sl": sl,
-            "symbol": self.symbol,
-            "tp": tp,
-            "type": 0,
-            "volume": nbrelot
-        }
-        print("detail :", detail)
-        resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
-        respString = json.dumps(resp) + "forex robot Action"
-        detailString = json.dumps(detail)
-        #self.sendMail(respString, detailString)
+    def sellLimit(self,  sl, tp, price, balance, vnl):
+        try:
+            h = self.client.commandExecute('getServerTime')
+            timeExpiration = h['returnData']['time'] + 3600000
+
+            nbrelot = self.NbrLot(balance, price, sl, vnl)
+            detail = {
+                "cmd": 3,
+                "customComment": "vente limit",
+                "expiration": timeExpiration,
+                "offset": 0,
+                "price": price,
+                "sl": sl,
+                "symbol": self.symbol,
+                "tp": tp,
+                "type": 0,
+                "volume": nbrelot
+            }
+            print("detail :", detail)
+            resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
+
+        except Exception as exc:
+            print("le programe a déclenché une erreur")
+            print("exception de mtype ", exc.__class__)
+            print("message", exc)
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            print(exc_type, fname, exc_tb.tb_lineno)
+
 
     def moveSellLimitWait(self,trade, sl , tp, price, balance):
         print("------------- moveSellLimit ************************-----------------")
@@ -306,7 +289,6 @@ class Order():
                                                  "type": 3
                                              }
                                      })
-        print("resp :", resp)
 
     def round_up(self, n, decimals=0):
         '''

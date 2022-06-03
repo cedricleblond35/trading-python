@@ -27,9 +27,7 @@ class MM(Price):
                 start = len(self._listData) - len(self._listDataLast) - duration
 
             list = self._listData[start:len(self._listData) - 1]
-            print("************SMA **************")
             for v in list:
-                print('v :', v)
                 nb = nb + 1  # numero necessaire pour debuter la moyenne  , ex : sma25 debute à partir de 26
                 if duration <= nb <= len(self._listData):
                     somme = 0.00
@@ -47,7 +45,6 @@ class MM(Price):
                         }}
 
                     myquery = {"ctm": v["ctm"]}
-                    print(v["ctmString"], " ", newvalues)
                     self._db[self.__timeframe].update_one(myquery, newvalues)
         except Exception as exc:
             print("le programe a déclenché une erreur")
@@ -85,7 +82,6 @@ class MM(Price):
                     # rien de rempli
                     EMAPrecedent = 0
                     start = duration
-                    print("calcul complet :", start)
                 else:
                     # Des ema existant, on configure le EMAPrecedent et le start correctement
                     # la 1ere ligne contient le sma ou ema precedent pour le calcul
@@ -118,7 +114,6 @@ class MM(Price):
                         EMAPrecedent = list[i][nameSMA]
                     else:
                         mm = round(self._avgClose(duration), 2)
-                        print("mm : ", mm)
                         newvalues = {
                             "$set": {
                                 name: mm

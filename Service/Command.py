@@ -2,6 +2,7 @@ import json
 from pymongo import MongoClient
 from Configuration.Config import Config
 
+
 class Command:
     def __init__(self):
         self.__userId = Config.USER_ID
@@ -13,8 +14,9 @@ class Command:
         self.tradeStatus = None
 
         # Command templates
+
     def baseCommand(self, commandName, arguments=None):
-        if arguments == None:
+        if arguments is None:
             arguments = dict()
         return dict([('command', commandName), ('arguments', arguments)])
 
@@ -23,6 +25,7 @@ class Command:
 
     # example function for processing ticks from Streaming socket
     def procTickExample(self, msg):
+        # print(msg)
         dataDownload = json.loads(json.dumps(msg))
         self.tick = dataDownload['data']
 
@@ -33,7 +36,6 @@ class Command:
     def procBalanceExample(self, msg):
         dataDownload = json.loads(json.dumps(msg))
         self.balance = dataDownload['data']
-
 
     def procTradeStatusExample(self, msg):
         dataDownload = json.loads(json.dumps(msg))

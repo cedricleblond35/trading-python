@@ -1,6 +1,4 @@
 from Indicators.Price import Price
-from ConnectionDB import ConnectionDB
-
 
 class Pivot(Price):
     '''
@@ -63,7 +61,6 @@ class Pivot(Price):
         return round(PP, 1), round(R1, 1), round(R2, 1), round(R3, 1), round(S1, 1), round(S2, 1), round(S3, 1)
 
     async def fibonacci(self):
-        print("calcul pivt Fibo")
         try:
             i = 0
             H = 0
@@ -110,7 +107,6 @@ class Pivot(Price):
         return round(PP, 1), round(R1, 1), round(R2, 1), round(R3, 1), round(S1, 1), round(S2, 1), round(S3, 1)
 
     async def woodie(self):
-        print("calcul pivt Woodie")
         try:
             i = 0
             H = 0
@@ -206,7 +202,7 @@ class Pivot(Price):
 
         return round(PP, 1), round(R1, 1), round(R2, 1), round(R3, 1), round(R4, 1), round(S1, 1), round(S2, 1), round(S3, 1), round(S4, 1)
 
-    async  def demark(self):
+    async def demark(self):
         '''
         The DeMark method begins with a different base and differs from the other pivot point calculation styles. Here the pivot points depend on the relation between the close and the open.
         If Close < Open, then X = High(previous day) + [2 x Low(previous day)] + Close(previous day)
