@@ -1,5 +1,6 @@
 from Indicators.Price import Price
 
+
 class Pivot(Price):
     '''
     Pivot point (PP) = (High + Low + Close) / 3
@@ -103,7 +104,7 @@ class Pivot(Price):
             print("message", exc)
             pass
 
-        print("calcul pivot Fibo  fini ")
+        # print("calcul pivot Fibo  fini ")
         return round(PP, 1), round(R1, 1), round(R2, 1), round(R3, 1), round(S1, 1), round(S2, 1), round(S3, 1)
 
     async def woodie(self):
@@ -166,15 +167,15 @@ class Pivot(Price):
         for v in self._db[self.__timeframe].find().sort("ctm", 1):
             if i > 0:
                 PP = (H + L + C) / 3
-                S1 = C - (H - L)*1.1 / 12
-                S2 = C - (H - L)*1.1 / 6
-                S3 = C - (H - L)*1.1 / 4
-                S4 = C - (H - L)*1.1 / 2
+                S1 = C - (H - L) * 1.1 / 12
+                S2 = C - (H - L) * 1.1 / 6
+                S3 = C - (H - L) * 1.1 / 4
+                S4 = C - (H - L) * 1.1 / 2
 
-                R4 = (H - L)*1.1 / 2 + C
-                R3 = (H - L)*1.1 / 4 + C
-                R2 = (H - L)*1.1 / 6 + C
-                R1 = (H - L)*1.1 / 12 + C
+                R4 = (H - L) * 1.1 / 2 + C
+                R3 = (H - L) * 1.1 / 4 + C
+                R2 = (H - L) * 1.1 / 6 + C
+                R1 = (H - L) * 1.1 / 12 + C
 
                 newvalues = {
                     "$set": {
@@ -200,7 +201,8 @@ class Pivot(Price):
                 C = v['close']
             i = i + 1
 
-        return round(PP, 1), round(R1, 1), round(R2, 1), round(R3, 1), round(R4, 1), round(S1, 1), round(S2, 1), round(S3, 1), round(S4, 1)
+        return round(PP, 1), round(R1, 1), round(R2, 1), round(R3, 1), round(R4, 1), round(S1, 1), round(S2, 1), round(
+            S3, 1), round(S4, 1)
 
     async def demark(self):
         '''
@@ -228,8 +230,8 @@ class Pivot(Price):
                 else:
                     x = H + L + 2 * C
 
-                S = round((x/2)-H, 1)
-                R = round((x/2)-L, 1)
+                S = round((x / 2) - H, 1)
+                R = round((x / 2) - L, 1)
 
                 newvalues = {
                     "$set": {

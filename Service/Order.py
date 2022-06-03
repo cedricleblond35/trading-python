@@ -9,7 +9,7 @@ import sys
 from Service.Email import Email
 
 
-class Order():
+class Order:
     def __init__(self, symbol, dbStreaming, client):
         email = Email()
         self.symbol = symbol
@@ -172,15 +172,15 @@ class Order():
               "type": 3
 
         }
-        print("detail :", detail)
+        #print("detail :", detail)
         resp = self.client.commandExecute('tradeTransaction',  {"tradeTransInfo": detail })
-        print("resp :", resp)
+        #print("resp :", resp)
 
     def movebuyLimitWait(self,trade, sl , tp, price, balance):
-        print("------------- movebuyLimitWait ************************-----------------")
+        #print("------------- movebuyLimitWait ************************-----------------")
         tp = round(tp, 1)
         sl = round(sl, 1)
-        print("trade :", trade)
+        #print("trade :", trade)
 
         nbrelot = self.NbrLot(balance, price, sl)
         detail = {
@@ -193,9 +193,9 @@ class Order():
                                                       "tp": tp,
                                                       "type": 3
                                                   }
-        print(detail)
+        #print(detail)
         resp = self.client.commandExecute('tradeTransaction', { "tradeTransInfo": detail})
-        print("resp :", resp)
+        #print("resp :", resp)
 
     def moveStopBuy(self, trade, sl):
         if sl > trade["sl"]:
@@ -213,7 +213,7 @@ class Order():
                                                      "type": 3
                                                  }
                                          })
-            print("resp :", resp)
+            #print("resp :", resp)
 
     def moveStopSell(self, trade, sl, tick):
         try:
@@ -230,7 +230,7 @@ class Order():
 
                 resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
 
-                print("resp :", resp)
+                #print("resp :", resp)
         except Exception as exc:
             print("le programe a déclenché une erreur")
             print("exception de mtype ", exc.__class__)
@@ -257,7 +257,7 @@ class Order():
                 "type": 0,
                 "volume": nbrelot
             }
-            print("detail :", detail)
+            #print("detail :", detail)
             resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
 
         except Exception as exc:
@@ -270,10 +270,9 @@ class Order():
 
 
     def moveSellLimitWait(self,trade, sl , tp, price, balance):
-        print("------------- moveSellLimit ************************-----------------")
+        #print("------------- moveSellLimit ************************-----------------")
         tp = round(tp, 1)
         sl = round(sl, 1)
-
         nbrelot = self.NbrLot(balance, price, sl)
         resp = self.client.commandExecute('tradeTransaction',
                                      {

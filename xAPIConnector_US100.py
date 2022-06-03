@@ -18,14 +18,8 @@ from Service.APIClient import APIClient
 import logging
 from Service.APIStreamClient import APIStreamClient
 from Service.Command import Command
-from Configuration.Config import Config
 from Indicators.Supertrend import Supertrend
 from Service.TransactionSide import TransactionSide
-
-import concurrent.futures
-
-# import datetime
-
 
 # Variables perso--------------------------------------------------------------------------------------------------------
 # horaire---------------
@@ -207,7 +201,7 @@ async def majDatAall(client, symbol, db):
     :param db: collection selectionné selon symbol
     :return:
     '''
-    print("**************************************** mise à jour majDatAall ****************************************")
+    #print("**************************************** mise à jour majDatAall ****************************************")
     try:
 
         # ctmRefStart = db["D"].find().sort("ctm", -1).skip(1).limit(1)
@@ -336,7 +330,7 @@ def round_down(n, decimals=0):
     return math.floor(n * multiplier) / multiplier
 
 
-def zoneSoutien2(close, zone):
+def zoneSoutien(close, zone):
     arrayT = sorted(zone)
     minimumPIP = 15
     supportDown = 0
@@ -457,12 +451,10 @@ async def main():
             bougie1M01 = db["M01"].find({}, sort=[('ctm', -1)]).limit(1).skip(1)[0]
             bougie2M01 = db["M01"].find({}, sort=[('ctm', -1)]).limit(1).skip(2)[0]
             bougie3M01 = db["M01"].find({}, sort=[('ctm', -1)]).limit(1).skip(3)[0]
-            bougieM05_1 = db["M05"].find({}, sort=[('ctm', -1)]).limit(1).skip(1)[0]
-            if c.getTick() is not None:
 
-                print(c.getTick())
+            if c.getTick() is not None:
                 tick = c.getTick()["ask"]
-                supportDown, supportHight = zoneSoutien2(tick, zone)
+                supportDown, supportHight = zoneSoutien(tick, zone)
                 if len(tradeOpen['returnData']) == 0:
                     if bougie1M01["EMA120"] < bougie1M01["EMA70"] < bougie1M01["EMA26"] \
                             and bougie1M01["EMA70"] > bougie2M01["EMA70"] \
@@ -485,10 +477,8 @@ async def main():
                             and superM01_3006T1 > superM013012T1:
                         support = supportHight + 15
                         objectif = supportDown + 5
-
                         # o.sellNow(support, objectif, round(price, 2), balance, VNL)
                         o.sellLimit(support, objectif, round(supportHight, 2), balance, VNL)
-
                 else:
                     for trade in tradeOpenDic['returnData']:
                         #print("ordre :", trade)
@@ -496,7 +486,7 @@ async def main():
                         # print("c.getProfit(): ", c.getProfit())
                         #############" ordre en attente ##################"
                         if TransactionSide.BUY_LIMIT == trade['cmd']:
-                            print("c'est ordre achat en attente")
+                            #print("c'est ordre achat en attente")
                             if bougie1M01["EMA120"] > supportDown:
                                 sl = bougie1M01["EMA120"]
                             else:
@@ -504,7 +494,7 @@ async def main():
                             o.moveStopBuy(trade, sl)
 
                         elif TransactionSide.SELL_LIMIT == trade['cmd']:
-                            print("ordre vente en attente")
+                            #print("ordre vente en attente")
                             sl = round(float(superM01_3006T1), 2)
                             o.moveStopSell(trade, sl, tick)
 
