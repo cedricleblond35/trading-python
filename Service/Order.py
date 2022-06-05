@@ -150,10 +150,10 @@ class Order:
         # print("|||||||||||||||||||| resp :", resp)
         respString = json.dumps(resp) + "forex robot Action"
         detailString = json.dumps(detail)
-        #self.sendMail(respString, detailString)
+        self.sendMail(respString, detailString)
 
     def movebuyLimit(self,trade, sl , tp, price, balance):
-        print("------------- movebuyLimit -----------------")
+        # print("------------- movebuyLimit -----------------")
         tp = round(tp, 1)
         sl = round(sl, 1)
 
@@ -229,6 +229,9 @@ class Order:
                 }
 
                 resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
+                respString = json.dumps(resp) + "forex robot Action"
+                detailString = json.dumps(detail)
+                self.sendMail(respString, detailString)
 
                 #print("resp :", resp)
         except Exception as exc:
