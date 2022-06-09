@@ -202,7 +202,7 @@ async def majDatAall(client, symbol, db):
     :param db: collection selectionné selon symbol
     :return:
     '''
-    #print("**************************************** mise à jour majDatAall ****************************************")
+    print("**************************************** mise à jour majDatAall ****************************************")
     try:
 
         # ctmRefStart = db["D"].find().sort("ctm", -1).skip(1).limit(1)
@@ -412,6 +412,7 @@ async def main():
         await ao01.calculAllCandles()
 
         o = Order(SYMBOL, dbStreaming, client)
+        print("mise à jour du start fini ")
         while True:
             ###################################################################################################
             balance = c.getBalance()
