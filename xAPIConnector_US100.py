@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 # python3 -m pip install pymongo==3.5.1
-
 import json
 import time
 import os
@@ -412,7 +411,7 @@ async def main():
         await ao01.calculAllCandles()
 
         o = Order(SYMBOL, dbStreaming, client)
-        print("mise à jour du start fini ")
+        logger.info("mise à jour du start fini ")
         while True:
             ###################################################################################################
             balance = c.getBalance()
@@ -483,12 +482,12 @@ async def main():
                         o.sellLimit(support, objectif, round(supportHight, 2), balance, VNL)
                 else:
                     for trade in tradeOpenDic['returnData']:
-                        # print("ordre en cours :", trade)
-                        # print("c.getTrade() :", c.getTrade())
-                        # print("c.getProfit(): ", c.getProfit())
+                        # logger.info("ordre en cours :", trade)
+                        # logger.info("c.getTrade() :", c.getTrade())
+                        # logger.info("c.getProfit(): ", c.getProfit())
                         #############" ordre en attente ##################"
                         if TransactionSide.BUY_LIMIT == trade['cmd']:
-                            #print("c'est ordre achat en attente")
+                            #logger.info("c'est ordre achat en attente")
                             if bougie1M01["EMA120"] > supportDown:
                                 sl = bougie1M01["EMA120"]
                             else:
@@ -496,7 +495,7 @@ async def main():
                             o.moveStopBuy(trade, sl, tick)
 
                         elif TransactionSide.SELL_LIMIT == trade['cmd']:
-                            #print("ordre vente en attente")
+                            #logger.info("ordre vente en attente")
                             sl = round(float(superM01_3006T1), 2)
                             o.moveStopSell(trade, sl, tick)
 
@@ -522,18 +521,18 @@ async def main():
             time.sleep(5)
 
     except Exception as exc:
-        print("le programe a déclenché une erreur")
-        print("exception de mtype ", exc.__class__)
-        print("message", exc)
+        logger.info("le programe a déclenché une erreur")
+        logger.info("exception de mtype ", exc.__class__)
+        logger.info("message", exc)
         exc_type, exc_obj, exc_tb = sys.exc_info()
         fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-        print(exc_type, fname, exc_tb.tb_lineno)
+        logger.info(exc_type, fname, exc_tb.tb_lineno)
 
         client.disconnect()
         exit(0)
 
     except OSError as err:
-        print("OS error: {0}".format(err))
+        logger.info("OS error: {0}".format(err))
         client.disconnect()
         exit(0)
 
