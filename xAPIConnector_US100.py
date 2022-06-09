@@ -483,7 +483,7 @@ async def main():
                         o.sellLimit(support, objectif, round(supportHight, 2), balance, VNL)
                 else:
                     for trade in tradeOpenDic['returnData']:
-                        #print("ordre :", trade)
+                        print("ordre :", trade)
                         # print("c.getTrade() :", c.getTrade())
                         # print("c.getProfit(): ", c.getProfit())
                         #############" ordre en attente ##################"
@@ -508,7 +508,7 @@ async def main():
                                     + abs(round(bougie1M01["high"] - bougie2M01["low"], 2)) \
                                     + abs(round(bougie3M01["high"] - bougie3M01["low"], 2))
                             sl = round(float(superM01_3006T1) - ecart / 4, 2)
-                            o.moveStopBuy(trade, sl)
+                            o.moveStopBuy(trade, sl, tick)
                         elif TransactionSide.SELL == trade['cmd']:
                             # ordre de vente en cours
                             ecart = abs(round(bougie1M01["high"] - bougie1M01["low"], 2)) \

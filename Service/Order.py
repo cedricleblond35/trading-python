@@ -127,93 +127,132 @@ class Order:
         #self.sendMail(respString, detailString)
 
     def buyLimit(self,  sl, tp, price, balance, vnl):
-        tp = round(tp, 1)
-        sl = round(sl, 1)
+        try:
+            tp = round(tp, 1)
+            sl = round(sl, 1)
 
-        h = self.client.commandExecute('getServerTime')
-        timeExpiration = h['returnData']['time'] + 3600000
+            h = self.client.commandExecute('getServerTime')
+            timeExpiration = h['returnData']['time'] + 3600000
 
-        nbrelot = self.NbrLot(balance, price, sl, vnl)
-        detail = {
-            "cmd": 2,
-            "customComment": "Achat limit",
-            "expiration": timeExpiration,
-            "offset": 0,
-            "price": price,
-            "sl": sl,
-            "symbol": self.symbol,
-            "tp": tp,
-            "type": 0,
-            "volume": nbrelot
-        }
-        resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
-        # print("|||||||||||||||||||| resp :", resp)
-        respString = json.dumps(resp) + "forex robot Action"
-        detailString = json.dumps(detail)
-        self.sendMail(respString, detailString)
+            nbrelot = self.NbrLot(balance, price, sl, vnl)
+            detail = {
+                "cmd": 2,
+                "customComment": "Achat limit",
+                "expiration": timeExpiration,
+                "offset": 0,
+                "price": price,
+                "sl": sl,
+                "symbol": self.symbol,
+                "tp": tp,
+                "type": 0,
+                "volume": nbrelot
+            }
+            resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
+            # print("|||||||||||||||||||| resp :", resp)
+            respString = json.dumps(resp) + "forex robot Action"
+            detailString = json.dumps(detail)
+            self.sendMail(respString, detailString)
+
+        except Exception as exc:
+            print("le programe a déclenché une erreur")
+            print("exception de mtype ", exc.__class__)
+            print("message", exc)
+            self.sendMail("Erreur ordre", exc)
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            print(exc_type, fname, exc_tb.tb_lineno)
+
 
     def movebuyLimit(self,trade, sl , tp, price, balance):
-        # print("------------- movebuyLimit -----------------")
-        tp = round(tp, 1)
-        sl = round(sl, 1)
+        try:
 
-        h = self.client.commandExecute('getServerTime')
-        timeExpiration = h['returnData']['time'] + 3600000
+            # print("------------- movebuyLimit -----------------")
+            tp = round(tp, 1)
+            sl = round(sl, 1)
 
-        nbrelot = self.NbrLot(balance, price, sl)
-        detail = {
-              "cmd": 2,
-              "order": trade['order'],
-              "sl": sl,
-              "price": price,  # TICK["bid"],
-              "symbol": self.symbol,
-              "volume": nbrelot,
-              "tp": tp,
-              "type": 3
+            h = self.client.commandExecute('getServerTime')
+            timeExpiration = h['returnData']['time'] + 3600000
 
-        }
-        #print("detail :", detail)
-        resp = self.client.commandExecute('tradeTransaction',  {"tradeTransInfo": detail })
-        #print("resp :", resp)
+            nbrelot = self.NbrLot(balance, price, sl)
+            detail = {
+                  "cmd": 2,
+                  "order": trade['order'],
+                  "sl": sl,
+                  "price": price,  # TICK["bid"],
+                  "symbol": self.symbol,
+                  "volume": nbrelot,
+                  "tp": tp,
+                  "type": 3
+
+            }
+            #print("detail :", detail)
+            resp = self.client.commandExecute('tradeTransaction',  {"tradeTransInfo": detail })
+            #print("resp :", resp)
+        except Exception as exc:
+            print("le programe a déclenché une erreur")
+            print("exception de mtype ", exc.__class__)
+            print("message", exc)
+            self.sendMail("Erreur ordre", exc)
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            print(exc_type, fname, exc_tb.tb_lineno)
 
     def movebuyLimitWait(self,trade, sl , tp, price, balance):
-        #print("------------- movebuyLimitWait ************************-----------------")
-        tp = round(tp, 1)
-        sl = round(sl, 1)
-        #print("trade :", trade)
+        try:
+            #print("------------- movebuyLimitWait ************************-----------------")
+            tp = round(tp, 1)
+            sl = round(sl, 1)
+            #print("trade :", trade)
 
-        nbrelot = self.NbrLot(balance, price, sl)
-        detail = {
-                                                      "cmd": 2,
-                                                      "order": trade['order'],
-                                                      "sl": sl,
-                                                      "price": price,  # TICK["bid"],
-                                                      "symbol": self.symbol,
-                                                      "volume": nbrelot,
-                                                      "tp": tp,
-                                                      "type": 3
-                                                  }
-        #print(detail)
-        resp = self.client.commandExecute('tradeTransaction', { "tradeTransInfo": detail})
-        #print("resp :", resp)
-
-    def moveStopBuy(self, trade, sl):
-        if sl > trade["sl"]:
-            tick = self.dbStreaming["Tick"].find_one({"symbol": self.symbol})
-            resp = self.client.commandExecute('tradeTransaction',
-                                         {
-                                             "tradeTransInfo":
-                                                 {
-                                                     "order": trade['order'],
-                                                     "sl": sl,
-                                                     "price":  tick["ask"],
-                                                     "symbol": trade["symbol"],
-                                                     "volume": trade["volume"],
-                                                     "tp": trade["tp"],
-                                                     "type": 3
-                                                 }
-                                         })
+            nbrelot = self.NbrLot(balance, price, sl)
+            detail = {
+                                                          "cmd": 2,
+                                                          "order": trade['order'],
+                                                          "sl": sl,
+                                                          "price": price,  # TICK["bid"],
+                                                          "symbol": self.symbol,
+                                                          "volume": nbrelot,
+                                                          "tp": tp,
+                                                          "type": 3
+                                                      }
+            #print(detail)
+            resp = self.client.commandExecute('tradeTransaction', { "tradeTransInfo": detail})
             #print("resp :", resp)
+        except Exception as exc:
+            print("le programe a déclenché une erreur")
+            print("exception de mtype ", exc.__class__)
+            print("message", exc)
+            self.sendMail("Erreur ordre", exc)
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            print(exc_type, fname, exc_tb.tb_lineno)
+
+    def moveStopBuy(self, trade, sl, tick):
+        try:
+            if sl > trade["sl"]:
+                detail = {
+                     "order": trade['order'],
+                     "sl": sl,
+                     "price":  tick,
+                     "symbol": trade["symbol"],
+                     "volume": trade["volume"],
+                     "tp": trade["tp"],
+                     "type": 2
+                 }
+                resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
+
+                respString = json.dumps(resp) + "forex robot Action Move stop Achat"
+                detailString = json.dumps(detail)
+                self.sendMail(respString, detailString)
+                print("resp :", resp)
+        except Exception as exc:
+            print("le programe a déclenché une erreur")
+            print("exception de mtype ", exc.__class__)
+            print("message", exc)
+            self.sendMail("Erreur ordre", exc)
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            print(exc_type, fname, exc_tb.tb_lineno)
 
     def moveStopSell(self, trade, sl, tick):
         try:
@@ -222,22 +261,22 @@ class Order:
                      "order": trade['order'],
                      "sl": sl,
                      "price": tick,  # TICK["bid"],
-                     "symbol": self.symbol,
+                     "symbol": trade["symbol"],
                      "volume": trade["volume"],
                      "tp": trade["tp"],
                      "type": 3
                 }
-
                 resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
-                respString = json.dumps(resp) + "forex robot Action"
+
+                respString = json.dumps(resp) + "forex robot Action  Move stop Vente"
                 detailString = json.dumps(detail)
                 self.sendMail(respString, detailString)
-
-                #print("resp :", resp)
+                print("resp :", resp)
         except Exception as exc:
             print("le programe a déclenché une erreur")
             print("exception de mtype ", exc.__class__)
             print("message", exc)
+            self.sendMail("Erreur ordre", exc)
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
             print(exc_type, fname, exc_tb.tb_lineno)
@@ -267,6 +306,7 @@ class Order:
             print("le programe a déclenché une erreur")
             print("exception de mtype ", exc.__class__)
             print("message", exc)
+            self.sendMail("Erreur ordre", exc)
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
             print(exc_type, fname, exc_tb.tb_lineno)
