@@ -241,7 +241,7 @@ class Order:
                  }
                 resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
 
-                print("resp :", resp)
+                print("resp moveStopBuy:", resp)
         except Exception as exc:
             print("le programe a déclenché une erreur")
             print("exception de mtype ", exc.__class__)
@@ -265,7 +265,7 @@ class Order:
                 }
                 resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
 
-                print("resp :", resp)
+                print("resp moveStopSell:", resp)
         except Exception as exc:
             print("le programe a déclenché une erreur")
             print("exception de mtype ", exc.__class__)
@@ -295,7 +295,7 @@ class Order:
             }
             #print("detail :", detail)
             resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
-
+            print("sellLimit :",resp)
         except Exception as exc:
             print("le programe a déclenché une erreur")
             print("exception de mtype ", exc.__class__)
