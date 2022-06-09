@@ -483,7 +483,7 @@ async def main():
                         o.sellLimit(support, objectif, round(supportHight, 2), balance, VNL)
                 else:
                     for trade in tradeOpenDic['returnData']:
-                        print("ordre :", trade)
+                        # print("ordre en cours :", trade)
                         # print("c.getTrade() :", c.getTrade())
                         # print("c.getProfit(): ", c.getProfit())
                         #############" ordre en attente ##################"
