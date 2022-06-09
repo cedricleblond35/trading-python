@@ -241,9 +241,6 @@ class Order:
                  }
                 resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
 
-                respString = json.dumps(resp) + "forex robot Action Move stop Achat"
-                detailString = json.dumps(detail)
-                self.sendMail(respString, detailString)
                 print("resp :", resp)
         except Exception as exc:
             print("le programe a déclenché une erreur")
@@ -268,9 +265,6 @@ class Order:
                 }
                 resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
 
-                respString = json.dumps(resp) + "forex robot Action  Move stop Vente"
-                detailString = json.dumps(detail)
-                self.sendMail(respString, detailString)
                 print("resp :", resp)
         except Exception as exc:
             print("le programe a déclenché une erreur")
