@@ -31,6 +31,7 @@ ObjectfDay = 3.00  # %
 # communication---------
 SignalMail = False
 
+
 BALANCE = 0
 TICK = False
 PROFIT = False
