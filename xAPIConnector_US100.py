@@ -493,7 +493,7 @@ async def main():
                                 sl = bougie1M01["EMA120"]
                             else:
                                 sl = supportDown
-                            o.moveStopBuy(trade, sl)
+                            o.moveStopBuy(trade, sl, tick)
 
                         elif TransactionSide.SELL_LIMIT == trade['cmd']:
                             #print("ordre vente en attente")
