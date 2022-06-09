@@ -516,6 +516,7 @@ async def main():
                                     + abs(round(bougie1M01["high"] - bougie2M01["low"], 2)) \
                                     + abs(round(bougie3M01["high"] - bougie3M01["low"], 2))
                             sl = round(float(superM01_3006T1) + ecart/4, 2)
+                            sl = round(bougie1M01["EMA120"] + ecart/4, 2)
                             o.moveStopSell(trade, sl, tick)
 
             time.sleep(5)
