@@ -522,7 +522,7 @@ async def main():
                         #############" ordre execute ##################"
                         elif TransactionSide.BUY == trade['cmd']:
                             if trade['customComment'] == "Achat direct":
-                                sl = round(float(superM01_3006T1) - ecart / 4, 2)
+                                sl = superM01_3006T1
                                 o.moveStopBuy(trade, sl, tick)
                             else:
                                 sl = round(bougie1M01["EMA120"] - ecart/4, 2)
@@ -530,7 +530,7 @@ async def main():
 
                         elif TransactionSide.SELL == trade['cmd']:
                             if trade['customComment'] == "Achat direct":
-                                sl = round(superM01_3006T1 + ecart/4, 2)
+                                sl = superM01_3006T1
                                 o.moveStopSell(trade, sl, tick)
                             else:
                                 sl = round(bougie1M01["EMA120"] + ecart/4, 2)
