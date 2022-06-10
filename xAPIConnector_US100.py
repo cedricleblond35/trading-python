@@ -456,7 +456,12 @@ async def main():
             if c.getTick() is not None:
                 tick = c.getTick()["ask"]
                 supportDown, supportHight = zoneSoutien(tick, zone)
+                ecart = abs(round(bougie1M01["high"] - bougie1M01["low"], 2)) \
+                        + abs(round(bougie0M01["high"] - bougie1M01["low"], 2)) \
+                        + abs(round(bougie1M01["high"] - bougie2M01["low"], 2)) \
+                        + abs(round(bougie3M01["high"] - bougie3M01["low"], 2))
                 if len(tradeOpen['returnData']) == 0:
+                    ######################## achat ###################################
                     if bougie1M01["EMA120"] < bougie1M01["EMA70"] < bougie1M01["EMA26"] \
                             and bougie1M01["EMA70"] > bougie2M01["EMA70"] \
                             and bougie1M01["EMA120"] > bougie2M01["EMA120"] \
@@ -469,6 +474,16 @@ async def main():
                         # o.buyNow(support, objectif, round(price, 2), balance, VNL)
                         o.buyLimit(support, objectif, round(supportDown, 2), balance, VNL)
 
+                    if bougie0M01["AW"] > 30 and tick > superM01_3006T1 and tick > bougie1M01["EMA70"]:
+                        sl = superM01_3006T1
+                        tp = 0
+                        o.buyNow(sl, tp, tick, balance, VNL)
+
+                    if bougie0M01["AW"] < 30 and tick < superM01_3006T1 and tick < bougie1M01["EMA70"]:
+                        sl = superM01_3006T1
+                        tp = 0
+                        o.sellNow(sl, tp, tick, balance, VNL)
+                    ######################## vente ###################################
                     if bougie1M01["EMA120"] > bougie1M01["EMA70"] > bougie1M01["EMA26"] \
                             and bougie1M01["EMA70"] < bougie2M01["EMA70"] \
                             and bougie1M01["EMA120"] < bougie2M01["EMA120"] \
@@ -480,6 +495,11 @@ async def main():
                         objectif = supportDown + 5
                         # o.sellNow(support, objectif, round(price, 2), balance, VNL)
                         o.sellLimit(support, objectif, round(supportHight, 2), balance, VNL)
+
+                    if bougie0M01["AW"] < 30 and tick < superM01_3006T1 and tick < bougie1M01["EMA70"]:
+                        sl = superM01_3006T1
+                        tp = 0
+                        o.sellNow(sl, tp, tick, balance, VNL)
                 else:
                     for trade in tradeOpenDic['returnData']:
                         # logger.info("ordre en cours :", trade)
@@ -501,22 +521,20 @@ async def main():
 
                         #############" ordre execute ##################"
                         elif TransactionSide.BUY == trade['cmd']:
-                            # ordre d achat en cours
-                            ecart = abs(round(bougie1M01["high"] - bougie1M01["low"], 2)) \
-                                    + abs(round(bougie0M01["high"] - bougie1M01["low"], 2)) \
-                                    + abs(round(bougie1M01["high"] - bougie2M01["low"], 2)) \
-                                    + abs(round(bougie3M01["high"] - bougie3M01["low"], 2))
-                            sl = round(float(superM01_3006T1) - ecart / 4, 2)
-                            o.moveStopBuy(trade, sl, tick)
+                            if trade['customComment'] == "Achat direct":
+                                sl = round(float(superM01_3006T1) - ecart / 4, 2)
+                                o.moveStopBuy(trade, sl, tick)
+                            else:
+                                sl = round(bougie1M01["EMA120"] - ecart/4, 2)
+                                o.moveStopBuy(trade, sl, tick)
+
                         elif TransactionSide.SELL == trade['cmd']:
-                            # ordre de vente en cours
-                            ecart = abs(round(bougie1M01["high"] - bougie1M01["low"], 2)) \
-                                    + abs(round(bougie0M01["high"] - bougie1M01["low"], 2)) \
-                                    + abs(round(bougie1M01["high"] - bougie2M01["low"], 2)) \
-                                    + abs(round(bougie3M01["high"] - bougie3M01["low"], 2))
-                            sl = round(float(superM01_3006T1) + ecart/4, 2)
-                            sl = round(bougie1M01["EMA120"] + ecart/4, 2)
-                            o.moveStopSell(trade, sl, tick)
+                            if trade['customComment'] == "Achat direct":
+                                sl = round(superM01_3006T1 + ecart/4, 2)
+                                o.moveStopSell(trade, sl, tick)
+                            else:
+                                sl = round(bougie1M01["EMA120"] + ecart/4, 2)
+                                o.moveStopSell(trade, sl, tick)
 
             time.sleep(5)
 
