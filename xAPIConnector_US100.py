@@ -401,10 +401,10 @@ async def main():
 
         moyMobil_01_120 = MM(SYMBOL, "M01", 0)
         moyMobil_05_120 = MM(SYMBOL, "M05", 0)
-        moyMobil_01_120.EMA(120)
-        moyMobil_01_120.EMA(70)
-        moyMobil_01_120.EMA(26)
-        moyMobil_05_120.EMA(120)
+        await moyMobil_01_120.EMA(120)
+        await moyMobil_01_120.EMA(70)
+        await moyMobil_01_120.EMA(26)
+        await moyMobil_05_120.EMA(120)
         ao05 = Awesome(SYMBOL, "M05")
         await ao05.calculAllCandles()
         ao01 = Awesome(SYMBOL, "M01")
@@ -424,11 +424,10 @@ async def main():
             ####################################################################################################
             startTime = await majData(client, startTime, SYMBOL, db)
             ####################################################################################################
-            moyMobil_01_120.EMA(120)
-            moyMobil_01_120.EMA(70)
-            moyMobil_01_120.EMA(26)
-            moyMobil_05_120.EMA(120)
-            moyMobil_05_120.EMA(120)
+            await moyMobil_01_120.EMA(120)
+            await moyMobil_01_120.EMA(70)
+            await moyMobil_01_120.EMA(26)
+            await moyMobil_05_120.EMA(120)
             # AO ###################################################################################
             await ao05.calculLastCandle(10)
             await ao01.calculLastCandle(10)

@@ -56,7 +56,7 @@ class MM(Price):
 
         # return sma
 
-    def EMA(self, duration):
+    async def EMA(self, duration):
         """
         EMA = (CLOSE (i) * P) + (EMA (i - 1) * (1 - P))
         (prix de clôture – EMA du jour précédent) × constante pondérant la moyenne mobile exponentielle en décimale + EMA du jour précédent
