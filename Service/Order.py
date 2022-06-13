@@ -101,6 +101,7 @@ class Order:
             "type": 0,
             "volume": nbrelot
         }
+        logger.info("sellnow :", detail)
         resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
 
     def buyNow(self, sl, tp, price, balance, vnl):
@@ -121,6 +122,7 @@ class Order:
             "type": 0,
             "volume": nbrelot
         }
+        logger.info("buy now :", detail)
         resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
         # logger.info("|||||||||||||||||||| resp :", resp)
         respString = json.dumps(resp) + "forex robot Action"
@@ -148,6 +150,7 @@ class Order:
                 "type": 0,
                 "volume": nbrelot
             }
+            logger.info("buy limit :", detail)
             resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
             # logger.info("|||||||||||||||||||| resp :", resp)
             respString = json.dumps(resp) + "forex robot Action"
@@ -294,6 +297,7 @@ class Order:
                 "type": 0,
                 "volume": nbrelot
             }
+            logger.info("sell limit :", detail)
             #logger.info("detail :", detail)
             resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
             logger.info("sellLimit :",resp)
