@@ -454,7 +454,6 @@ async def main():
             bougie3M01 = db["M01"].find({}, sort=[('ctm', -1)]).limit(1).skip(3)[0]
 
             if c.getTick() is not None:
-                print(bougie0M01)
                 tick = c.getTick()["ask"]
                 supportDown, supportHight = zoneSoutien(tick, zone)
                 ecart = abs(round(bougie1M01["high"] - bougie1M01["low"], 2)) \
