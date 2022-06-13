@@ -479,10 +479,6 @@ async def main():
                         tp = 0
                         o.buyNow(sl, tp, tick, balance, VNL)
 
-                    elif bougie0M01["AW"] < 30 and tick < superM01_3006T1 and tick < bougie1M01["EMA70"]:
-                        sl = superM01_3006T1
-                        tp = 0
-                        o.sellNow(sl, tp, tick, balance, VNL)
                     ######################## vente ###################################
                     elif bougie1M01["EMA120"] > bougie1M01["EMA70"] > bougie1M01["EMA26"] \
                             and bougie1M01["EMA70"] < bougie2M01["EMA70"] \
@@ -502,7 +498,7 @@ async def main():
                         o.sellNow(sl, tp, tick, balance, VNL)
                 else:
                     for trade in tradeOpenDic['returnData']:
-                        # logger.info("ordre en cours :", trade)
+                        logger.info("ordre en cours :", trade)
                         # logger.info("c.getTrade() :", c.getTrade())
                         # logger.info("c.getProfit(): ", c.getProfit())
                         #############" ordre en attente ##################"
