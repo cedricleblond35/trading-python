@@ -122,7 +122,7 @@ class MM(Price):
                         self._db[self.__timeframe].update_one(myquery, newvalues)
                         EMAPrecedent = mm
         except Exception as exc:
-            print("le programe a déclenché une erreur")
+            print("le programe a déclenché une erreur SMA.py")
             print("exception de mtype ", exc.__class__)
             print("message", exc)
             exc_type, exc_obj, exc_tb = sys.exc_info()

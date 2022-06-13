@@ -536,7 +536,7 @@ async def main():
             time.sleep(5)
 
     except Exception as exc:
-        logger.info("le programe a déclenché une erreur")
+        logger.info("le programe a déclenché une erreur xApiconnector_US100")
         logger.info("exception de mtype ", exc.__class__)
         logger.info("message", exc)
         exc_type, exc_obj, exc_tb = sys.exc_info()
