@@ -86,7 +86,7 @@ class MM(Price):
                     # Des ema existant, on configure le EMAPrecedent et le start correctement
                     # la 1ere ligne contient le sma ou ema precedent pour le calcul
                     start = len(self._listData) - len(self._listDataLast)
-                    idLastEma = start - 1
+                    idLastEma = start
                     EMAPrecedent = self._listData[idLastEma][name]
 
                 # print("calcul en cours ...  ")
