@@ -91,7 +91,7 @@ class Order:
         nbrelot = self.NbrLot(balance, price, sl, vnl)
         detail = {
             "cmd": 1,
-            "customComment": "vente direct",
+            "customComment": "Vente direct",
             "expiration": timeExpiration,
             "offset": 0,
             "price": price,
@@ -287,7 +287,7 @@ class Order:
             nbrelot = self.NbrLot(balance, price, sl, vnl)
             detail = {
                 "cmd": 3,
-                "customComment": "vente limit",
+                "customComment": "Vente limit",
                 "expiration": timeExpiration,
                 "offset": 0,
                 "price": price,

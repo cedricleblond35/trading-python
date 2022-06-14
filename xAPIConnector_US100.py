@@ -528,7 +528,7 @@ async def main():
                                 o.moveStopBuy(trade, sl, tick)
 
                         elif TransactionSide.SELL == trade['cmd']:
-                            if trade['customComment'] == "Achat direct":
+                            if trade['customComment'] == "Vente direct":
                                 sl = superM01_3006T1
                                 o.moveStopSell(trade, sl, tick)
                             else:
