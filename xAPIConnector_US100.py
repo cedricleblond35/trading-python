@@ -500,7 +500,7 @@ async def main():
                         o.sellNow(sl, tp, tick, balance, VNL)
                 else:
                     for trade in tradeOpenDic['returnData']:
-                        logger.info("ordre en cours :", trade)
+                        print("ordre en cours :", trade)
                         # logger.info("c.getTrade() :", c.getTrade())
                         # logger.info("c.getProfit(): ", c.getProfit())
                         #############" ordre en attente ##################"
