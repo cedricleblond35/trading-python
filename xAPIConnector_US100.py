@@ -184,7 +184,7 @@ async def majData(client, startTime, symbol, db):
     return newTime
 
 
-def majDatAall(client, symbol, db):
+async def majDatAall(client, symbol, db):
     '''
     Mise à jour de la base de données
     Limitations: there are limitations in charts data availability. Detailed ranges for charts data, what can be accessed with specific period, are as follows:
@@ -214,7 +214,7 @@ def majDatAall(client, symbol, db):
         dataDAY = json.dumps(json_data_Day)
         dataDAYDownload = json.loads(dataDAY)
         listDataDBDAY = db["D"].find_one({}, sort=[('ctm', -1)])
-        insertData(db["D"], dataDAYDownload, listDataDBDAY)
+        await insertData(db["D"], dataDAYDownload, listDataDBDAY)
 
         # on recupere les 4 dernieres heures pour eviter de tt scanner afin que le traitement soit plus rapide
         ctmRefStart = db["H4"].find().sort("ctm", -1).skip(1).limit(1)
@@ -382,7 +382,7 @@ async def main():
         db = connection[SYMBOL]
         dbStreaming = connection["STREAMING"]
 
-        startTime = majDatAall(client, SYMBOL, db)
+        startTime = await majDatAall(client, SYMBOL, db)
 
         # # pivot##################################################################################################
         # print('mise à jour du pivot -------------------------')
@@ -390,22 +390,22 @@ async def main():
         # PPF, R1F, R2F, R3F, S1F, S2F, S3F = await P.fibonacci()  # valeurs ok
         # R1D, S1D = await P.demark()  # valeurs ok
 
-        PPW, R1W, R2W, S1W, S2W = P.woodie()  # valeurs ok
-        PPC, R1C, R2C, R3C, R4C, S1C, S2C, S3C, S4C = P.camarilla()  # valeurs ok
+        PPW, R1W, R2W, S1W, S2W = await P.woodie()  # valeurs ok
+        PPC, R1C, R2C, R3C, R4C, S1C, S2C, S3C, S4C = await P.camarilla()  # valeurs ok
 
         zone = np.array([PPC, R1C, R2C, R3C, R4C, S1C, S2C, S3C, S4C, R1W, R2W, S1W, S2W])
         zone = np.sort(zone)
 
         moyMobil_01_120 = MM(SYMBOL, "M01", 0)
         moyMobil_05_120 = MM(SYMBOL, "M05", 0)
-        moyMobil_01_120.EMA(120)
-        moyMobil_01_120.EMA(70)
-        moyMobil_01_120.EMA(26)
-        moyMobil_05_120.EMA(120)
+        await moyMobil_01_120.EMA(120)
+        await moyMobil_01_120.EMA(70)
+        await moyMobil_01_120.EMA(26)
+        await moyMobil_05_120.EMA(120)
         ao05 = Awesome(SYMBOL, "M05")
-        ao05.calculAllCandles()
+        await ao05.calculAllCandles()
         ao01 = Awesome(SYMBOL, "M01")
-        ao01.calculAllCandles()
+        await ao01.calculAllCandles()
 
         o = Order(SYMBOL, dbStreaming, client)
         logger.info("mise à jour du start fini ")
@@ -419,7 +419,7 @@ async def main():
                 balance = balance["marginFree"]
 
             ####################################################################################################
-            startTime = majData(client, startTime, SYMBOL, db)
+            startTime = await majData(client, startTime, SYMBOL, db)
             ####################################################################################################
             await moyMobil_01_120.EMA(120)
             await moyMobil_01_120.EMA(70)
