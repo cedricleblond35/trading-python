@@ -461,37 +461,33 @@ async def main():
                         + abs(round(bougie1M01["high"] - bougie2M01["low"], 2)) \
                         + abs(round(bougie3M01["high"] - bougie3M01["low"], 2))
                 if len(tradeOpen['returnData']) == 0:
-                    ######################## achat ###################################
-                    if bougie1M01["EMA120"] < bougie1M01["EMA70"] < bougie1M01["EMA26"] \
-                            and bougie1M01["EMA70"] > bougie2M01["EMA70"] \
-                            and bougie1M01["EMA120"] > bougie2M01["EMA120"] \
-                            and bougie1M01["EMA26"] > supportDown \
-                            and bougie1M01["EMA120"] < supportDown \
-                            and bougie1M01["EMA26"] > superM01_3008T1 \
-                            and superM01_3008T1 > superM013012T1:
-                        support = supportDown - 15
-                        objectif = supportHight - 5
-                        # o.buyNow(support, objectif, round(price, 2), balance, VNL)
-                        o.buyLimit(support, objectif, round(supportDown, 2), balance, VNL)
+                    if bougie1M01.get("EMA26") and bougie1M01.get("EMA70") and bougie1M01.get("EMA120"):
+                        ######################## achat ###################################
+                        if bougie1M01["EMA26"] > bougie1M01["EMA70"] > bougie1M01["EMA120"] > bougie2M01["EMA120"] \
+                                and bougie1M01["EMA70"] > bougie2M01["EMA70"] \
+                                and bougie1M01["EMA26"] > supportDown > bougie1M01["EMA120"] \
+                                and bougie1M01["EMA26"] > superM01_3008T1 > superM013012T1:
+                            support = supportDown - 15
+                            objectif = supportHight - 5
+                            # o.buyNow(support, objectif, round(price, 2), balance, VNL)
+                            o.buyLimit(support, objectif, round(supportDown, 2), balance, VNL)
+                        ######################## vente ###################################
+                        elif bougie1M01["EMA120"] > bougie1M01["EMA70"] > bougie1M01["EMA26"] \
+                                and bougie1M01["EMA70"] < bougie2M01["EMA70"] \
+                                and bougie1M01["EMA120"] < bougie2M01["EMA120"] \
+                                and bougie1M01["EMA26"] < supportHight \
+                                and bougie1M01["EMA120"] > supportHight \
+                                and bougie1M01["EMA26"] < superM01_3008T1 \
+                                and superM01_3008T1 > superM013012T1:
+                            support = supportHight + 15
+                            objectif = supportDown + 5
+                            # o.sellNow(support, objectif, round(price, 2), balance, VNL)
+                            o.sellLimit(support, objectif, round(supportHight, 2), balance, VNL)
 
-                    elif bougie0M01["AW"] > 15 and tick > superM01_3008T1 and tick > bougie1M01["EMA70"]:
+                    if bougie0M01["AW"] > 15 and tick > superM01_3008T1 and tick > bougie1M01["EMA70"]:
                         sl = superM01_3008T1
                         tp = 0
                         o.buyNow(sl, tp, tick, balance, VNL)
-
-                    ######################## vente ###################################
-                    elif bougie1M01["EMA120"] > bougie1M01["EMA70"] > bougie1M01["EMA26"] \
-                            and bougie1M01["EMA70"] < bougie2M01["EMA70"] \
-                            and bougie1M01["EMA120"] < bougie2M01["EMA120"] \
-                            and bougie1M01["EMA26"] < supportHight \
-                            and bougie1M01["EMA120"] > supportHight \
-                            and bougie1M01["EMA26"] < superM01_3008T1 \
-                            and superM01_3008T1 > superM013012T1:
-                        support = supportHight + 15
-                        objectif = supportDown + 5
-                        # o.sellNow(support, objectif, round(price, 2), balance, VNL)
-                        o.sellLimit(support, objectif, round(supportHight, 2), balance, VNL)
-
                     elif bougie0M01["AW"] < -15 and tick < superM01_3008T1 and tick < bougie1M01["EMA70"]:
                         sl = superM01_3008T1
                         tp = 0
