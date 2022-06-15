@@ -9,6 +9,9 @@ import sys
 from Service.Email import Email
 import logging
 
+from Service.TransactionSide import TransactionSide
+
+
 logger = logging.getLogger("jsonSocket")
 class Order:
     def __init__(self, symbol, dbStreaming, client):
@@ -28,7 +31,7 @@ class Order:
 
             nbrelot = self.NbrLot(balance, price, sl, vnl)
             detail = {
-                "cmd": 2,
+                "cmd": TransactionSide.BUY_LIMIT,
                 "customComment": "Achat limit",
                 "expiration": timeExpiration,
                 "offset": 0,
@@ -62,7 +65,7 @@ class Order:
 
             nbrelot = self.NbrLot(balance, price, sl, vnl)
             detail = {
-                "cmd": 3,
+                "cmd": TransactionSide.SELL_LIMIT,
                 "customComment": "Vente limit",
                 "expiration": timeExpiration,
                 "offset": 0,
@@ -70,7 +73,7 @@ class Order:
                 "sl": sl,
                 "symbol": self.symbol,
                 "tp": tp,
-                "type": 0,
+                "type": TransactionSide.OPEN,
                 "volume": nbrelot
             }
             print("sell limit :", detail)
@@ -95,7 +98,7 @@ class Order:
         timeExpiration = h['returnData']['time'] + 3600000
         nbrelot = self.NbrLot(balance, price, sl, vnl)
         detail = {
-            "cmd": 1,
+            "cmd": TransactionSide.SELL,
             "customComment": "Vente direct",
             "expiration": timeExpiration,
             "offset": 0,
@@ -146,7 +149,7 @@ class Order:
                      "symbol": trade["symbol"],
                      "volume": trade["volume"],
                      "tp": trade["tp"],
-                     "type": 3
+                     "type": TransactionSide.MODIFY
                  }
                 print("moveStopBuy :", detail)
                 resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
@@ -170,7 +173,7 @@ class Order:
                      "symbol": trade["symbol"],
                      "volume": trade["volume"],
                      "tp": trade["tp"],
-                     "type": 3
+                     "type": TransactionSide.MODIFY
                 }
                 print("moveStopSell :", detail)
                 resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
@@ -187,43 +190,7 @@ class Order:
 
     ###############################################################
 
-    def achatDirect(self, tp, sl):
-        balance = self.dbStreaming["Balance"].find_one({"_id": Config.USER_ID})
-        self.email.sendMail("forex robot Action", "Prise de postion -- Achat 1")
-        # logger.info("ask :", float(TICK["ask"]), ">", superT1, " and ", bougie2['close'], "<", superT1)
-
-        tp = round(tp, 1)
-        sl = round(sl - 5.0, 1)
-        tick = self.dbStreaming["Tick"].find_one({"symbol": self.symbol})
-        price = tick["bid"]
-
-        h = self.client.commandExecute('getServerTime')
-        timeExpiration = h['returnData']['time'] + 3600000
-
-        if tp - price > 10:
-            nbrelot = self.NbrLot(balance, price, sl)
-            self.buyNow(self.client, timeExpiration, price, sl, self.symbol, tp, nbrelot)
-
-    def venteDirect(self, supportDown, supportHight, superM01T0):
-        balance = self.dbStreaming["Balance"].find_one({"_id": Config.USER_ID})
-        #self.sendMail("forex robot Action", "Prise de postion -- Vente 1")
-        tick = self.dbStreaming["Tick"].find_one({"symbol": self.symbol})
-
-        sl = round(superM01T0 + 5.0, 1)
-        tp = round(supportDown, 1)
-        price = tick["ask"]
-        h = self.client.commandExecute('getServerTime')
-        timeExpiration = h['returnData']['time'] + 3600000
-
-        if price - tp > 10:
-            nbrelot = self.NbrLot(balance, price, sl)
-            self.sellNow(self.client, timeExpiration, price, sl, self.symbol, tp, nbrelot)
-
-
-
-
-
-    def movebuyLimit(self,trade, sl , tp, price, balance):
+     def movebuyLimit(self,trade, sl , tp, price, balance):
         try:
 
             # print("------------- movebuyLimit -----------------")
@@ -286,8 +253,6 @@ class Order:
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
             logger.info(exc_type, fname, exc_tb.tb_lineno)
-
-
 
     def moveSellLimitWait(self,trade, sl , tp, price, balance):
         #logger.info("------------- moveSellLimit ************************-----------------")
