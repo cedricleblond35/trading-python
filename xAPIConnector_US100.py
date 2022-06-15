@@ -481,15 +481,15 @@ async def main():
                             objectif = supportDown + 5
                             # o.sellNow(support, objectif, round(price, 2), balance, VNL)
                             o.sellLimit(support, objectif, round(supportHight, 2), balance, VNL)
-                    if bougie1M01.get("EMA70") and bougie1M01.get("AW") :
-                        if bougie0M01["AW"] > 15 and tick > superM01_8008T0 and tick > bougie1M01["EMA70"]:
-                            sl = superM01_8008T0
-                            tp = 0
-                            o.buyNow(sl, tp, tick, balance, VNL)
-                        elif bougie0M01["AW"] < -15 and tick < superM01_8008T0 and tick < bougie1M01["EMA70"]:
-                            sl = superM01_8008T0
-                            tp = 0
-                            o.sellNow(sl, tp, tick, balance, VNL)
+                        elif bougie1M01.get("EMA70") and bougie1M01.get("AW") :
+                            if bougie0M01["AW"] > 15 and tick > superM01_8008T0 and tick > bougie1M01["EMA70"]:
+                                sl = superM01_8008T0
+                                tp = 0
+                                o.buyNow(sl, tp, tick, balance, VNL)
+                            elif bougie0M01["AW"] < -15 and tick < superM01_8008T0 and tick < bougie1M01["EMA70"]:
+                                sl = superM01_8008T0
+                                tp = 0
+                                o.sellNow(sl, tp, tick, balance, VNL)
                 else:
                     for trade in tradeOpenDic['returnData']:
                         print("---------->ordre en cours :", trade)
