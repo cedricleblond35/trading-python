@@ -184,7 +184,7 @@ async def majData(client, startTime, symbol, db):
     return newTime
 
 
-async def majDatAall(client, symbol, db):
+def majDatAall(client, symbol, db):
     '''
     Mise à jour de la base de données
     Limitations: there are limitations in charts data availability. Detailed ranges for charts data, what can be accessed with specific period, are as follows:
