@@ -419,7 +419,7 @@ async def main():
                 balance = balance["marginFree"]
 
             ####################################################################################################
-            startTime = await majData(client, startTime, SYMBOL, db)
+            startTime = majData(client, startTime, SYMBOL, db)
             ####################################################################################################
             await moyMobil_01_120.EMA(120)
             await moyMobil_01_120.EMA(70)
