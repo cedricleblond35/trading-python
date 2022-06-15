@@ -107,7 +107,7 @@ class Pivot(Price):
         # print("calcul pivot Fibo  fini ")
         return round(PP, 1), round(R1, 1), round(R2, 1), round(R3, 1), round(S1, 1), round(S2, 1), round(S3, 1)
 
-    async def woodie(self):
+    def woodie(self):
         try:
             i = 0
             H = 0
@@ -147,7 +147,7 @@ class Pivot(Price):
             pass
         return round(PP, 1), round(R1, 1), round(R2, 1), round(S1, 1), round(S2, 1)
 
-    async def camarilla(self):
+    def camarilla(self):
         # Resistance 4 or R4 = (H - L)X1.1 / 2 + C
         # Resistance 3 or R3 = (H - L)X1.1 / 4 + C
         # Resistance 2 or R2 = (H - L)X1.1 / 6 + C
