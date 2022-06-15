@@ -434,8 +434,8 @@ async def main():
             # supertrend ###################################################################################
             spM013012 = Supertrend(SYMBOL, "M01", 30, 12)
             superM013012T0, superM013012T1, superM013012T2 = spM013012.getST()
-            spM013006 = Supertrend(SYMBOL, "M01", 30, 6)
-            superM01_3006T0, superM01_3006T1, superM01_3006T2 = spM013006.getST()
+            spM013008 = Supertrend(SYMBOL, "M01", 30, 8)
+            superM01_3008T0, superM01_3008T1, superM01_3008T2 = spM013008.getST()
 
             ###############################################################################################################
             # order
@@ -456,7 +456,7 @@ async def main():
                 tick = c.getTick()["ask"]
                 print(bougie0M01)
                 print(bougie1M01)
-                print(superM01_3006T1)
+                print(superM01_3008T1)
                 print("--------------------------------------------------")
                 supportDown, supportHight = zoneSoutien(tick, zone)
                 ecart = abs(round(bougie1M01["high"] - bougie1M01["low"], 2)) \
@@ -470,15 +470,15 @@ async def main():
                             and bougie1M01["EMA120"] > bougie2M01["EMA120"] \
                             and bougie1M01["EMA26"] > supportDown \
                             and bougie1M01["EMA120"] < supportDown \
-                            and bougie1M01["EMA26"] > superM01_3006T1 \
-                            and superM01_3006T1 > superM013012T1:
+                            and bougie1M01["EMA26"] > superM01_3008T1 \
+                            and superM01_3008T1 > superM013012T1:
                         support = supportDown - 15
                         objectif = supportHight - 5
                         # o.buyNow(support, objectif, round(price, 2), balance, VNL)
                         o.buyLimit(support, objectif, round(supportDown, 2), balance, VNL)
 
-                    elif bougie0M01["AW"] > 15 and tick > superM01_3006T1 and tick > bougie1M01["EMA70"]:
-                        sl = superM01_3006T1
+                    elif bougie0M01["AW"] > 15 and tick > superM01_3008T1 and tick > bougie1M01["EMA70"]:
+                        sl = superM01_3008T1
                         tp = 0
                         o.buyNow(sl, tp, tick, balance, VNL)
 
@@ -488,15 +488,15 @@ async def main():
                             and bougie1M01["EMA120"] < bougie2M01["EMA120"] \
                             and bougie1M01["EMA26"] < supportHight \
                             and bougie1M01["EMA120"] > supportHight \
-                            and bougie1M01["EMA26"] < superM01_3006T1 \
-                            and superM01_3006T1 > superM013012T1:
+                            and bougie1M01["EMA26"] < superM01_3008T1 \
+                            and superM01_3008T1 > superM013012T1:
                         support = supportHight + 15
                         objectif = supportDown + 5
                         # o.sellNow(support, objectif, round(price, 2), balance, VNL)
                         o.sellLimit(support, objectif, round(supportHight, 2), balance, VNL)
 
-                    elif bougie0M01["AW"] < -15 and tick < superM01_3006T1 and tick < bougie1M01["EMA70"]:
-                        sl = superM01_3006T1
+                    elif bougie0M01["AW"] < -15 and tick < superM01_3008T1 and tick < bougie1M01["EMA70"]:
+                        sl = superM01_3008T1
                         tp = 0
                         o.sellNow(sl, tp, tick, balance, VNL)
                 else:
@@ -515,13 +515,13 @@ async def main():
 
                         elif TransactionSide.SELL_LIMIT == trade['cmd']:
                             #logger.info("ordre vente en attente")
-                            sl = round(float(superM01_3006T1), 2)
+                            sl = round(float(superM01_3008T1), 2)
                             o.moveStopSell(trade, sl, tick)
 
                         #############" ordre execute ##################"
                         elif TransactionSide.BUY == trade['cmd']:
                             if trade['customComment'] == "Achat direct":
-                                sl = superM01_3006T1
+                                sl = superM01_3008T1
                                 o.moveStopBuy(trade, sl, tick)
                             else:
                                 sl = round(bougie1M01["EMA120"] - ecart/4, 2)
@@ -529,7 +529,7 @@ async def main():
 
                         elif TransactionSide.SELL == trade['cmd']:
                             if trade['customComment'] == "Vente direct":
-                                sl = superM01_3006T1
+                                sl = superM01_3008T1
                                 o.moveStopSell(trade, sl, tick)
                             else:
                                 sl = round(bougie1M01["EMA120"] + ecart/4, 2)
