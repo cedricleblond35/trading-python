@@ -17,71 +17,76 @@ class Order:
         self.dbStreaming = dbStreaming
         self.client = client
 
-    def achatDirect(self, tp, sl):
-        balance = self.dbStreaming["Balance"].find_one({"_id": Config.USER_ID})
-        self.email.sendMail("forex robot Action", "Prise de postion -- Achat 1")
-        # logger.info("ask :", float(TICK["ask"]), ">", superT1, " and ", bougie2['close'], "<", superT1)
-
-        tp = round(tp, 1)
-        sl = round(sl - 5.0, 1)
-        tick = self.dbStreaming["Tick"].find_one({"symbol": self.symbol})
-        price = tick["bid"]
-
-        h = self.client.commandExecute('getServerTime')
-        timeExpiration = h['returnData']['time'] + 3600000
-
-        if tp - price > 10:
-            nbrelot = self.NbrLot(balance, price, sl)
-            self.buyNow(self.client, timeExpiration, price, sl, self.symbol, tp, nbrelot)
-
-    def venteDirect(self, supportDown, supportHight, superM01T0):
-        balance = self.dbStreaming["Balance"].find_one({"_id": Config.USER_ID})
-        #self.sendMail("forex robot Action", "Prise de postion -- Vente 1")
-        tick = self.dbStreaming["Tick"].find_one({"symbol": self.symbol})
-
-        sl = round(superM01T0 + 5.0, 1)
-        tp = round(supportDown, 1)
-        price = tick["ask"]
-        h = self.client.commandExecute('getServerTime')
-        timeExpiration = h['returnData']['time'] + 3600000
-
-        if price - tp > 10:
-            nbrelot = self.NbrLot(balance, price, sl)
-            self.sellNow(self.client, timeExpiration, price, sl, self.symbol, tp, nbrelot)
-
-    def NbrLot(self, balance, position, stp, vnl):
-        '''
-        Calcul le nombre de posible à prendre
-        GER30 : 2,5 € de perte max, Stop loss : 10, valeur nominale du lot : 25 €
-        calcul: 2,5 / 10 / 25 = 0,01 lot
-
-        NASDAQ : 2,5 de perte, Stop loss : 10, vaLeur nominale du lot : 20 $  mettre 35
-        calcul : 2,5 / 10 / 35 =
-
-        '''
+    ################## ordre avec limit #################################################
+    def buyLimit(self,  sl, tp, price, balance, vnl):
         try:
-            perteAcceptable = round(balance * 0.01, 0)
-            ecartPip = abs((position - stp))
-            nbrelot = perteAcceptable / ecartPip / vnl
-            """
-            qtMax = self.round_down((balance["equityFX"] / 20000), 2)
-            if nbrelot > qtMax:
-                nbrelot = qtMax
-            """
-            """
-            logger.info('//////////////////////////////////// NbrLot ////////////////////////////////////')
-            logger.info('balance :', balance)
-            logger.info('position :', position)
-            logger.info('stp :', stp)
-            logger.info('perteAcceptable :', perteAcceptable)
-            logger.info('ecartPip :', ecartPip)
-            logger.info('nbrelot :', nbrelot)
-            logger.info('//////////////////////////////////// NbrLot ////////////////////////////////////')
-            """
-            return round(nbrelot, 2)
-        except (RuntimeError, TypeError, NameError):
-            pass
+            tp = round(tp, 1)
+            sl = round(sl, 1)
 
+            h = self.client.commandExecute('getServerTime')
+            timeExpiration = h['returnData']['time'] + 3600000
+
+            nbrelot = self.NbrLot(balance, price, sl, vnl)
+            detail = {
+                "cmd": 2,
+                "customComment": "Achat limit",
+                "expiration": timeExpiration,
+                "offset": 0,
+                "price": price,
+                "sl": sl,
+                "symbol": self.symbol,
+                "tp": tp,
+                "type": 0,
+                "volume": nbrelot
+            }
+            print("buy limit :", detail)
+            resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
+            # logger.info("|||||||||||||||||||| resp :", resp)
+            respString = json.dumps(resp) + "forex robot Action"
+            detailString = json.dumps(detail)
+            self.sendMail(respString, detailString)
+
+        except Exception as exc:
+            logger.info("le programe a déclenché une erreur")
+            logger.info("exception de mtype ", exc.__class__)
+            logger.info("message", exc)
+            self.sendMail("Erreur ordre", exc)
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            print(exc_type, fname, exc_tb.tb_lineno)
+
+    def sellLimit(self,  sl, tp, price, balance, vnl):
+        try:
+            h = self.client.commandExecute('getServerTime')
+            timeExpiration = h['returnData']['time'] + 3600000
+
+            nbrelot = self.NbrLot(balance, price, sl, vnl)
+            detail = {
+                "cmd": 3,
+                "customComment": "Vente limit",
+                "expiration": timeExpiration,
+                "offset": 0,
+                "price": price,
+                "sl": sl,
+                "symbol": self.symbol,
+                "tp": tp,
+                "type": 0,
+                "volume": nbrelot
+            }
+            print("sell limit :", detail)
+            #logger.info("detail :", detail)
+            resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
+            logger.info("sellLimit :",resp)
+        except Exception as exc:
+            logger.info("le programe a déclenché une erreur")
+            logger.info("exception de mtype ", exc.__class__)
+            logger.info("message", exc)
+            self.sendMail("Erreur ordre", exc)
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            logger.info(exc_type, fname, exc_tb.tb_lineno)
+
+    ################### ordre direct ##################################################
     def sellNow(self, sl, tp, price, balance, vnl):
         tp = round(tp, 1)
         sl = round(sl, 1)
@@ -129,33 +134,22 @@ class Order:
         detailString = json.dumps(detail)
         #self.sendMail(respString, detailString)
 
-    def buyLimit(self,  sl, tp, price, balance, vnl):
+    ############################ move stop après ordre executé ###########################
+
+    def moveStopBuy(self, trade, sl, tick):
         try:
-            tp = round(tp, 1)
-            sl = round(sl, 1)
-
-            h = self.client.commandExecute('getServerTime')
-            timeExpiration = h['returnData']['time'] + 3600000
-
-            nbrelot = self.NbrLot(balance, price, sl, vnl)
-            detail = {
-                "cmd": 2,
-                "customComment": "Achat limit",
-                "expiration": timeExpiration,
-                "offset": 0,
-                "price": price,
-                "sl": sl,
-                "symbol": self.symbol,
-                "tp": tp,
-                "type": 0,
-                "volume": nbrelot
-            }
-            print("buy limit :", detail)
-            resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
-            # logger.info("|||||||||||||||||||| resp :", resp)
-            respString = json.dumps(resp) + "forex robot Action"
-            detailString = json.dumps(detail)
-            self.sendMail(respString, detailString)
+            if sl > trade["sl"]:
+                detail = {
+                     "order": trade['order'],
+                     "sl": sl,
+                     "price":  tick,
+                     "symbol": trade["symbol"],
+                     "volume": trade["volume"],
+                     "tp": trade["tp"],
+                     "type": 0
+                 }
+                print("moveStopBuy :", detail)
+                resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
 
         except Exception as exc:
             logger.info("le programe a déclenché une erreur")
@@ -164,7 +158,69 @@ class Order:
             self.sendMail("Erreur ordre", exc)
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            print(exc_type, fname, exc_tb.tb_lineno)
+            logger.info(exc_type, fname, exc_tb.tb_lineno)
+
+    def moveStopSell(self, trade, sl, tick):
+        try:
+            if sl < trade["sl"]:
+                detail = {
+                     "order": trade['order'],
+                     "sl": sl,
+                     "price": tick,  # TICK["bid"],
+                     "symbol": trade["symbol"],
+                     "volume": trade["volume"],
+                     "tp": trade["tp"],
+                     "type": 1
+                }
+                print("moveStopSell :", detail)
+                resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
+
+                logger.info("resp moveStopSell:", resp)
+        except Exception as exc:
+            logger.info("le programe a déclenché une erreur")
+            logger.info("exception de mtype ", exc.__class__)
+            logger.info("message", exc)
+            self.sendMail("Erreur ordre", exc)
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            logger.info(exc_type, fname, exc_tb.tb_lineno)
+
+    ###############################################################
+
+    def achatDirect(self, tp, sl):
+        balance = self.dbStreaming["Balance"].find_one({"_id": Config.USER_ID})
+        self.email.sendMail("forex robot Action", "Prise de postion -- Achat 1")
+        # logger.info("ask :", float(TICK["ask"]), ">", superT1, " and ", bougie2['close'], "<", superT1)
+
+        tp = round(tp, 1)
+        sl = round(sl - 5.0, 1)
+        tick = self.dbStreaming["Tick"].find_one({"symbol": self.symbol})
+        price = tick["bid"]
+
+        h = self.client.commandExecute('getServerTime')
+        timeExpiration = h['returnData']['time'] + 3600000
+
+        if tp - price > 10:
+            nbrelot = self.NbrLot(balance, price, sl)
+            self.buyNow(self.client, timeExpiration, price, sl, self.symbol, tp, nbrelot)
+
+    def venteDirect(self, supportDown, supportHight, superM01T0):
+        balance = self.dbStreaming["Balance"].find_one({"_id": Config.USER_ID})
+        #self.sendMail("forex robot Action", "Prise de postion -- Vente 1")
+        tick = self.dbStreaming["Tick"].find_one({"symbol": self.symbol})
+
+        sl = round(superM01T0 + 5.0, 1)
+        tp = round(supportDown, 1)
+        price = tick["ask"]
+        h = self.client.commandExecute('getServerTime')
+        timeExpiration = h['returnData']['time'] + 3600000
+
+        if price - tp > 10:
+            nbrelot = self.NbrLot(balance, price, sl)
+            self.sellNow(self.client, timeExpiration, price, sl, self.symbol, tp, nbrelot)
+
+
+
 
 
     def movebuyLimit(self,trade, sl , tp, price, balance):
@@ -231,85 +287,6 @@ class Order:
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
             logger.info(exc_type, fname, exc_tb.tb_lineno)
 
-    def moveStopBuy(self, trade, sl, tick):
-        try:
-            if sl > trade["sl"]:
-                detail = {
-                     "order": trade['order'],
-                     "sl": sl,
-                     "price":  tick,
-                     "symbol": trade["symbol"],
-                     "volume": trade["volume"],
-                     "tp": trade["tp"],
-                     "type": 2
-                 }
-                print("moveStopBuy :", detail)
-                resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
-
-        except Exception as exc:
-            logger.info("le programe a déclenché une erreur")
-            logger.info("exception de mtype ", exc.__class__)
-            logger.info("message", exc)
-            self.sendMail("Erreur ordre", exc)
-            exc_type, exc_obj, exc_tb = sys.exc_info()
-            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            logger.info(exc_type, fname, exc_tb.tb_lineno)
-
-    def moveStopSell(self, trade, sl, tick):
-        try:
-            if sl < trade["sl"]:
-                detail = {
-                     "order": trade['order'],
-                     "sl": sl,
-                     "price": tick,  # TICK["bid"],
-                     "symbol": trade["symbol"],
-                     "volume": trade["volume"],
-                     "tp": trade["tp"],
-                     "type": 3
-                }
-                print("moveStopSell :", detail)
-                resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
-
-                logger.info("resp moveStopSell:", resp)
-        except Exception as exc:
-            logger.info("le programe a déclenché une erreur")
-            logger.info("exception de mtype ", exc.__class__)
-            logger.info("message", exc)
-            self.sendMail("Erreur ordre", exc)
-            exc_type, exc_obj, exc_tb = sys.exc_info()
-            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            logger.info(exc_type, fname, exc_tb.tb_lineno)
-
-    def sellLimit(self,  sl, tp, price, balance, vnl):
-        try:
-            h = self.client.commandExecute('getServerTime')
-            timeExpiration = h['returnData']['time'] + 3600000
-
-            nbrelot = self.NbrLot(balance, price, sl, vnl)
-            detail = {
-                "cmd": 3,
-                "customComment": "Vente limit",
-                "expiration": timeExpiration,
-                "offset": 0,
-                "price": price,
-                "sl": sl,
-                "symbol": self.symbol,
-                "tp": tp,
-                "type": 0,
-                "volume": nbrelot
-            }
-            print("sell limit :", detail)
-            #logger.info("detail :", detail)
-            resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
-            logger.info("sellLimit :",resp)
-        except Exception as exc:
-            logger.info("le programe a déclenché une erreur")
-            logger.info("exception de mtype ", exc.__class__)
-            logger.info("message", exc)
-            self.sendMail("Erreur ordre", exc)
-            exc_type, exc_obj, exc_tb = sys.exc_info()
-            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            logger.info(exc_type, fname, exc_tb.tb_lineno)
 
 
     def moveSellLimitWait(self,trade, sl , tp, price, balance):
@@ -331,6 +308,39 @@ class Order:
                                                  "type": 3
                                              }
                                      })
+
+    def NbrLot(self, balance, position, stp, vnl):
+        '''
+        Calcul le nombre de posible à prendre
+        GER30 : 2,5 € de perte max, Stop loss : 10, valeur nominale du lot : 25 €
+        calcul: 2,5 / 10 / 25 = 0,01 lot
+
+        NASDAQ : 2,5 de perte, Stop loss : 10, vaLeur nominale du lot : 20 $  mettre 35
+        calcul : 2,5 / 10 / 35 =
+
+        '''
+        try:
+            perteAcceptable = round(balance * 0.01, 0)
+            ecartPip = abs((position - stp))
+            nbrelot = perteAcceptable / ecartPip / vnl
+            """
+            qtMax = self.round_down((balance["equityFX"] / 20000), 2)
+            if nbrelot > qtMax:
+                nbrelot = qtMax
+            """
+            """
+            logger.info('//////////////////////////////////// NbrLot ////////////////////////////////////')
+            logger.info('balance :', balance)
+            logger.info('position :', position)
+            logger.info('stp :', stp)
+            logger.info('perteAcceptable :', perteAcceptable)
+            logger.info('ecartPip :', ecartPip)
+            logger.info('nbrelot :', nbrelot)
+            logger.info('//////////////////////////////////// NbrLot ////////////////////////////////////')
+            """
+            return round(nbrelot, 2)
+        except (RuntimeError, TypeError, NameError):
+            pass
 
     def round_up(self, n, decimals=0):
         '''
