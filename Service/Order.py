@@ -150,7 +150,7 @@ class Order:
                 "type": 0,
                 "volume": nbrelot
             }
-            logger.info("buy limit :", detail)
+            print("buy limit :", detail)
             resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
             # logger.info("|||||||||||||||||||| resp :", resp)
             respString = json.dumps(resp) + "forex robot Action"
@@ -179,7 +179,7 @@ class Order:
 
             nbrelot = self.NbrLot(balance, price, sl)
             detail = {
-                  "cmd": 2,
+                  "cmd": trade['order'],
                   "order": trade['order'],
                   "sl": sl,
                   "price": price,  # TICK["bid"],
@@ -189,7 +189,7 @@ class Order:
                   "type": 3
 
             }
-            #logger.info("detail :", detail)
+            print("movebuyLimit :", detail)
             resp = self.client.commandExecute('tradeTransaction',  {"tradeTransInfo": detail })
             #logger.info("resp :", resp)
         except Exception as exc:
@@ -210,7 +210,7 @@ class Order:
 
             nbrelot = self.NbrLot(balance, price, sl)
             detail = {
-                                                          "cmd": 2,
+                                                          "cmd": trade['order'],
                                                           "order": trade['order'],
                                                           "sl": sl,
                                                           "price": price,  # TICK["bid"],
@@ -219,7 +219,7 @@ class Order:
                                                           "tp": tp,
                                                           "type": 3
                                                       }
-            #logger.info(detail)
+            print("movebuyLimitWait :",detail)
             resp = self.client.commandExecute('tradeTransaction', { "tradeTransInfo": detail})
             #logger.info("resp :", resp)
         except Exception as exc:
@@ -246,7 +246,6 @@ class Order:
                 print("moveStopBuy :", detail)
                 resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
 
-                logger.info("resp moveStopBuy:", resp)
         except Exception as exc:
             logger.info("le programe a déclenché une erreur")
             logger.info("exception de mtype ", exc.__class__)
@@ -299,7 +298,7 @@ class Order:
                 "type": 0,
                 "volume": nbrelot
             }
-            logger.info("sell limit :", detail)
+            print("sell limit :", detail)
             #logger.info("detail :", detail)
             resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
             logger.info("sellLimit :",resp)
