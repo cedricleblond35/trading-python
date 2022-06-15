@@ -170,7 +170,7 @@ class Order:
                      "symbol": trade["symbol"],
                      "volume": trade["volume"],
                      "tp": trade["tp"],
-                     "type": 1
+                     "type": 3
                 }
                 print("moveStopSell :", detail)
                 resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
