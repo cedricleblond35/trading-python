@@ -99,7 +99,7 @@ async def insertData(collection, dataDownload, listDataDB):
                         "vol": value['vol'],
                         "pointMedian": pointMedian
                 }}
-                collection.update_one({'ctm': value['ctm']}, {newvalues}, upsert=False)
+                collection.update_one({'ctm': value['ctm']}, newvalues, upsert=False)
                 ctm = value['ctm']
             elif value['ctm'] == listDataDB["ctm"]:
                 close = (value['open'] + value['close']) / 100.0
