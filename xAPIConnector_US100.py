@@ -101,7 +101,7 @@ async def insertData(collection, dataDownload, listDataDB):
                         "vol": value['vol'],
                         "pointMedian": pointMedian
                 }}
-                collection.update_one({'ctm': value['ctm']}, newvalues, upsert=False)
+                collection.update_one({'ctm': value['ctm']}, newvalues, upsert=True)
             elif value['ctm'] == listDataDB["ctm"]:
                 myquery = {"ctm": value['ctm']}
                 newvalues = {
@@ -381,8 +381,10 @@ async def main():
         connection = MongoClient('localhost', 27017)
         db = connection[SYMBOL]
         dbStreaming = connection["STREAMING"]
+        print("insert db")
 
         startTime = await majDatAall(client, SYMBOL, db)
+        print("insert db fini")
 
         # # pivot##################################################################################################
         # print('mise à jour du pivot -------------------------')
