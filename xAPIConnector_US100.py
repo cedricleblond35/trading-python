@@ -89,16 +89,26 @@ async def insertData(collection, dataDownload, listDataDB):
                 low = (value['open'] + value['low']) / 100.0
                 pointMedian = round((high + low) / 2, 2)
                 newvalues = {
-                    "ctm": value['ctm'],
-                    "ctmString": value['ctmString'],
-                    "open": open,
-                    "close": close,
-                    "high": high,
-                    "low": low,
-                    "vol": value['vol'],
-                    "pointMedian": pointMedian
-                }
-                collection.insert_one(newvalues)
+                    "$set": {
+                        "ctm": value['ctm'],
+                        "ctmString": value['ctmString'],
+                        "open": open,
+                        "close": close,
+                        "high": high,
+                        "low": low,
+                        "vol": value['vol'],
+                        "pointMedian": pointMedian
+                }}
+                collection.update_one({
+                    'ctm': value['ctm']
+                }, {
+                    newvalues
+                }, upsert=False)
+
+
+
+
+                collection.update(newvalues)
                 ctm = value['ctm']
             elif value['ctm'] == listDataDB["ctm"]:
                 close = (value['open'] + value['close']) / 100.0
