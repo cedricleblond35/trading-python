@@ -101,7 +101,7 @@ async def insertData(collection, dataDownload, listDataDB):
                         "vol": value['vol'],
                         "pointMedian": pointMedian
                 }}
-                if collection.find({"ctm": ctm}).count() == 0:
+                if collection.find({"ctm": ctm}):
                     collection.insert_one(newvalues)
             elif value['ctm'] == listDataDB["ctm"]:
                 myquery = {"ctm": value['ctm']}
