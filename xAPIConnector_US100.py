@@ -513,6 +513,7 @@ async def main():
 
                         #############" ordre execute ##################"
                         elif TransactionSide.BUY == trade['cmd']:
+                            print("trade['customComment'] :", trade['customComment'])
                             if trade['customComment'] == "Achat direct":
                                 sl = superM01_3008T1
                                 o.moveStopBuy(trade, sl, tick)
@@ -521,6 +522,7 @@ async def main():
                                 o.moveStopBuy(trade, sl, tick)
 
                         elif TransactionSide.SELL == trade['cmd']:
+                            print("trade['customComment'] :", trade['customComment'])
                             if trade['customComment'] == "Vente direct":
                                 sl = superM01_3008T1
                                 o.moveStopSell(trade, sl, tick)
