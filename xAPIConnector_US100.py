@@ -477,24 +477,22 @@ async def main():
                         ######################## vente ###################################
                         elif bougie1M01["EMA120"] > bougie1M01["EMA70"] > bougie1M01["EMA26"] \
                                 and bougie1M01["EMA70"] < bougie2M01["EMA70"] \
-                                and bougie1M01["EMA120"] < bougie2M01["EMA120"] \
-                                and bougie1M01["EMA26"] < supportHight \
-                                and bougie1M01["EMA120"] > supportHight \
+                                and bougie2M01["EMA120"] > bougie1M01["EMA120"] > supportHight > bougie1M01["EMA26"] \
                                 and bougie1M01["EMA26"] < superM01_3008T1 \
                                 and superM01_3008T1 > superM013012T1:
                             support = supportHight + 15
                             objectif = supportDown + 5
                             # o.sellNow(support, objectif, round(price, 2), balance, VNL)
                             o.sellLimit(support, objectif, round(supportHight, 2), balance, VNL)
-
-                    if bougie0M01["AW"] > 15 and tick > superM01_3008T1 and tick > bougie1M01["EMA70"]:
-                        sl = superM01_3008T1
-                        tp = 0
-                        o.buyNow(sl, tp, tick, balance, VNL)
-                    elif bougie0M01["AW"] < -15 and tick < superM01_3008T1 and tick < bougie1M01["EMA70"]:
-                        sl = superM01_3008T1
-                        tp = 0
-                        o.sellNow(sl, tp, tick, balance, VNL)
+                    if bougie1M01.get("EMA70") and bougie1M01.get("AW") :
+                        if bougie0M01["AW"] > 15 and tick > superM01_3008T1 and tick > bougie1M01["EMA70"]:
+                            sl = superM01_3008T1
+                            tp = 0
+                            o.buyNow(sl, tp, tick, balance, VNL)
+                        elif bougie0M01["AW"] < -15 and tick < superM01_3008T1 and tick < bougie1M01["EMA70"]:
+                            sl = superM01_3008T1
+                            tp = 0
+                            o.sellNow(sl, tp, tick, balance, VNL)
                 else:
                     for trade in tradeOpenDic['returnData']:
                         print("ordre en cours :", trade)

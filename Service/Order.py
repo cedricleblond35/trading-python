@@ -243,6 +243,7 @@ class Order:
                      "tp": trade["tp"],
                      "type": 2
                  }
+                print("moveStopBuy :", detail)
                 resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
 
                 logger.info("resp moveStopBuy:", resp)
@@ -267,6 +268,7 @@ class Order:
                      "tp": trade["tp"],
                      "type": 3
                 }
+                print("moveStopSell :", detail)
                 resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
 
                 logger.info("resp moveStopSell:", resp)
