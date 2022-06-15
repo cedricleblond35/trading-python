@@ -524,6 +524,7 @@ async def main():
                         elif TransactionSide.SELL == trade['cmd']:
                             print("trade['customComment'] :", trade['customComment'])
                             if trade['customComment'] == "Vente direct":
+                                print("vente direct ok")
                                 sl = superM01_3008T1
                                 o.moveStopSell(trade, sl, tick)
                             else:
