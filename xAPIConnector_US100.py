@@ -82,15 +82,17 @@ async def insertData(collection, dataDownload, listDataDB):
         # exit(0)
 
         for value in dataDownload["returnData"]['rateInfos']:
+
+            ctm = value['ctm']
+            close = (value['open'] + value['close']) / 100.0
+            high = (value['open'] + value['high']) / 100.0
+            low = (value['open'] + value['low']) / 100.0
+            pointMedian = round((high + low) / 2, 2)
             if (listDataDB is None) or (value['ctm'] > listDataDB["ctm"]):
                 open = value['open'] / 100.0
-                close = (value['open'] + value['close']) / 100.0
-                high = (value['open'] + value['high']) / 100.0
-                low = (value['open'] + value['low']) / 100.0
-                pointMedian = round((high + low) / 2, 2)
                 newvalues = {
                     "$set": {
-                        "ctm": value['ctm'],
+                        "ctm": ctm,
                         "ctmString": value['ctmString'],
                         "open": open,
                         "close": close,
@@ -100,12 +102,7 @@ async def insertData(collection, dataDownload, listDataDB):
                         "pointMedian": pointMedian
                 }}
                 collection.update_one({'ctm': value['ctm']}, newvalues, upsert=False)
-                ctm = value['ctm']
             elif value['ctm'] == listDataDB["ctm"]:
-                close = (value['open'] + value['close']) / 100.0
-                high = (value['open'] + value['high']) / 100.0
-                low = (value['open'] + value['low']) / 100.0
-                pointMedian = round((high + low) / 2, 2)
                 myquery = {"ctm": value['ctm']}
                 newvalues = {
                     "$set": {
@@ -117,7 +114,6 @@ async def insertData(collection, dataDownload, listDataDB):
                     }}
 
                 collection.update_many(myquery, newvalues)
-                ctm = value['ctm']
 
     return ctm
 
