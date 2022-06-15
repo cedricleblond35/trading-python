@@ -90,7 +90,7 @@ class Supertrend(Price):
                 df['SuperTrend'][i] = df['lower Band'][i]
             elif df['SuperTrend'][i - 1] == df['lower Band'][i - 1] and df['close'][i] <= df['lower Band'][i]:
                 df['SuperTrend'][i] = df['Upper Band'][i]
-        #print("SuperTrend:", df)
+        print("SuperTrend:", df)
         #print("SuperTrend 1:", df['SuperTrend'][len(df)-1])
         #print("SuperTrend 2:", df['SuperTrend'][len(df) - 2])
         #print("SuperTrend arrondi:", round(df['SuperTrend'][len(df)-1], 2))

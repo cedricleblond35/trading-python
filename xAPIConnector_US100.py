@@ -382,7 +382,7 @@ async def main():
         db = connection[SYMBOL]
         dbStreaming = connection["STREAMING"]
 
-        startTime = await majDatAall(client, SYMBOL, db)
+        startTime = majDatAall(client, SYMBOL, db)
 
         # # pivot##################################################################################################
         # print('mise à jour du pivot -------------------------')
@@ -390,22 +390,22 @@ async def main():
         # PPF, R1F, R2F, R3F, S1F, S2F, S3F = await P.fibonacci()  # valeurs ok
         # R1D, S1D = await P.demark()  # valeurs ok
 
-        PPW, R1W, R2W, S1W, S2W = await P.woodie()  # valeurs ok
-        PPC, R1C, R2C, R3C, R4C, S1C, S2C, S3C, S4C = await P.camarilla()  # valeurs ok
+        PPW, R1W, R2W, S1W, S2W = P.woodie()  # valeurs ok
+        PPC, R1C, R2C, R3C, R4C, S1C, S2C, S3C, S4C = P.camarilla()  # valeurs ok
 
         zone = np.array([PPC, R1C, R2C, R3C, R4C, S1C, S2C, S3C, S4C, R1W, R2W, S1W, S2W])
         zone = np.sort(zone)
 
         moyMobil_01_120 = MM(SYMBOL, "M01", 0)
         moyMobil_05_120 = MM(SYMBOL, "M05", 0)
-        await moyMobil_01_120.EMA(120)
-        await moyMobil_01_120.EMA(70)
-        await moyMobil_01_120.EMA(26)
-        await moyMobil_05_120.EMA(120)
+        moyMobil_01_120.EMA(120)
+        moyMobil_01_120.EMA(70)
+        moyMobil_01_120.EMA(26)
+        moyMobil_05_120.EMA(120)
         ao05 = Awesome(SYMBOL, "M05")
-        await ao05.calculAllCandles()
+        ao05.calculAllCandles()
         ao01 = Awesome(SYMBOL, "M01")
-        await ao01.calculAllCandles()
+        ao01.calculAllCandles()
 
         o = Order(SYMBOL, dbStreaming, client)
         logger.info("mise à jour du start fini ")
