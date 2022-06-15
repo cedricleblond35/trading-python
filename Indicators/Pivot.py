@@ -1,5 +1,8 @@
 from Indicators.Price import Price
-
+import logging
+import sys
+import os
+logger = logging.getLogger("jsonSocket")
 
 class Pivot(Price):
     '''
@@ -139,12 +142,14 @@ class Pivot(Price):
                     L = v['low']
                     C = v['close']
                 i = i + 1
-
         except Exception as exc:
-            print("le programme a déclenché une erreur pour le Pivot calculPivotWoodie")
-            print("exception de type ", exc.__class__)
-            print("message", exc)
-            pass
+            logger.info("le programe a déclenché une erreur xApiconnector_US100")
+            logger.info("exception de mtype ", exc.__class__)
+            logger.info("message", exc)
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            logger.info(exc_type, fname, exc_tb.tb_lineno)
+
         return round(PP, 1), round(R1, 1), round(R2, 1), round(S1, 1), round(S2, 1)
 
     async def camarilla(self):

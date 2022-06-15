@@ -7,6 +7,7 @@ import sys
 import asyncio
 import math as math
 import numpy as np
+import logging
 from datetime import datetime
 from pymongo import MongoClient
 from Indicators.Awesome import Awesome
@@ -14,7 +15,6 @@ from Service.Order import Order
 from Indicators.Pivot import Pivot
 from Indicators.SMA import MM
 from Service.APIClient import APIClient
-import logging
 from Service.APIStreamClient import APIStreamClient
 from Service.Command import Command
 from Indicators.Supertrend import Supertrend
@@ -388,7 +388,7 @@ async def main():
         print("insert db fini")
 
         # # pivot##################################################################################################
-        # print('mise à jour du pivot -------------------------')
+        print('mise à jour du pivot -------------------------')
         P = Pivot(SYMBOL, "D")
         # PPF, R1F, R2F, R3F, S1F, S2F, S3F = await P.fibonacci()  # valeurs ok
         # R1D, S1D = await P.demark()  # valeurs ok
