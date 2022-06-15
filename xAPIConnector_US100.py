@@ -453,10 +453,7 @@ async def main():
 
             if c.getTick() is not None:
                 tick = c.getTick()["ask"]
-                print(bougie0M01)
                 print(bougie1M01)
-                print("superM013012T0 :", superM013012T0)
-                print("superM01_3008T1 :", superM01_3008T1)
                 print("--------------------------------------------------")
                 supportDown, supportHight = zoneSoutien(tick, zone)
                 ecart = abs(round(bougie1M01["high"] - bougie1M01["low"], 2)) \
