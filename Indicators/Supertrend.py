@@ -6,7 +6,7 @@ pd.options.mode.chained_assignment = None  # default='warn'
 
 
 class Supertrend(Price):
-    def __init__(self, symbol, timeframe,  periode= 10, multplicateur = 3, duration=100,shift=0):
+    def __init__(self, symbol, timeframe,  periode= 10, multplicateur = 3, duration=200,shift=0):
         '''
 
         :param symbol: Symbole à calculer (DE30, SILVER ...)
@@ -31,7 +31,7 @@ class Supertrend(Price):
         # df is the dataframe, n is the period, f is the factor; f=3, n=7 are commonly used.
         f = self.__multplicateur
         n = self.__periode
-        self._prepareListData(self.__periode, self.__shift)
+        self._prepareListData(self.__duration, self.__shift)
         df = pd.DataFrame.from_dict(self._listData)
 
         # Calculation of ATR
