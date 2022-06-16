@@ -6,7 +6,7 @@ pd.options.mode.chained_assignment = None  # default='warn'
 
 
 class Supertrend(Price):
-    def __init__(self, symbol, timeframe,  periode= 10, multplicateur = 3, duration=200,shift=0):
+    def __init__(self, symbol, timeframe,  periode= 10, multplicateur = 3, duration=82,shift=0):
         '''
 
         :param symbol: Symbole à calculer (DE30, SILVER ...)
@@ -44,7 +44,7 @@ class Supertrend(Price):
         df.loc[self.__periode - 1, 'ATR'] = df['TR'][
                                             :self.__periode - 1].mean()  # .ix is deprecated from pandas version- 0.19
         for i in range(self.__periode, len(df)):
-            df['ATR'][i] = round((df['ATR'][i - 1] * (self.__periode - 1) + df['TR'][i]) / self.__periode, 2)
+            df['ATR'][i] = (df['ATR'][i - 1] * (self.__periode - 1) + df['TR'][i]) / self.__periode
 
 
         # Calculation of SuperTrend
