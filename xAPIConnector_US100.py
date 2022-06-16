@@ -425,7 +425,7 @@ async def main():
             # supertrend ###################################################################################
             spM013012 = Supertrend(SYMBOL, "M01", 30, 12)
             superM013012T0, superM013012T1, superM013012T2 = spM013012.getST()
-            spM01_8008 = Supertrend(SYMBOL, "M01", 80, 8)
+            spM01_8008 = Supertrend(SYMBOL, "M01", 80, 8, 100, 1)
             superM01_8008T0, superM01_8008T1, superM01_8008T2 = spM01_8008.getST()
 
             pM05 = Supertrend(SYMBOL, "M05", 30, 5)
