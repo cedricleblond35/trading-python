@@ -75,14 +75,7 @@ async def insertData(collection, dataDownload, listDataDB):
 
     ctm = ''
     if dataDownload['status'] and len(dataDownload["returnData"]['rateInfos']) > 0:
-        # import time
-        # tps1 = time.clock()
-        # tps2 = time.clock()
-        # print("time : ",tps2 - tps1)
-        # exit(0)
-
         for value in dataDownload["returnData"]['rateInfos']:
-            print(value['ctm'])
             ctm = value['ctm']
             close = (value['open'] + value['close']) / 100.0
             high = (value['open'] + value['high']) / 100.0
@@ -91,7 +84,6 @@ async def insertData(collection, dataDownload, listDataDB):
             if (listDataDB is None) or (value['ctm'] > listDataDB["ctm"]):
                 open = value['open'] / 100.0
                 newvalues = {
-                    "$set": {
                         "ctm": ctm,
                         "ctmString": value['ctmString'],
                         "open": open,
@@ -100,9 +92,8 @@ async def insertData(collection, dataDownload, listDataDB):
                         "low": low,
                         "vol": value['vol'],
                         "pointMedian": pointMedian
-                }}
+                }
                 collection.insert_one(newvalues)
-                ctm = value['ctm']
             elif value['ctm'] == listDataDB["ctm"]:
                 myquery = {"ctm": value['ctm']}
                 newvalues = {
@@ -113,9 +104,7 @@ async def insertData(collection, dataDownload, listDataDB):
                         "vol": value['vol'],
                         "pointMedian": pointMedian
                     }}
-
                 collection.update_many(myquery, newvalues)
-                ctm = value['ctm']
 
     print("ctm :",ctm)
     return ctm
