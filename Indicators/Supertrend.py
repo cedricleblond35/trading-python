@@ -6,7 +6,7 @@ pd.options.mode.chained_assignment = None  # default='warn'
 
 
 class Supertrend(Price):
-    def __init__(self, symbol, timeframe,  periode= 10, multplicateur = 3, duration=100,shift=0):
+    def __init__(self, symbol, timeframe,  periode= 10, multplicateur = 3, duration=200,shift=0):
         '''
 
         :param symbol: Symbole à calculer (DE30, SILVER ...)
@@ -52,7 +52,6 @@ class Supertrend(Price):
         df['lower Basic'] = (df['high'] + df['low']) / 2 - (f * df['ATR'])
         df['Upper Band'] = df['Upper Basic']
         df['lower Band'] = df['lower Basic']
-
 
         for i in range(n, len(df)):
             if df['close'][i - 1] <= df['Upper Band'][i - 1]:
