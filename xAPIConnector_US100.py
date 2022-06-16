@@ -95,6 +95,7 @@ async def insertData(collection, dataDownload, listDataDB):
                 }
                 collection.insert_one(newvalues)
             elif value['ctm'] == listDataDB["ctm"]:
+                print("update_many :",value['ctm'])
                 myquery = {"ctm": value['ctm']}
                 newvalues = {
                     "$set": {
