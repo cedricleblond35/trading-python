@@ -102,6 +102,7 @@ async def insertData(collection, dataDownload, listDataDB):
                         "pointMedian": pointMedian
                 }}
                 collection.insert_one(newvalues)
+                ctm = value['ctm']
             elif value['ctm'] == listDataDB["ctm"]:
                 myquery = {"ctm": value['ctm']}
                 newvalues = {
@@ -114,6 +115,7 @@ async def insertData(collection, dataDownload, listDataDB):
                     }}
 
                 collection.update_many(myquery, newvalues)
+                ctm = value['ctm']
 
     print("ctm :",ctm)
     return ctm
