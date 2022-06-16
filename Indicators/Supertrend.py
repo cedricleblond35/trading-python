@@ -31,7 +31,7 @@ class Supertrend(Price):
         # df is the dataframe, n is the period, f is the factor; f=3, n=7 are commonly used.
         f = self.__multplicateur
         n = self.__periode
-        self._prepareListData(self.__duration, self.__shift)
+        self._prepareListData(self.__periode, self.__shift)
         df = pd.DataFrame.from_dict(self._listData)
 
         # Calculation of ATR
