@@ -115,6 +115,7 @@ async def insertData(collection, dataDownload, listDataDB):
 
                 collection.update_many(myquery, newvalues)
 
+    print("ctm :",ctm)
     return ctm
 
 
@@ -294,7 +295,7 @@ async def majDatAall(client, symbol, db):
         listDataDBM05 = db["M05"].find_one({}, sort=[('ctm', -1)])
         newTime = await insertData(db["M05"], dataM05Download, listDataDBM05)
     except Exception as exc:
-        print("le programe a déclenché une erreur")
+        print("majDatAall a déclenché une erreur")
         print("exception de mtype ", exc.__class__)
         print("message", exc)
         exc_type, exc_obj, exc_tb = sys.exc_info()
