@@ -138,6 +138,7 @@ class Pivot(Price):
                     L = v['low']
                     C = v['close']
                 else:
+                    print(v)
                     H = v['high']
                     L = v['low']
                     C = v['close']
