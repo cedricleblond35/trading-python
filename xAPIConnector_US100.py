@@ -82,7 +82,7 @@ async def insertData(collection, dataDownload, listDataDB):
         # exit(0)
 
         for value in dataDownload["returnData"]['rateInfos']:
-
+            print(value['ctm'])
             ctm = value['ctm']
             close = (value['open'] + value['close']) / 100.0
             high = (value['open'] + value['high']) / 100.0
@@ -101,9 +101,7 @@ async def insertData(collection, dataDownload, listDataDB):
                         "vol": value['vol'],
                         "pointMedian": pointMedian
                 }}
-                if collection.find({"ctm": ctm}):
-                    r =collection.insert_one(newvalues)
-                    print(r)
+                collection.insert_one(newvalues)
             elif value['ctm'] == listDataDB["ctm"]:
                 myquery = {"ctm": value['ctm']}
                 newvalues = {
