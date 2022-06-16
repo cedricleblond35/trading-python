@@ -106,7 +106,6 @@ async def insertData(collection, dataDownload, listDataDB):
                     }}
                 collection.update_many(myquery, newvalues)
 
-    print("ctm :",ctm)
     return ctm
 
 
@@ -425,8 +424,14 @@ async def main():
             # supertrend ###################################################################################
             spM013012 = Supertrend(SYMBOL, "M01", 30, 12)
             superM013012T0, superM013012T1, superM013012T2 = spM013012.getST()
-            spM013008 = Supertrend(SYMBOL, "M01", 80, 8)
-            superM01_8008T0, superM01_8008T1, superM01_8008T2 = spM013008.getST()
+            spM01_8008 = Supertrend(SYMBOL, "M01", 80, 8)
+            superM01_8008T0, superM01_8008T1, superM01_8008T2 = spM01_8008.getST()
+
+            pM05 = Supertrend(SYMBOL, "M05", 30, 5)
+            superM05T0, superT1, superT2 = pM05.getST()
+            superM05T0 = round(float(superM05T0), 2)
+            print("superM05T0 ;", superM05T0)
+
             print("superM01_8008T0 ;", superM01_8008T0)
             print("superM01_8008T1:", superM01_8008T1)
             print("superM01_8008T2 :",superM01_8008T2)
