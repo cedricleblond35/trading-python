@@ -44,7 +44,7 @@ class Supertrend(Price):
         df.loc[self.__periode - 1, 'ATR'] = df['TR'][
                                             :self.__periode - 1].mean()  # .ix is deprecated from pandas version- 0.19
         for i in range(self.__periode, len(df)):
-            df['ATR'][i] = (df['ATR'][i - 1] * (self.__periode - 1) + df['TR'][i]) / self.__periode
+            df['ATR'][i] = round((df['ATR'][i - 1] * (self.__periode - 1) + df['TR'][i]) / self.__periode, 2)
 
 
         # Calculation of SuperTrend
