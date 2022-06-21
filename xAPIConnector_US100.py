@@ -397,7 +397,7 @@ async def main():
         print("insert db fini")
 
         # # pivot##################################################################################################
-        pivot()
+        zone = pivot()
 
         moyMobil_01_120 = MM(SYMBOL, "M01", 0)
         moyMobil_05_120 = MM(SYMBOL, "M05", 0)
