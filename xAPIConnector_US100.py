@@ -63,6 +63,14 @@ def startEA_Horaire():
     else:
         return False
 
+def updatePivot():
+    time = datetime.now().time()
+    if 6 > int(time.strftime("%H")) > 1:
+        return True
+    else:
+        return False
+
+
 
 async def insertData(collection, dataDownload, listDataDB):
     '''
@@ -95,7 +103,6 @@ async def insertData(collection, dataDownload, listDataDB):
                 }
                 collection.insert_one(newvalues)
             elif value['ctm'] == listDataDB["ctm"]:
-                print("update_many :",value['ctm'])
                 myquery = {"ctm": value['ctm']}
                 newvalues = {
                     "$set": {
@@ -355,6 +362,17 @@ def subscribe(loginResponse):
 
     return sclient, c
 
+def pivot():
+    print('mise à jour du pivot -------------------------')
+    P = Pivot(SYMBOL, "D")
+    # PPF, R1F, R2F, R3F, S1F, S2F, S3F = await P.fibonacci()  # valeurs ok
+    # R1D, S1D = await P.demark()  # valeurs ok
+
+    PPW, R1W, R2W, S1W, S2W = await P.woodie()  # valeurs ok
+    PPC, R1C, R2C, R3C, R4C, S1C, S2C, S3C, S4C = await P.camarilla()  # valeurs ok
+    zone = np.array([PPC, R1C, R2C, R3C, R4C, S1C, S2C, S3C, S4C, R1W, R2W, S1W, S2W])
+    return np.sort(zone)
+
 
 async def main():
     client = APIClient()  # create & connect to RR socket
@@ -379,16 +397,7 @@ async def main():
         print("insert db fini")
 
         # # pivot##################################################################################################
-        print('mise à jour du pivot -------------------------')
-        P = Pivot(SYMBOL, "D")
-        # PPF, R1F, R2F, R3F, S1F, S2F, S3F = await P.fibonacci()  # valeurs ok
-        # R1D, S1D = await P.demark()  # valeurs ok
-
-        PPW, R1W, R2W, S1W, S2W = await P.woodie()  # valeurs ok
-        PPC, R1C, R2C, R3C, R4C, S1C, S2C, S3C, S4C = await P.camarilla()  # valeurs ok
-
-        zone = np.array([PPC, R1C, R2C, R3C, R4C, S1C, S2C, S3C, S4C, R1W, R2W, S1W, S2W])
-        zone = np.sort(zone)
+        pivot()
 
         moyMobil_01_120 = MM(SYMBOL, "M01", 0)
         moyMobil_05_120 = MM(SYMBOL, "M05", 0)
@@ -404,6 +413,9 @@ async def main():
         o = Order(SYMBOL, dbStreaming, client)
         logger.info("mise à jour du start fini ")
         while True:
+            if updatePivot():
+                zone = pivot()
+
             ###################################################################################################
             balance = c.getBalance()
             if c.getBalance() == 0:
@@ -432,11 +444,6 @@ async def main():
             superM05T0, superT1, superT2 = pM05.getST()
 
 
-            print("superM05T0 ;", superM05T0)
-            print("superM05_1003T0 ;", superM05_1003T0)
-            print("superM05_1003T1:", superM05_1003T1)
-            print("superM05_1003T2 :",superM05_1003T2)
-
             ###############################################################################################################
             # order
             ###############################################################################################################
@@ -451,6 +458,8 @@ async def main():
             bougie1M01 = db["M01"].find({}, sort=[('ctm', -1)]).limit(1).skip(1)[0]
             bougie2M01 = db["M01"].find({}, sort=[('ctm', -1)]).limit(1).skip(2)[0]
             bougie3M01 = db["M01"].find({}, sort=[('ctm', -1)]).limit(1).skip(3)[0]
+
+            bougie1M05 = db["M05"].find({}, sort=[('ctm', -1)]).limit(1).skip(1)[0]
 
             if c.getTick() is not None:
                 tick = c.getTick()["ask"]
@@ -482,6 +491,16 @@ async def main():
                             objectif = supportDown + 5
                             # o.sellNow(support, objectif, round(price, 2), balance, VNL)
                             o.sellLimit(support, objectif, round(supportHight, 2), balance, VNL)
+
+
+
+
+
+
+
+
+
+
                         elif bougie1M01.get("EMA70") and bougie1M01.get("AW") :
                             if bougie0M01["AW"] > 15 and tick > superM05_1003T0 and tick > bougie1M01["EMA70"]:
                                 sl = superM05_1003T0
