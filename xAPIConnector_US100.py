@@ -362,7 +362,7 @@ def subscribe(loginResponse):
 
     return sclient, c
 
-def pivot():
+async def pivot():
     print('mise à jour du pivot -------------------------')
     P = Pivot(SYMBOL, "D")
     # PPF, R1F, R2F, R3F, S1F, S2F, S3F = await P.fibonacci()  # valeurs ok
@@ -397,7 +397,7 @@ async def main():
         print("insert db fini")
 
         # # pivot##################################################################################################
-        zone = pivot()
+        zone = await pivot()
 
         moyMobil_01_120 = MM(SYMBOL, "M01", 0)
         moyMobil_05_120 = MM(SYMBOL, "M05", 0)
@@ -414,7 +414,7 @@ async def main():
         logger.info("mise à jour du start fini ")
         while True:
             if updatePivot():
-                zone = pivot()
+                zone = await pivot()
 
             ###################################################################################################
             balance = c.getBalance()
