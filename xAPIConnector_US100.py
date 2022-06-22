@@ -520,7 +520,7 @@ async def main():
                         elif TransactionSide.BUY == trade['cmd']:
                             print("trade['customComment'] :", trade['customComment'])
                             if trade['customComment'] == "Achat direct":
-                                sl = superM05_1003T1
+                                sl = round(superM05_1003T1 - ecart/4, 2)
                                 print("sl superM05_1003T1:", sl)
                                 o.moveStopBuy(trade, sl, tick)
                             else:
@@ -532,7 +532,7 @@ async def main():
                             print("trade['customComment'] :", trade['customComment'])
                             if trade['customComment'] == "Vente direct":
                                 print("vente direct ok : sl :", superM05_1003T1)
-                                sl = superM05_1003T1
+                                sl = round(superM05_1003T1 + ecart/4, 2)
                                 o.moveStopSell(trade, sl, tick)
                             else:
                                 sl = round(bougie1M01["EMA120"] + ecart/4, 2)
