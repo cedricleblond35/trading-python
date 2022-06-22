@@ -521,9 +521,11 @@ async def main():
                             print("trade['customComment'] :", trade['customComment'])
                             if trade['customComment'] == "Achat direct":
                                 sl = superM05_1003T0
+                                print("sl superM05_1003T0:", sl)
                                 o.moveStopBuy(trade, sl, tick)
                             else:
                                 sl = round(bougie1M01["EMA120"] - ecart/4, 2)
+                                print("sl EMA120 :", sl)
                                 o.moveStopBuy(trade, sl, tick)
 
                         elif TransactionSide.SELL == trade['cmd']:
