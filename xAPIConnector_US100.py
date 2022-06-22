@@ -440,10 +440,6 @@ async def main():
             spM05_1003 = Supertrend(SYMBOL, "M05", 10, 3)
             superM05_1003T0, superM05_1003T1, superM05_1003T2 = spM05_1003.getST()
 
-            pM05 = Supertrend(SYMBOL, "M05", 30, 5)
-            superM05T0, superT1, superT2 = pM05.getST()
-
-
             ###############################################################################################################
             # order
             ###############################################################################################################
@@ -463,8 +459,8 @@ async def main():
 
             if c.getTick() is not None:
                 tick = c.getTick()["ask"]
-                print(bougie1M01)
-                print("--------------------------------------------------")
+                #print(bougie1M01)
+                #print("--------------------------------------------------")
                 supportDown, supportHight = zoneSoutien(tick, zone)
                 ecart = abs(round(bougie1M01["high"] - bougie1M01["low"], 2)) \
                         + abs(round(bougie0M01["high"] - bougie1M01["low"], 2)) \
@@ -491,15 +487,6 @@ async def main():
                             objectif = supportDown + 5
                             # o.sellNow(support, objectif, round(price, 2), balance, VNL)
                             o.sellLimit(support, objectif, round(supportHight, 2), balance, VNL)
-
-
-
-
-
-
-
-
-
 
                         elif bougie1M01.get("EMA70") and bougie1M01.get("AW") :
                             if bougie0M01["AW"] > 15 and tick > superM05_1003T0 and tick > bougie1M01["EMA70"]:
