@@ -413,6 +413,10 @@ async def main():
         o = Order(SYMBOL, dbStreaming, client)
         logger.info("mise à jour du start fini ")
         while True:
+            now = datetime.now()
+            current_time = now.strftime("%H:%M:%S")
+            print("Current Time =", current_time)
+
             print("mise à jour des indicateurs -----------------------------------------------")
             if updatePivot():
                 zone = await pivot()
