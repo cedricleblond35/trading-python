@@ -498,6 +498,7 @@ async def main():
                                 tp = 0
                                 o.sellNow(sl, tp, tick, balance, VNL)
                 else:
+                    print(tradeOpen)
                     for trade in tradeOpenDic['returnData']:
                         print("---------->ordre en cours :", trade)
                         # logger.info("c.getTrade() :", c.getTrade())
