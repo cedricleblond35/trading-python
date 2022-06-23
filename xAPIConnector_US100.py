@@ -417,7 +417,7 @@ async def main():
             current_time = now.strftime("%H:%M:%S")
             print("Current Time =", current_time)
 
-            print("mise à jour des indicateurs -----------------------------------------------")
+            print("mise à jour des indicateurs : " , current_time ," -----------------------------------------------")
             if updatePivot():
                 zone = await pivot()
 
