@@ -413,6 +413,7 @@ async def main():
         o = Order(SYMBOL, dbStreaming, client)
         logger.info("mise à jour du start fini ")
         while True:
+            print("mise à jour des indicateurs -----------------------------------------------")
             if updatePivot():
                 zone = await pivot()
 
@@ -458,6 +459,7 @@ async def main():
             bougie1M05 = db["M05"].find({}, sort=[('ctm', -1)]).limit(1).skip(1)[0]
 
             if c.getTick() is not None:
+                print("go stategie ***************************************")
                 tick = c.getTick()["ask"]
                 #print(bougie1M01)
                 #print("--------------------------------------------------")
