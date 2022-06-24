@@ -71,7 +71,6 @@ class MM(Price):
             name = "EMA" + str(duration)
             nameSMA = "SMA" + str(duration)
             α = round(2 / (duration + 1), 5)
-
             self._prepareListData()                         #toutes les bougies
             self._prepareListEMA(0, duration, name)         #toutes les bougies ne possédant pas EMA (HORS LES X PREMIÈRES)
 
@@ -92,7 +91,7 @@ class MM(Price):
                     print("self._listData[idLastEma] :", self._listData[idLastEma])
                     EMAPrecedent = self._listData[idLastEma][name]
 
-                # print("calcul en cours ...  ")
+                print("calcul en cours ...  ")
                 list = self._listData[start:len(self._listData) - 1]
                 for i in range(0, len(list)):
                     if EMAPrecedent > 0:
