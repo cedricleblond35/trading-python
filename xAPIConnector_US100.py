@@ -517,14 +517,24 @@ async def main():
                         if TransactionSide.BUY_LIMIT == trade['cmd']:
                             #logger.info("c'est ordre achat en attente")
                             if bougie1M01["EMA120"] > supportDown:
-                                sl = bougie1M01["EMA120"]
+                                if superM05_1003T1 > bougie1M01["EMA120"] :
+                                    sl = bougie1M01["EMA120"]
+                                else:
+                                    sl = bougie1M01["EMA120"]
                             else:
                                 sl = supportDown
                             o.moveStopBuy(trade, sl, tick)
 
                         elif TransactionSide.SELL_LIMIT == trade['cmd']:
+                            if bougie1M01["EMA120"] < supportHight:
+                                if superM05_1003T1 < bougie1M01["EMA120"] :
+                                    sl = bougie1M01["EMA120"]
+                                else:
+                                    sl = bougie1M01["EMA120"]
+                            else:
+                                sl = supportDown
                             #logger.info("ordre vente en attente")
-                            sl = round(float(superM05_1003T1), 2)
+                            sl = round(float(sl), 2)
                             o.moveStopSell(trade, sl, tick)
 
                         #############" ordre execute ##################"
@@ -532,11 +542,6 @@ async def main():
                             print("trade['customComment'] :", trade['customComment'])
                             if trade['customComment'] == "Achat direct":
                                 #if bougie1M01["EMA70"]  >
-
-
-
-
-
 
                                 sl = round(superM05_1003T1 - ecart/4, 2)
                                 print("sl superM05_1003T1:", sl)
