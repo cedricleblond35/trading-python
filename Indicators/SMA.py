@@ -89,6 +89,7 @@ class MM(Price):
                     print("idLastEma :", idLastEma)
                     print("name : ", name)
                     print("self._listData[idLastEma] :", self._listData[idLastEma])
+                    print("get :", self._listData[idLastEma].get(name))
                     EMAPrecedent = self._listData[idLastEma][name]
 
                 print("calcul en cours ...  ")
