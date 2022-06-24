@@ -111,6 +111,9 @@ class Order:
         }
         logger.info("sellnow :", detail)
         resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
+        respString = json.dumps(resp) + "forex robot Action"
+        detailString = json.dumps(detail)
+        self.sendMail(respString, detailString)
 
     def buyNow(self, sl, tp, price, balance, vnl):
         tp = round(tp, 1)
@@ -135,7 +138,7 @@ class Order:
         # logger.info("|||||||||||||||||||| resp :", resp)
         respString = json.dumps(resp) + "forex robot Action"
         detailString = json.dumps(detail)
-        #self.sendMail(respString, detailString)
+        self.sendMail(respString, detailString)
 
     ############################ move stop après ordre executé ###########################
 
