@@ -44,7 +44,6 @@ class Order:
             }
             print("buy limit :", detail)
             resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
-            # logger.info("|||||||||||||||||||| resp :", resp)
             respString = json.dumps(resp) + "forex robot Action"
             detailString = json.dumps(detail)
             self.sendMail(respString, detailString)
@@ -79,7 +78,9 @@ class Order:
             print("sell limit :", detail)
             #logger.info("detail :", detail)
             resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
-            logger.info("sellLimit :",resp)
+            respString = json.dumps(resp) + "forex robot Action"
+            detailString = json.dumps(detail)
+            self.sendMail(respString, detailString)
         except Exception as exc:
             logger.info("le programe a déclenché une erreur")
             logger.info("exception de mtype ", exc.__class__)
