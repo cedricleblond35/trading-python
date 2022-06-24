@@ -90,7 +90,19 @@ class MM(Price):
                     print("name : ", name)
                     print("self._listData[idLastEma] :", self._listData[idLastEma])
                     print("get :", self._listData[idLastEma].get(name))
-                    EMAPrecedent = self._listData[idLastEma][name]
+                    if self._listData[idLastEma].get(name):
+                        EMAPrecedent = self._listData[idLastEma][name]
+                    else:
+                        self._db[self.__timeframe].delete_one({ "_id": self._listData[idLastEma].get('_id') })
+                        self._prepareListData()  # toutes les bougies
+                        self._prepareListEMA(0, duration, name)
+                        start = len(self._listData) - len(self._listDataLast)
+                        idLastEma = start - 1
+                        if self._listData[idLastEma].get(name):
+                            EMAPrecedent = self._listData[idLastEma][name]
+                        else:
+                            return
+
 
                 print("calcul en cours ...  ")
                 list = self._listData[start:len(self._listData) - 1]
