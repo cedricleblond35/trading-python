@@ -30,17 +30,16 @@ ObjectfDay = 3.00  # %
 # communication---------
 SignalMail = False
 
-
 BALANCE = 0
 TICK = False
 PROFIT = False
 
 # GE30 le cout d un pip = 25€ * 0.01 --------------------------
-PRICE = 6.95
-PIP = 0.01
+# PRICE = 6.95
+# PIP = 0.01
 SYMBOL = "US100"
 VNL = 35
-SPREAD = 0.04
+# SPREAD = 0.04
 
 # logger properties
 logger = logging.getLogger("jsonSocket")
@@ -63,13 +62,13 @@ def startEA_Horaire():
     else:
         return False
 
+
 def updatePivot():
     time = datetime.now().time()
     if 6 > int(time.strftime("%H")) > 1:
         return True
     else:
         return False
-
 
 
 async def insertData(collection, dataDownload, listDataDB):
@@ -92,14 +91,14 @@ async def insertData(collection, dataDownload, listDataDB):
             if (listDataDB is None) or (value['ctm'] > listDataDB["ctm"]):
                 open = value['open'] / 100.0
                 newvalues = {
-                        "ctm": ctm,
-                        "ctmString": value['ctmString'],
-                        "open": open,
-                        "close": close,
-                        "high": high,
-                        "low": low,
-                        "vol": value['vol'],
-                        "pointMedian": pointMedian
+                    "ctm": ctm,
+                    "ctmString": value['ctmString'],
+                    "open": open,
+                    "close": close,
+                    "high": high,
+                    "low": low,
+                    "vol": value['vol'],
+                    "pointMedian": pointMedian
                 }
                 collection.insert_one(newvalues)
             elif value['ctm'] == listDataDB["ctm"]:
@@ -362,6 +361,7 @@ def subscribe(loginResponse):
 
     return sclient, c
 
+
 async def pivot():
     print('calcul pivot ')
     P = Pivot(SYMBOL, "D")
@@ -417,7 +417,7 @@ async def main():
             current_time = now.strftime("%H:%M:%S")
             print("Current Time =", current_time)
 
-            print("mise à jour des indicateurs : " , current_time ," -----------------------------------------------")
+            print("mise à jour des indicateurs : ", current_time, " -----------------------------------------------")
             if updatePivot():
                 zone = await pivot()
 
@@ -440,8 +440,8 @@ async def main():
             await ao05.calculLastCandle(10)
             await ao01.calculLastCandle(10)
             # supertrend ###################################################################################
-            #spM013012 = Supertrend(SYMBOL, "M01", 30, 12)
-            #superM013012T0, superM013012T1, superM013012T2 = spM013012.getST()
+            # spM013012 = Supertrend(SYMBOL, "M01", 30, 12)
+            # superM013012T0, superM013012T1, superM013012T2 = spM013012.getST()
             spM05_1003 = Supertrend(SYMBOL, "M05", 10, 3)
             superM05_1003T0, superM05_1003T1, superM05_1003T2 = spM05_1003.getST()
 
@@ -465,8 +465,8 @@ async def main():
             if c.getTick() is not None:
                 print("go stategie ***************************************")
                 tick = c.getTick()["ask"]
-                #print(bougie1M01)
-                #print("--------------------------------------------------")
+                # print(bougie1M01)
+                # print("--------------------------------------------------")
                 supportDown, supportHight = zoneSoutien(tick, zone)
                 ecart = abs(round(bougie1M01["high"] - bougie1M01["low"], 2)) \
                         + abs(round(bougie0M01["high"] - bougie1M01["low"], 2)) \
@@ -495,7 +495,7 @@ async def main():
                             # o.sellNow(support, objectif, round(price, 2), balance, VNL)
                             o.sellLimit(support, objectif, round(supportHight, 2), balance, VNL)
 
-                        elif bougie1M01.get("EMA70") and bougie1M01.get("AW") :
+                        elif bougie1M01.get("EMA70") and bougie1M01.get("AW"):
                             ######################## achat ###################################
                             if tick > superM05_1003T1 and superM05_1003T1 < superM05_1003T2:
                                 sl = superM05_1003T1
@@ -518,7 +518,7 @@ async def main():
                             if bougie1M01["EMA120"] > supportDown:
                                 print("superM05_1003T1 :", superM05_1003T1)
                                 print("EMA120 : ", bougie1M01["EMA120"])
-                                if superM05_1003T1 > bougie1M01["EMA120"] :
+                                if superM05_1003T1 > bougie1M01["EMA120"]:
                                     sl = superM05_1003T1
                                 else:
                                     sl = bougie1M01["EMA120"]
@@ -530,13 +530,13 @@ async def main():
                             if bougie1M01["EMA120"] < supportHight:
                                 print("superM05_1003T1 :", superM05_1003T1)
                                 print("EMA120 : ", bougie1M01["EMA120"])
-                                if superM05_1003T1 < bougie1M01["EMA120"] :
+                                if superM05_1003T1 < bougie1M01["EMA120"]:
                                     sl = superM05_1003T1
                                 else:
                                     sl = bougie1M01["EMA120"]
                             else:
                                 sl = supportDown
-                            #logger.info("ordre vente en attente")
+                            # logger.info("ordre vente en attente")
                             sl = round(float(sl), 2)
                             o.moveStopSell(trade, sl, tick)
 
@@ -544,13 +544,13 @@ async def main():
                         elif TransactionSide.BUY == trade['cmd']:
                             print("trade['customComment'] :", trade['customComment'])
                             if trade['customComment'] == "Achat direct":
-                                #if bougie1M01["EMA70"]  >
+                                # if bougie1M01["EMA70"]  >
 
-                                sl = round(superM05_1003T1 - ecart/4, 2)
+                                sl = round(superM05_1003T1 - ecart / 4, 2)
                                 print("sl superM05_1003T1:", sl)
                                 o.moveStopBuy(trade, sl, tick)
                             else:
-                                sl = round(bougie1M01["EMA120"] - ecart/4, 2)
+                                sl = round(bougie1M01["EMA120"] - ecart / 4, 2)
                                 print("sl EMA120 :", sl)
                                 o.moveStopBuy(trade, sl, tick)
 
@@ -558,10 +558,10 @@ async def main():
                             print("trade['customComment'] :", trade['customComment'])
                             if trade['customComment'] == "Vente direct":
                                 print("vente direct ok : sl :", superM05_1003T1)
-                                sl = round(superM05_1003T1 + ecart/4, 2)
+                                sl = round(superM05_1003T1 + ecart / 4, 2)
                                 o.moveStopSell(trade, sl, tick)
                             else:
-                                sl = round(bougie1M01["EMA120"] + ecart/4, 2)
+                                sl = round(bougie1M01["EMA120"] + ecart / 4, 2)
                                 o.moveStopSell(trade, sl, tick)
 
             time.sleep(5)
@@ -584,6 +584,7 @@ async def main():
 
     client.disconnect()
     sclient.disconnect()
+
 
 if __name__ == "__main__":
     asyncio.run(main())
