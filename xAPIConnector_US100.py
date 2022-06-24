@@ -496,11 +496,13 @@ async def main():
                             o.sellLimit(support, objectif, round(supportHight, 2), balance, VNL)
 
                         elif bougie1M01.get("EMA70") and bougie1M01.get("AW") :
-                            if bougie0M01["AW"] > 15 and tick > superM05_1003T1 and tick > bougie1M01["EMA70"]:
+                            ######################## achat ###################################
+                            if tick > superM05_1003T1 and superM05_1003T1 < superM05_1003T2:
                                 sl = superM05_1003T1
                                 tp = 0
                                 o.buyNow(sl, tp, tick, balance, VNL)
-                            elif bougie0M01["AW"] < -15 and tick < superM05_1003T1 and tick < bougie1M01["EMA70"]:
+                            ######################## vente ###################################
+                            elif tick < superM05_1003T1 and superM05_1003T1 > superM05_1003T2:
                                 sl = superM05_1003T1
                                 tp = 0
                                 o.sellNow(sl, tp, tick, balance, VNL)
@@ -529,6 +531,13 @@ async def main():
                         elif TransactionSide.BUY == trade['cmd']:
                             print("trade['customComment'] :", trade['customComment'])
                             if trade['customComment'] == "Achat direct":
+                                #if bougie1M01["EMA70"]  >
+
+
+
+
+
+
                                 sl = round(superM05_1003T1 - ecart/4, 2)
                                 print("sl superM05_1003T1:", sl)
                                 o.moveStopBuy(trade, sl, tick)
