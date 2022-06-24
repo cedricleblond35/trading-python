@@ -515,8 +515,9 @@ async def main():
                         # logger.info("c.getProfit(): ", c.getProfit())
                         #############" ordre en attente ##################"
                         if TransactionSide.BUY_LIMIT == trade['cmd']:
-                            #logger.info("c'est ordre achat en attente")
                             if bougie1M01["EMA120"] > supportDown:
+                                print("superM05_1003T1 :", superM05_1003T1)
+                                print("EMA120 : ", bougie1M01["EMA120"])
                                 if superM05_1003T1 > bougie1M01["EMA120"] :
                                     sl = superM05_1003T1
                                 else:
@@ -527,6 +528,8 @@ async def main():
 
                         elif TransactionSide.SELL_LIMIT == trade['cmd']:
                             if bougie1M01["EMA120"] < supportHight:
+                                print("superM05_1003T1 :", superM05_1003T1)
+                                print("EMA120 : ", bougie1M01["EMA120"])
                                 if superM05_1003T1 < bougie1M01["EMA120"] :
                                     sl = superM05_1003T1
                                 else:
