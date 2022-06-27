@@ -43,7 +43,7 @@ PROFIT = False
 # GE30 le cout d un pip = 25€ * 0.01 --------------------------
 PRICE = 6.95
 PIP = 0.01
-SYMBOL = "OIL"
+SYMBOL = "US100"
 SPREAD = 0.04
 
 # logger properties
@@ -355,84 +355,6 @@ def main():
     try:
         connection = MongoClient('localhost', 27017)
         db = connection[SYMBOL]
-        dbStreaming = connection["STREAMING"]
-        c = Command()
-        # ssid = loginResponse['streamSessionId']
-        # sclient = APIStreamClient(
-        #     ssId=ssid,
-        #     tickFun=c.procTickExample,
-        #     tradeFun=c.procTradeExample,
-        #     profitFun=c.procProfitExample,
-        #     tradeStatusFun=c.procTradeStatusExample,
-        #     balanceFun=c.procBalanceExample
-        # )
-        # sclient.subscribePrice("OIL")
-        # sclient.subscribeProfits()
-        # sclient.subscribeTradeStatus()
-        # sclient.subscribeTrades()
-        # sclient.subscribeBalance()
-        #
-
-        #
-        # startTime = int(round(time.time() * 1000)) - (
-        #         60 * 60 * 30 * 1) * 1000  # reculer de 30 jours : (60*60*24*30)*1000
-        #
-        # # print("************************** calcul balance******************************************")
-        # json_balance1 = json.dumps(client.commandExecute('getMarginLevel'))
-        # dict_balance = json.loads(json_balance1)
-        # BALANCE = dict_balance["returnData"]
-        #
-        # print("mise à jour en cours de l ensemble .......")
-        # startTime = await majDatAall(client, startTime, SYMBOL, db)
-        #
-        # # pivot##################################################################################################
-        # print('mise à jour du pivot -------------------------')
-        # P = Pivot(SYMBOL, "D")
-        # PPF, R1F, R2F, R3F, S1F, S2F, S3F = await P.fibonacci()  # valeurs ok
-        # PPW, R1W, R2W, S1W, S2W = await P.woodie()  # valeurs ok
-        # PPC, R1C, R2C, R3C, R4C, S1C, S2C, S3C, S4C = await P.camarilla()  # valeurs ok
-        # R1D, S1D = await P.demark()  # valeurs ok
-        #
-        # zone = np.array(
-        #     [PPC, R1C, R2C, R3C, R4C, S1C, S2C, S3C, S4C, R1W, R2W, S1W, S2W, R1D, S1D])
-        # zone = np.sort(zone)
-        # print('zone :', zone)
-        # #exit(0)
-        # print('calcul du Pivot fini')
-        #moy_mobil_01_120 = MM(SYMBOL, "M01", 0)
-        #moy_mobil_01_120.calculSMA(120)
-        #moy_mobil_01_360 = MM(SYMBOL, "M01", 0)
-        #moy_mobil_01_360.calculSMA(360)
-        #print("calcul sma120 fini")
-        # #
-        # moy_mobil_05_120 = MM(SYMBOL, "M05", 0)
-        # moy_mobil_05_120.calculSMA(120)
-        # moy_mobil_05_120.EMA(120)
-        #
-        # ao05 = Awesome(SYMBOL, "M05")
-        # await ao05.calculAllCandles()
-        # ao01 = Awesome(SYMBOL, "M01")
-        # await ao01.calculAllCandles()
-
-        # # supertrend ###################################################################################
-        #sp_m05 = Supertrend(SYMBOL, "M05", 20, 9)
-        #super_m05_t0, super_t1, super_t2 = sp_m05.getST()
-        # super_m05T0 = round(float(super_m05_t0), 2)
-        # # print("super_m01T0 :", super_m05T0)
-        # superT1 = round(float(super_t1), 1)
-        # # print("superT1 :", superT1)
-        # sp_m05 = Supertrend(SYMBOL, "M05", 10, 4)
-        # super_m05T0, super_m05T1, super_m05T2 = sp_m05.getST()
-
-
-        # sp_m01 = Supertrend(SYMBOL, "M01", 20, 9)
-        # super_m01T0, super_m01T1, super_m01T2 = sp_m01.getST()
-
-        # # print("super_m05T0 :", super_m05T0)
-        #
-        # print("fini *********************************")
-        #
-        # o = Order(SYMBOL, dbStreaming, client)
 
         # Charger les bougies
         bougies0_m01 = False

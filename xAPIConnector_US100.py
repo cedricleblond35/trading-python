@@ -291,6 +291,9 @@ async def majDatAall(client, symbol, db):
         dataM05Download = json.loads(dataM05)
         listDataDBM05 = db["M05"].find_one({}, sort=[('ctm', -1)])
         newTime = await insertData(db["M05"], dataM05Download, listDataDBM05)
+
+        # on retourne le dernier temps "ctm" enregistré
+        return newTime
     except Exception as exc:
         print("majDatAall a déclenché une erreur")
         print("exception de mtype ", exc.__class__)
@@ -299,8 +302,7 @@ async def majDatAall(client, symbol, db):
         fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
         print(exc_type, fname, exc_tb.tb_lineno)
 
-    # on retourne le dernier temps "ctm" enregistré
-    return newTime
+
 
 
 def round_up(n, decimals=0):
