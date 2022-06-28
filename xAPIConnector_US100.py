@@ -467,6 +467,7 @@ async def main():
             if c.getTick() is not None:
                 print("go stategie ***************************************")
                 tick = c.getTick()["ask"]
+                print("tick :", tick)
                 # print(bougie1M01)
                 # print("--------------------------------------------------")
                 supportDown, supportHight = zoneSoutien(tick, zone)
