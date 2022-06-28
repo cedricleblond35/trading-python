@@ -504,12 +504,12 @@ async def main():
 
                         elif bougie1M01.get("EMA70") and bougie1M01.get("AW"):
                             ######################## achat ###################################
-                            if tick > superM05_1003T1 and superM05_1003T1 < superM05_1003T2:
+                            if tick > superM05_1003T1 and superM05_1003T1 > superM05_1003T2:
                                 sl = superM05_1003T1
                                 tp = 0
                                 o.buyNow(sl, tp, tick+10, balance, VNL)
                             ######################## vente ###################################
-                            elif tick < superM05_1003T1 and superM05_1003T1 > superM05_1003T2:
+                            elif tick < superM05_1003T1 and superM05_1003T1 < superM05_1003T2:
                                 sl = superM05_1003T1
                                 tp = 0
                                 o.sellNow(sl, tp, tick-10, balance, VNL)
