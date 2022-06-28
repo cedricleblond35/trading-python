@@ -294,8 +294,13 @@ class Order:
             perteAcceptable = round(balance * 0.01, 0)
 
             print("perteAcceptable :", perteAcceptable)
+            print("position :", position)
+            print("stp :", stp)
             ecartPip = abs((position - stp))
+
+            print("ecart type :", ecartPip)
             nbrelot = perteAcceptable / ecartPip / vnl
+            print("nbrelot :", nbrelot)
             """
             qtMax = self.round_down((balance["equityFX"] / 20000), 2)
             if nbrelot > qtMax:
