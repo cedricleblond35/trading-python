@@ -503,12 +503,12 @@ async def main():
                             if tick > superM05_1003T1 and superM05_1003T1 < superM05_1003T2:
                                 sl = superM05_1003T1
                                 tp = 0
-                                o.buyNow(sl, tp, tick, balance, VNL)
+                                o.buyNow(sl, tp, tick+10, balance, VNL)
                             ######################## vente ###################################
                             elif tick < superM05_1003T1 and superM05_1003T1 > superM05_1003T2:
                                 sl = superM05_1003T1
                                 tp = 0
-                                o.sellNow(sl, tp, tick, balance, VNL)
+                                o.sellNow(sl, tp, tick-10, balance, VNL)
                 else:
                     print(tradeOpen)
                     for trade in tradeOpenDic['returnData']:
