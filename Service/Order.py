@@ -307,14 +307,14 @@ class Order:
                 nbrelot = qtMax
             """
 
-            logger.info('//////////////////////////////////// NbrLot ////////////////////////////////////')
+            logger.info('//////////////////////////////////// NbrLot debut ////////////////////////////////////')
             logger.info('balance :', balance)
             logger.info('position :', position)
             logger.info('stp :', stp)
             logger.info('perteAcceptable :', perteAcceptable)
             logger.info('ecartPip :', ecartPip)
             logger.info('nbrelot :', nbrelot)
-            logger.info('//////////////////////////////////// NbrLot ////////////////////////////////////')
+            logger.info('//////////////////////////////////// NbrLot fin ////////////////////////////////////')
 
             return round(nbrelot, 2)
         except (RuntimeError, TypeError, NameError):
