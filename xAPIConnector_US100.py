@@ -469,6 +469,8 @@ async def main():
                 print("c.getTick() :", c.getTick())
                 tick = c.getTick()["ask"]
                 print("tick :", tick)
+                print("superM05_1003T1 :", superM05_1003T1)
+                print("superM05_1003T2 :", superM05_1003T2)
                 # print(bougie1M01)
                 # print("--------------------------------------------------")
                 supportDown, supportHight = zoneSoutien(tick, zone)
