@@ -466,6 +466,7 @@ async def main():
 
             if c.getTick() is not None:
                 print("go stategie ***************************************")
+                print("c.getTick() :", c.getTick())
                 tick = c.getTick()["ask"]
                 print("tick :", tick)
                 # print(bougie1M01)
