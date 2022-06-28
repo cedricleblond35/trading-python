@@ -297,7 +297,7 @@ class Order:
             if nbrelot > qtMax:
                 nbrelot = qtMax
             """
-            """
+
             logger.info('//////////////////////////////////// NbrLot ////////////////////////////////////')
             logger.info('balance :', balance)
             logger.info('position :', position)
@@ -306,7 +306,7 @@ class Order:
             logger.info('ecartPip :', ecartPip)
             logger.info('nbrelot :', nbrelot)
             logger.info('//////////////////////////////////// NbrLot ////////////////////////////////////')
-            """
+
             return round(nbrelot, 2)
         except (RuntimeError, TypeError, NameError):
             pass
