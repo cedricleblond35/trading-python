@@ -291,7 +291,7 @@ class Order:
         try:
             print("balance :", balance)
             print("vnl :", vnl)
-            perteAcceptable = round(balance * 0.01, 0)
+            perteAcceptable = round(balance * 0.05, 0)
 
             print("perteAcceptable :", perteAcceptable)
             print("position :", position)
