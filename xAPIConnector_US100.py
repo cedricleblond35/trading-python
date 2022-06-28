@@ -479,6 +479,7 @@ async def main():
                 if len(tradeOpen['returnData']) == 0:
                     print("-- Aucun ordre   ***************************************")
                     if bougie1M01.get("EMA26") and bougie1M01.get("EMA70") and bougie1M01.get("EMA120"):
+                        print("demarrage de selection d un futur ordre")
                         ######################## achat ###################################
                         if bougie1M01["EMA26"] > bougie1M01["EMA70"] > bougie1M01["EMA120"] > bougie2M01["EMA120"] \
                                 and bougie1M01["EMA70"] > bougie2M01["EMA70"] \
