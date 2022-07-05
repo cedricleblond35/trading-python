@@ -156,7 +156,7 @@ async def majData(client, startTime, symbol, db):
     data_D = json.dumps(json_data_D)
     dataDayDownload = json.loads(data_D)
     listDataDB = db["D"].find_one({}, sort=[('ctm', -1)])
-    await insertData(db["H4"], dataDayDownload, listDataDB)
+    await insertData(db["D"], dataDayDownload, listDataDB)
 
     # MAJ H4 ------------------------------------------------------------------------
     # 20 jours x 24 heures x 3600 secondes x 1000
