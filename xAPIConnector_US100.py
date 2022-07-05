@@ -147,17 +147,28 @@ async def majData(client, startTime, symbol, db):
     listDataDBM01 = db["M01"].find_one({}, sort=[('ctm', -1)])
     await insertData(db["M01"], dataM01Download, listDataDBM01)
 
+    startTimeDay = int(round(time.time() * 1000)) - (60 * 60 * 24 * 3) * 1000
+    arguments = {
+        "info": {"start": startTimeDay, "end": endTime, "period": 1440,
+                 "symbol": symbol,
+                 "ticks": 0}}
+    json_data_D = client.commandExecute('getChartRangeRequest', arguments)
+    data_D = json.dumps(json_data_D)
+    dataDayDownload = json.loads(data_D)
+    listDataDB = db["D"].find_one({}, sort=[('ctm', -1)])
+    await insertData(db["H4"], dataDayDownload, listDataDB)
+
     # MAJ H4 ------------------------------------------------------------------------
     # 20 jours x 24 heures x 3600 secondes x 1000
     # print("H4 :", startTime - (6 * 3600000))
-    # json_data_H4 = client.commandExecute('getChartRangeRequest', {
-    #     "info": {"start": startTime - (6 * 3600000), "end": endTime, "period": 240,
-    #              "symbol": symbol,
-    #              "ticks": 0}})
-    # data_H4 = json.dumps(json_data_H4)
-    # dataH4Download = json.loads(data_H4)
-    # listDataDB = db["H4"].find_one({}, sort=[('ctm', -1)])
-    # await insertData(db["H4"], dataH4Download, listDataDB)
+    json_data_H4 = client.commandExecute('getChartRangeRequest', {
+        "info": {"start": startTime - (6 * 3600000), "end": endTime, "period": 240,
+                 "symbol": symbol,
+                 "ticks": 0}})
+    data_H4 = json.dumps(json_data_H4)
+    dataH4Download = json.loads(data_H4)
+    listDataDB = db["H4"].find_one({}, sort=[('ctm', -1)])
+    await insertData(db["H4"], dataH4Download, listDataDB)
 
     startTimeM15 = int(round(time.time() * 1000)) - (60 * 60 * 24 * 30 * 15) * 1000
     json_data_M15 = client.commandExecute('getChartRangeRequest', {
@@ -303,8 +314,6 @@ async def majDatAall(client, symbol, db):
         print(exc_type, fname, exc_tb.tb_lineno)
 
 
-
-
 def round_up(n, decimals=0):
     '''
     Arrondi au superieur
@@ -378,6 +387,7 @@ async def pivot():
 
 async def main():
     client = APIClient()  # create & connect to RR socket
+    print(client)
     loginResponse = client.identification()  # connect to RR socket, login
     # get ssId from login response
     ssid = loginResponse['streamSessionId']
