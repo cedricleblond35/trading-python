@@ -562,6 +562,7 @@ async def main():
                         #############" ordre execute ##################"
                         elif TransactionSide.BUY == trade['cmd']:
                             print("trade['customComment'] :", trade['customComment'])
+                            print("bougie0M05['AW'] :", bougie0M05)
                             if trade['customComment'] == "Achat direct":
 
                                 # Pour garantir pas de perte : monter le stop  a 5pip de benef :
