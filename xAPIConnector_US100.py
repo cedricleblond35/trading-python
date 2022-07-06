@@ -530,8 +530,8 @@ async def main():
                     for trade in tradeOpenDic['returnData']:
                         print("-- ordre en cours   ***************************************")
                         print(trade)
-                        logger.info("c.getTrade() :", c.getTrade())
-                        logger.info("c.getProfit(): ", c.getProfit())
+                        print("c.getTrade() :", c.getTrade())
+                        print("c.getProfit(): ", c.getProfit())
                         #############" ordre en attente ##################"
                         if TransactionSide.BUY_LIMIT == trade['cmd']:
                             if bougie1M01["EMA120"] > supportDown:
