@@ -472,6 +472,7 @@ async def main():
             bougie2M01 = db["M01"].find({}, sort=[('ctm', -1)]).limit(1).skip(2)[0]
             bougie3M01 = db["M01"].find({}, sort=[('ctm', -1)]).limit(1).skip(3)[0]
 
+            bougie0M05 = db["M05"].find({}, sort=[('ctm', -1)]).limit(1).skip(0)[0]
             bougie1M05 = db["M05"].find({}, sort=[('ctm', -1)]).limit(1).skip(1)[0]
 
             if c.getTick() is not None:
@@ -561,22 +562,37 @@ async def main():
                         elif TransactionSide.BUY == trade['cmd']:
                             print("trade['customComment'] :", trade['customComment'])
                             if trade['customComment'] == "Achat direct":
-                                # if bougie1M01["EMA70"]  >
 
-                                sl = round(superM05_1003T1 - ecart / 4, 2)
-                                print("sl superM05_1003T1:", sl)
-                                o.moveStopBuy(trade, sl, tick)
+                                # Pour garantir pas de perte : monter le stop  a 5pip de benef :
+                                #   Si cours en dessus de l ouverture avec ecart 20pip
+                                #   Et si AW change de tendance
+                                if trade['sl'] < trade['price'] and tick > trade['price']+20 and bougie0M05['AW'] < bougie1M05['AW']:
+                                    sl = trade['price'] + 5
+                                    o.moveStopBuy(trade, sl, tick)
+                                else:
+                                    sl = round(superM05_1003T1 - ecart / 4, 2)
+                                    print("sl superM05_1003T1:", sl)
+                                    o.moveStopBuy(trade, sl, tick)
                             else:
-                                sl = round(bougie1M01["EMA120"] - ecart / 4, 2)
-                                print("sl EMA120 :", sl)
-                                o.moveStopBuy(trade, sl, tick)
+                                    sl = round(bougie1M01["EMA120"] - ecart / 4, 2)
+                                    print("sl EMA120 :", sl)
+                                    o.moveStopBuy(trade, sl, tick)
 
                         elif TransactionSide.SELL == trade['cmd']:
                             print("trade['customComment'] :", trade['customComment'])
                             if trade['customComment'] == "Vente direct":
-                                print("vente direct ok : sl :", superM05_1003T1)
-                                sl = round(superM05_1003T1 + ecart / 4, 2)
-                                o.moveStopSell(trade, sl, tick)
+
+                                # descendre le stop  a 5pip de benef :
+                                #   Si cours en dessous de l ouverture avec ecart 20pip
+                                #   Et si AW change de tendance
+                                if trade['sl'] > trade['price'] and tick < trade['price'] - 20 and bougie0M05['AW'] > \
+                                        bougie1M05['AW']:
+                                    sl = trade['price'] - 5
+                                    o.moveStopSell(trade, sl, tick)
+                                else:
+                                    print("vente direct ok : sl :", superM05_1003T1)
+                                    sl = round(superM05_1003T1 + ecart / 4, 2)
+                                    o.moveStopSell(trade, sl, tick)
                             else:
                                 sl = round(bougie1M01["EMA120"] + ecart / 4, 2)
                                 o.moveStopSell(trade, sl, tick)
