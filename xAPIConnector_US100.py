@@ -479,6 +479,7 @@ async def main():
                 print("go stategie ***************************************")
                 print("c.getTick() :", c.getTick())
                 tick = c.getTick()["ask"]
+                logger.info("c.getTrade() :", c.getTrade())
                 print("tick :", tick)
                 print("superM05_1003T1 :", superM05_1003T1)
                 print("superM05_1003T2 :", superM05_1003T2)
@@ -529,8 +530,8 @@ async def main():
                     for trade in tradeOpenDic['returnData']:
                         print("-- ordre en cours   ***************************************")
                         print(trade)
-                        # logger.info("c.getTrade() :", c.getTrade())
-                        # logger.info("c.getProfit(): ", c.getProfit())
+                        logger.info("c.getTrade() :", c.getTrade())
+                        logger.info("c.getProfit(): ", c.getProfit())
                         #############" ordre en attente ##################"
                         if TransactionSide.BUY_LIMIT == trade['cmd']:
                             if bougie1M01["EMA120"] > supportDown:
