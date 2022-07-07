@@ -490,7 +490,7 @@ async def main():
                         + abs(round(bougie3M01["high"] - bougie3M01["low"], 2))
                 if len(tradeOpen['returnData']) == 0:
                     print("-- Aucun ordre   ***************************************")
-                    if bougie1M01.get("EMA26") and bougie1M01.get("EMA70") and bougie1M01.get("EMA120"):
+                    if bougie1M01.get("EMA26") and bougie1M01.get("EMA70") and bougie1M01.get("EMA120") and bougie1M05.get("EMA120"):
                         print("demarrage de selection d un futur ordre")
                         ######################## achat ###################################
                         if bougie1M01["EMA26"] > bougie1M01["EMA70"] > bougie1M01["EMA120"] > bougie2M01["EMA120"] \
@@ -514,12 +514,12 @@ async def main():
 
                         elif bougie1M01.get("EMA70") and bougie1M01.get("AW"):
                             ######################## achat ###################################
-                            if tick > superM05_1003T1 >= superM05_1003T2:
+                            if tick > superM05_1003T1 >= superM05_1003T2 and bougie1M01["EMA70"] > bougie1M05.get("EMA120"):
                                 sl = superM05_1003T1
                                 tp = 0
                                 o.buyNow(sl, tp, tick, balance, VNL)
                             ######################## vente ###################################
-                            elif tick < superM05_1003T1 <= superM05_1003T2:
+                            elif tick < superM05_1003T1 <= superM05_1003T2 and bougie1M01["EMA70"] < bougie1M05.get("EMA120"):
                                 sl = superM05_1003T1
                                 tp = 0
                                 o.sellNow(sl, tp, tick, balance, VNL)
