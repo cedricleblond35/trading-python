@@ -478,7 +478,7 @@ async def main():
                 print("go stategie ***************************************")
                 print("c.getTick() :", c.getTick())
                 tick = c.getTick()["ask"]
-                logger.info("c.getTrade() :", c.getTrade())
+                #logger.info("c.getTrade() :", c.getTrade())  erreur !!!!
                 print("tick :", tick)
                 print("superM05_1003T1 :", superM05_1003T1)
                 print("superM05_1003T2 :", superM05_1003T2)
