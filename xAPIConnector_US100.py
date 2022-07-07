@@ -478,7 +478,6 @@ async def main():
                 print("go stategie ***************************************")
                 print("c.getTick() :", c.getTick())
                 tick = c.getTick()["ask"]
-                #logger.info("c.getTrade() :", c.getTrade())  erreur !!!!
                 print("tick :", tick)
                 print("superM05_1003T1 :", superM05_1003T1)
                 print("superM05_1003T2 :", superM05_1003T2)
@@ -531,6 +530,8 @@ async def main():
                         print(trade)
                         print("c.getTrade() :", c.getTrade())
                         print("c.getProfit(): ", c.getProfit())
+                        print("trade['customComment'] :", trade['customComment'])
+                        print("bougie0M05['AW'] :", bougie0M05)
                         #############" ordre en attente ##################"
                         if TransactionSide.BUY_LIMIT == trade['cmd']:
                             if bougie1M01["EMA120"] > supportDown:
@@ -560,14 +561,13 @@ async def main():
 
                         #############" ordre execute ##################"
                         elif TransactionSide.BUY == trade['cmd']:
-                            print("trade['customComment'] :", trade['customComment'])
-                            print("bougie0M05['AW'] :", bougie0M05)
+
                             if trade['customComment'] == "Achat direct":
 
                                 # Pour garantir pas de perte : monter le stop  a 5pip de benef :
                                 #   Si cours en dessus de l ouverture avec ecart 20pip
                                 #   Et si AW change de tendance
-                                if trade['sl'] < trade['price'] and tick > trade['price']+20 and bougie0M05['AW'] < bougie1M05['AW']:
+                                if trade['sl'] < trade['open_price'] and tick > trade['open_price']+20 and bougie0M05['AW'] < bougie1M05['AW']:
                                     sl = trade['price'] + 5
                                     o.moveStopBuy(trade, sl, tick)
                                 else:
@@ -586,7 +586,7 @@ async def main():
                                 # descendre le stop  a 5pip de benef :
                                 #   Si cours en dessous de l ouverture avec ecart 20pip
                                 #   Et si AW change de tendance
-                                if trade['sl'] > trade['price'] and tick < trade['price'] - 20 and bougie0M05['AW'] > \
+                                if trade['sl'] > trade['open_price'] and tick < trade['open_price'] - 20 and bougie0M05['AW'] > \
                                         bougie1M05['AW']:
                                     sl = trade['price'] - 5
                                     o.moveStopSell(trade, sl, tick)
