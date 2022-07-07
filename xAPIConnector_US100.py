@@ -568,7 +568,7 @@ async def main():
                                 #   Si cours en dessus de l ouverture avec ecart 20pip
                                 #   Et si AW change de tendance
                                 if trade['sl'] < trade['open_price'] and tick > trade['open_price']+20 and bougie0M05['AW'] < bougie1M05['AW']:
-                                    sl = trade['price'] + 5
+                                    sl = trade['open_price'] + 5
                                     o.moveStopBuy(trade, sl, tick)
                                 else:
                                     sl = round(superM05_1003T1 - ecart / 4, 2)
@@ -588,7 +588,7 @@ async def main():
                                 #   Et si AW change de tendance
                                 if trade['sl'] > trade['open_price'] and tick < trade['open_price'] - 20 and bougie0M05['AW'] > \
                                         bougie1M05['AW']:
-                                    sl = trade['price'] - 5
+                                    sl = trade['open_price'] - 5
                                     o.moveStopSell(trade, sl, tick)
                                 else:
                                     print("vente direct ok : sl :", superM05_1003T1)
