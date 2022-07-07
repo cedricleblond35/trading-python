@@ -170,9 +170,8 @@ async def majData(client, startTime, symbol, db):
     listDataDB = db["H4"].find_one({}, sort=[('ctm', -1)])
     await insertData(db["H4"], dataH4Download, listDataDB)
 
-    startTimeM15 = int(round(time.time() * 1000)) - (60 * 60 * 24 * 30 * 15) * 1000
     json_data_M15 = client.commandExecute('getChartRangeRequest', {
-        "info": {"start": startTimeM15, "end": endTime, "period": 15,
+        "info": {"start": startTime - (6 * 60 * 1000), "end": endTime, "period": 15,
                  "symbol": symbol,
                  "ticks": 0}})
     dataM15 = json.dumps(json_data_M15)
