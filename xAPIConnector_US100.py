@@ -538,7 +538,7 @@ async def main():
                                 print("superM05_1003T1 :", superM05_1003T1)
                                 print("EMA120 : ", bougie1M01["EMA120"])
                                 if superM05_1003T1 > bougie1M01["EMA120"]:
-                                    sl = superM05_1003T1
+                                    sl = round(superM05_1003T1 - ecart / 4, 2)
                                 else:
                                     sl = bougie1M01["EMA120"]
                             else:
@@ -550,7 +550,7 @@ async def main():
                                 print("superM05_1003T1 :", superM05_1003T1)
                                 print("EMA120 : ", bougie1M01["EMA120"])
                                 if superM05_1003T1 < bougie1M01["EMA120"]:
-                                    sl = superM05_1003T1
+                                    sl = round(superM05_1003T1 + ecart / 4, 2)
                                 else:
                                     sl = bougie1M01["EMA120"]
                             else:
