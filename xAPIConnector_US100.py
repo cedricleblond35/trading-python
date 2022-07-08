@@ -404,50 +404,6 @@ async def main():
             current_time = now.strftime("%H:%M:%S")
             print("Current Time =", current_time)
             print("mise à jour des indicateurs : ", current_time, " -----------------------------------------------")
-            if updatePivot():
-                zone = await pivot()
-
-            ###################################################################################################
-            balance = c.getBalance()
-            if c.getBalance() == 0:
-                resp = client.commandExecute('getMarginLevel')
-                balance = resp["returnData"]["margin_free"]
-            else:
-                balance = balance["marginFree"]
-
-            ####################################################################################################
-            startTime = await majData(client, startTime, SYMBOL, db)
-            ####################################################################################################
-            await moyMobil_01_120.EMA(120)
-            await moyMobil_01_120.EMA(70)
-            await moyMobil_01_120.EMA(26)
-            await moyMobil_05_120.EMA(120)
-            # AO ###################################################################################
-            await ao05.calculLastCandle(10)
-            await ao01.calculLastCandle(10)
-            # supertrend ###################################################################################
-            # spM013012 = Supertrend(SYMBOL, "M01", 30, 12)
-            # superM013012T0, superM013012T1, superM013012T2 = spM013012.getST()
-            spM05_1003 = Supertrend(SYMBOL, "M05", 10, 3)
-            superM05_1003T0, superM05_1003T1, superM05_1003T2 = spM05_1003.getST()
-
-            ###############################################################################################################
-            # order
-            ###############################################################################################################
-            tradeOpenDic = findopenOrder(client)
-            tradeOpen = json.loads(json.dumps(tradeOpenDic))
-
-            ###############################################################################################################
-            # bougie
-            ###############################################################################################################
-            # minutes-------------------------------------------------------
-            bougie0M01 = db["M01"].find({}, sort=[('ctm', -1)]).limit(1).skip(0)[0]
-            bougie1M01 = db["M01"].find({}, sort=[('ctm', -1)]).limit(1).skip(1)[0]
-            bougie2M01 = db["M01"].find({}, sort=[('ctm', -1)]).limit(1).skip(2)[0]
-            bougie3M01 = db["M01"].find({}, sort=[('ctm', -1)]).limit(1).skip(3)[0]
-
-            bougie0M05 = db["M05"].find({}, sort=[('ctm', -1)]).limit(1).skip(0)[0]
-            bougie1M05 = db["M05"].find({}, sort=[('ctm', -1)]).limit(1).skip(1)[0]
 
 
             time.sleep(5)
