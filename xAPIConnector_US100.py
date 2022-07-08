@@ -499,6 +499,7 @@ async def main():
                     print("EMA70 1min:", bougie1M01["EMA70"], "    EMA120 5min:", bougie1M05.get("EMA120"))
                     print("-- variable fin ************")
                     print("demarrage de selection d un futur ordre")
+                    """
                     if bougie1M01.get("EMA26") and bougie1M01.get("EMA70") and bougie1M01.get(
                             "EMA120") and bougie1M05.get("EMA120"):
                         ######################## achat ###################################
@@ -510,9 +511,11 @@ async def main():
                             objectif = supportHight - 5
                             # o.buyNow(support, objectif, round(price, 2), balance, VNL)
                             o.buyLimit(support, objectif, round(supportDown, 2), balance, VNL)
+                    
+
 
                         ######################## vente ###################################
-                        elif bougie1M01["EMA120"] > bougie1M01["EMA70"] > bougie1M01["EMA26"] \
+                        if bougie1M01["EMA120"] > bougie1M01["EMA70"] > bougie1M01["EMA26"] \
                                 and bougie1M01["EMA70"] < bougie2M01["EMA70"] \
                                 and bougie2M01["EMA120"] > bougie1M01["EMA120"] > supportHight > bougie1M01["EMA26"] \
                                 and bougie1M01["EMA26"] < superM05_1003T1 \
@@ -521,20 +524,20 @@ async def main():
                             objectif = supportDown + 5
                             # o.sellNow(support, objectif, round(price, 2), balance, VNL)
                             o.sellLimit(support, objectif, round(supportHight, 2), balance, VNL)
-
-                        elif bougie1M01.get("EMA70") and bougie1M01.get("AW") and bougie1M01.get(
-                                "EMA70") and bougie1M05.get("EMA120"):
-                            ######################## achat ###################################
-                            if tick > superM05_1003T1 >= superM05_1003T2 and bougie1M01["EMA70"] > bougie1M05["EMA120"] \
-                                    and tick > superM05_1003T0:
-                                sl = superM05_1003T1
-                                tp = 0
-                                o.buyNow(sl, tp, tick, balance, VNL)
-                            ######################## vente ###################################
-                            elif tick < superM05_1003T1 <= superM05_1003T2 and bougie1M01["EMA70"] < bougie1M05["EMA120"] and tick < superM05_1003T0:
-                                sl = superM05_1003T1
-                                tp = 0
-                                o.sellNow(sl, tp, tick, balance, VNL)
+                    """
+                    if bougie1M01.get("EMA70") and bougie1M01.get("AW") and bougie1M01.get(
+                            "EMA70") and bougie1M05.get("EMA120"):
+                        ######################## achat ###################################
+                        if tick > superM05_1003T1 >= superM05_1003T2 and bougie1M01["EMA70"] > bougie1M05["EMA120"] \
+                                and tick > superM05_1003T0:
+                            sl = superM05_1003T1
+                            tp = 0
+                            o.buyNow(sl, tp, tick, balance, VNL)
+                        ######################## vente ###################################
+                        elif tick < superM05_1003T1 <= superM05_1003T2 and bougie1M01["EMA70"] < bougie1M05["EMA120"] and tick < superM05_1003T0:
+                            sl = superM05_1003T1
+                            tp = 0
+                            o.sellNow(sl, tp, tick, balance, VNL)
                 else:
                     print("ordre encours ...")
                     for trade in tradeOpenDic['returnData']:
