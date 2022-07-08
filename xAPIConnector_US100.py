@@ -525,15 +525,13 @@ async def main():
                         elif bougie1M01.get("EMA70") and bougie1M01.get("AW") and bougie1M01.get(
                                 "EMA70") and bougie1M05.get("EMA120"):
                             ######################## achat ###################################
-                            if tick > superM05_1003T1 >= superM05_1003T2 and bougie1M01["EMA70"] > bougie1M05.get(
-                                    "EMA120") \
+                            if tick > superM05_1003T1 >= superM05_1003T2 and bougie1M01["EMA70"] > bougie1M05["EMA120"] \
                                     and tick > superM05_1003T0:
                                 sl = superM05_1003T1
                                 tp = 0
                                 o.buyNow(sl, tp, tick, balance, VNL)
                             ######################## vente ###################################
-                            elif tick < superM05_1003T1 <= superM05_1003T2 and bougie1M01["EMA70"] < bougie1M05.get(
-                                    "EMA120") and tick < superM05_1003T0:
+                            elif tick < superM05_1003T1 <= superM05_1003T2 and bougie1M01["EMA70"] < bougie1M05["EMA120"] and tick < superM05_1003T0:
                                 sl = superM05_1003T1
                                 tp = 0
                                 o.sellNow(sl, tp, tick, balance, VNL)
