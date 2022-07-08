@@ -447,7 +447,6 @@ async def main():
             spM05_1003 = Supertrend(SYMBOL, "M05", 10, 3)
             superM05_1003T0, superM05_1003T1, superM05_1003T2 = spM05_1003.getST()
 
-
             now = datetime.now()
             current_time = now.strftime("%H:%M:%S")
             print("fin de la mise à jour ", current_time)
@@ -490,6 +489,8 @@ async def main():
                         + abs(round(bougie0M01["high"] - bougie1M01["low"], 2)) \
                         + abs(round(bougie1M01["high"] - bougie2M01["low"], 2)) \
                         + abs(round(bougie3M01["high"] - bougie3M01["low"], 2))
+
+                print("recherche de type dordre à executer : nouvel ordre ou move SL")
                 if len(tradeOpen['returnData']) == 0:
                     print("-- Aucun ordre   ***************************************")
                     print("-- variable ************")
@@ -537,9 +538,8 @@ async def main():
                                 tp = 0
                                 o.sellNow(sl, tp, tick, balance, VNL)
                 else:
-                    print(tradeOpen)
+                    print("ordre encours ...")
                     for trade in tradeOpenDic['returnData']:
-                        print("-- ordre en cours   ***************************************")
                         print(trade)
                         print("c.getTrade() :", c.getTrade())
                         print("c.getProfit(): ", c.getProfit())
