@@ -543,12 +543,12 @@ async def main():
                     if tick < superM05_1003T1 <= superM05_1003T2 and tick < superM05_1003T0 and tick < bougie1M01["EMA120"]:
                         sl = superM05_1003T1
                         tp = 0
-                        o.sellLimit(sl, tp, bougie1M01["120"], balance, VNL)
+                        o.sellLimit(sl, tp, bougie1M01["EMA120"], balance, VNL)
 
                     if tick > superM05_1003T1 >= superM05_1003T2 and tick > superM05_1003T0 and tick > bougie1M01["EMA120"]:
                         sl = superM05_1003T1
                         tp = 0
-                        o.buyLimit(sl, tp, bougie1M01["120"], balance, VNL)
+                        o.buyLimit(sl, tp, bougie1M01["EMA120"], balance, VNL)
 
                     if bougie1M01.get("EMA70") and bougie1M01.get("AW") and bougie1M01.get(
                             "EMA70") and bougie1M05.get("EMA120"):
