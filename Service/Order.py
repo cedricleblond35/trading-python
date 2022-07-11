@@ -256,11 +256,11 @@ class Order:
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
             logger.info(exc_type, fname, exc_tb.tb_lineno)
 
-    def moveSellLimitWait(self,trade, sl , tp, price, balance):
+    def moveSellLimitWait(self,trade, sl , tp, price, balance, vnl):
         #logger.info("------------- moveSellLimit ************************-----------------")
         tp = round(tp, 1)
         sl = round(sl, 1)
-        nbrelot = self.NbrLot(balance, price, sl)
+        nbrelot = self.NbrLot(balance, price, sl, vnl)
         resp = self.client.commandExecute('tradeTransaction',
                                      {
                                          "tradeTransInfo":
