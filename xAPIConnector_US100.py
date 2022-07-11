@@ -579,7 +579,7 @@ async def main():
                         elif TransactionSide.SELL_LIMIT == trade['cmd']:
                             sl = superM05_1003T1
                             tp = 0
-                            o.moveStopSell(trade, sl, tp, bougie1M01["EMA120"], balance, VNL)
+                            o.moveSellLimitWait(trade, sl, tp, bougie1M01["EMA120"], balance, VNL)
 
                         #############" ordre execute ##################"
                         elif TransactionSide.BUY == trade['cmd']:
