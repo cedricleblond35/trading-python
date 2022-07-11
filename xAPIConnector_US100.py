@@ -451,11 +451,14 @@ async def main():
             current_time = now.strftime("%H:%M:%S")
             print("fin de la mise à jour ", current_time)
 
+
             if c.getTick() is not None:
+
                 print("go stategie ***************************************")
                 print("c.getTick() :", c.getTick())
                 tick = c.getTick()["ask"]
                 print("tick :", tick)
+                print("c.getTrade() :", c.getTrade())
 
                 ###############################################################################################################
                 # order
@@ -542,7 +545,6 @@ async def main():
                     print("ordre encours ...")
                     for trade in tradeOpenDic['returnData']:
                         print(trade)
-                        print("c.getTrade() :", c.getTrade())
                         print("c.getProfit(): ", c.getProfit())
                         print("trade['customComment'] :", trade['customComment'])
                         print("bougie0M05['AW'] :", bougie0M05)
