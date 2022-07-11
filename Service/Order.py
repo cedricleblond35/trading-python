@@ -228,14 +228,12 @@ class Order:
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
             logger.info(exc_type, fname, exc_tb.tb_lineno)
 
-    def movebuyLimitWait(self,trade, sl , tp, price, balance):
+    def movebuyLimitWait(self,trade, sl , tp, price, balance, vnl):
         try:
             #logger.info("------------- movebuyLimitWait ************************-----------------")
             tp = round(tp, 1)
             sl = round(sl, 1)
-            #logger.info("trade :", trade)
-
-            nbrelot = self.NbrLot(balance, price, sl)
+            nbrelot = self.NbrLot(balance, price, sl, vnl)
             detail = {
                                                           "cmd": trade['order'],
                                                           "order": trade['order'],

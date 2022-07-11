@@ -545,12 +545,12 @@ async def main():
                         tp = 0
                         o.sellLimit(sl, tp, bougie1M01["EMA120"], balance, VNL)
 
-                    if tick > superM05_1003T1 >= superM05_1003T2 and tick > superM05_1003T0 and tick > bougie1M01["EMA120"]:
+                    elif tick > superM05_1003T1 >= superM05_1003T2 and tick > superM05_1003T0 and tick > bougie1M01["EMA120"]:
                         sl = superM05_1003T1
                         tp = 0
                         o.buyLimit(sl, tp, bougie1M01["EMA120"], balance, VNL)
 
-                    if bougie1M01.get("EMA70") and bougie1M01.get("AW") and bougie1M01.get(
+                    elif bougie1M01.get("EMA70") and bougie1M01.get("AW") and bougie1M01.get(
                             "EMA70") and bougie1M05.get("EMA120"):
                         ######################## achat ###################################
                         if tick > superM05_1003T1 >= superM05_1003T2 and bougie1M01["EMA70"] > bougie1M05["EMA120"] \
@@ -572,30 +572,14 @@ async def main():
                         print("bougie0M05['AW'] :", bougie0M05)
                         #############" ordre en attente ##################"
                         if TransactionSide.BUY_LIMIT == trade['cmd']:
-                            if bougie1M01["EMA120"] > supportDown:
-                                print("superM05_1003T1 :", superM05_1003T1)
-                                print("EMA120 : ", bougie1M01["EMA120"])
-                                if superM05_1003T1 > bougie1M01["EMA120"]:
-                                    sl = round(superM05_1003T1 - ecart / 4, 2)
-                                else:
-                                    sl = bougie1M01["EMA120"]
-                            else:
-                                sl = supportDown
-                            o.moveStopBuy(trade, sl, tick)
+                            sl = superM05_1003T1
+                            tp = 0
+                            o.movebuyLimitWait(trade, sl, tp, bougie1M01["EMA120"], balance, VNL)
 
                         elif TransactionSide.SELL_LIMIT == trade['cmd']:
-                            if bougie1M01["EMA120"] < supportHight:
-                                print("superM05_1003T1 :", superM05_1003T1)
-                                print("EMA120 : ", bougie1M01["EMA120"])
-                                if superM05_1003T1 < bougie1M01["EMA120"]:
-                                    sl = round(superM05_1003T1 + ecart / 4, 2)
-                                else:
-                                    sl = bougie1M01["EMA120"]
-                            else:
-                                sl = supportDown
-                            # logger.info("ordre vente en attente")
-                            sl = round(float(sl), 2)
-                            o.moveStopSell(trade, sl, tick)
+                            sl = superM05_1003T1
+                            tp = 0
+                            o.moveStopSell(trade, sl, tp, bougie1M01["EMA120"], balance, VNL)
 
                         #############" ordre execute ##################"
                         elif TransactionSide.BUY == trade['cmd']:
