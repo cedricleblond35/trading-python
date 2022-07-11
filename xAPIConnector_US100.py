@@ -116,6 +116,17 @@ async def insertData(collection, dataDownload, listDataDB):
     return ctm
 
 
+def findTradesHistory(client, start):
+    '''
+    Selectionner les ordres ouverts
+    :param client: parametre de connexion
+    :return: dictionnaire d ordre
+    '''
+    tradesHistoryString = client.commandExecute('getTradesHistory', {"end": 0, "start": start})
+    tradesHistoryJson = json.dumps(tradesHistoryString)
+    return json.loads(tradesHistoryJson)
+
+
 def findopenOrder(client):
     '''
     Selectionner les ordres ouverts
@@ -577,9 +588,7 @@ async def main():
 
                         #############" ordre execute ##################"
                         elif TransactionSide.BUY == trade['cmd']:
-
                             if trade['customComment'] == "Achat direct":
-
                                 # Pour garantir pas de perte : monter le stop  a 5pip de benef :
                                 #   Si cours en dessus de l ouverture avec ecart 20pip
                                 #   Et si AW change de tendance
