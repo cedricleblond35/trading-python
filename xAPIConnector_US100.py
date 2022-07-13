@@ -540,7 +540,7 @@ async def main():
                             # o.sellNow(support, objectif, round(price, 2), balance, VNL)
                             o.sellLimit(support, objectif, round(supportHight, 2), balance, VNL)
                     """
-                    print("tick :", tick, " ema120", bougie1M01["EMA120"])
+                    print("tick :", tick, " ema120", bougie1M01["EMA120"], "superM05_1003T0:", superM05_1003T0)
                     if tick < superM05_1003T1 <= superM05_1003T2 and tick < superM05_1003T0 and tick < bougie1M01["EMA120"]:
                         sl = superM05_1003T1
                         tp = 0
