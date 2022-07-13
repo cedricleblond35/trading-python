@@ -541,12 +541,21 @@ async def main():
                             o.sellLimit(support, objectif, round(supportHight, 2), balance, VNL)
                     """
                     print("tick :", tick, " ema120", bougie1M01["EMA120"], "superM05_1003T0:", superM05_1003T0)
-                    if tick < superM05_1003T1 <= superM05_1003T2 and tick < superM05_1003T0 and tick < bougie1M01["EMA120"] and bougie1M01["EMA120"] < superM05_1003T1 :
+
+                    '''
+                    Strategie EMA: 
+                        Ouverture d ordre au niveau : suivre la EMA120 de 5 min
+                        SL : superM05_1003T1
+                        tack profit : infini
+                    '''
+                    if tick < superM05_1003T1 <= superM05_1003T2 and tick < superM05_1003T0 \
+                            and tick < bougie1M01["EMA120"] < superM05_1003T1:
                         sl = superM05_1003T1
                         tp = 0
                         o.sellLimit(sl, tp, bougie1M01["EMA120"], balance, VNL)
 
-                    elif tick > superM05_1003T1 >= superM05_1003T2 and tick > superM05_1003T0 and tick > bougie1M01["EMA120"]  and bougie1M01["EMA120"] > superM05_1003T1 :
+                    elif tick > superM05_1003T1 >= superM05_1003T2 and tick > superM05_1003T0 \
+                            and tick > bougie1M01["EMA120"] > superM05_1003T1:
                         sl = superM05_1003T1
                         tp = 0
                         o.buyLimit(sl, tp, bougie1M01["EMA120"], balance, VNL)
@@ -560,7 +569,8 @@ async def main():
                             tp = 0
                             o.buyNow(sl, tp, tick, balance, VNL)
                         ######################## vente ###################################
-                        elif tick < superM05_1003T1 <= superM05_1003T2 and bougie1M01["EMA70"] < bougie1M05["EMA120"] and tick < superM05_1003T0:
+                        elif tick < superM05_1003T1 <= superM05_1003T2 and bougie1M01["EMA70"] < bougie1M05["EMA120"] \
+                                and tick < superM05_1003T0:
                             sl = superM05_1003T1
                             tp = 0
                             o.sellNow(sl, tp, tick, balance, VNL)
