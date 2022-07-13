@@ -510,7 +510,7 @@ async def main():
                     print("-- variable ************")
                     print("superM05_1003T1 :", superM05_1003T1)
                     print("superM05_1003T2 :", superM05_1003T2)
-                    print("EMA70 1min:", bougie1M01["EMA70"], "    EMA120 5min:", bougie1M05.get("EMA120"))
+                    print("EMA70 1min:", bougie1M01["EMA70"], "   bougie1M01 EMA120 5min:", bougie1M05.get("EMA120"))
                     print("bougie1M01 :", bougie1M01)
                     print("-- variable fin ************")
                     print("demarrage de selection d un futur ordre")
@@ -541,12 +541,12 @@ async def main():
                             o.sellLimit(support, objectif, round(supportHight, 2), balance, VNL)
                     """
                     print("tick :", tick, " ema120", bougie1M01["EMA120"], "superM05_1003T0:", superM05_1003T0)
-                    if tick < superM05_1003T1 <= superM05_1003T2 and tick < superM05_1003T0 and tick < bougie1M01["EMA120"]:
+                    if tick < superM05_1003T1 <= superM05_1003T2 and tick < superM05_1003T0 and tick < bougie1M01["EMA120"] and bougie1M01["EMA120"] < superM05_1003T1 :
                         sl = superM05_1003T1
                         tp = 0
                         o.sellLimit(sl, tp, bougie1M01["EMA120"], balance, VNL)
 
-                    elif tick > superM05_1003T1 >= superM05_1003T2 and tick > superM05_1003T0 and tick > bougie1M01["EMA120"]:
+                    elif tick > superM05_1003T1 >= superM05_1003T2 and tick > superM05_1003T0 and tick > bougie1M01["EMA120"]  and bougie1M01["EMA120"] > superM05_1003T1 :
                         sl = superM05_1003T1
                         tp = 0
                         o.buyLimit(sl, tp, bougie1M01["EMA120"], balance, VNL)
