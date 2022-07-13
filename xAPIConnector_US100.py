@@ -573,11 +573,14 @@ async def main():
                         print("bougie0M05['AW'] :", bougie0M05)
                         #############" ordre en attente ##################"
                         if TransactionSide.BUY_LIMIT == trade['cmd']:
+                            print("move price buy !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
                             sl = superM05_1003T1
                             tp = 0
                             o.movebuyLimitWait(trade, sl, tp, bougie1M01["EMA120"], balance, VNL)
 
                         elif TransactionSide.SELL_LIMIT == trade['cmd']:
+
+                            print("move price dell !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
                             sl = superM05_1003T1
                             tp = 0
                             o.moveSellLimitWait(trade, sl, tp, bougie1M01["EMA120"], balance, VNL)
