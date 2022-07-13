@@ -432,7 +432,7 @@ async def main():
         ao01 = Awesome(SYMBOL, "M01")
         await ao01.calculAllCandles()
 
-        o = Order(SYMBOL, dbStreaming, client)
+        o = Order(SYMBOL, dbStreaming, client, db["trade"])
         logger.info("mise à jour du start fini ")
         while True:
             now = datetime.now()

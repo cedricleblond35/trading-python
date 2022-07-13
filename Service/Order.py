@@ -8,16 +8,16 @@ import os
 import sys
 from Service.Email import Email
 import logging
-
 from Service.TransactionSide import TransactionSide
 
 
 logger = logging.getLogger("jsonSocket")
 class Order:
-    def __init__(self, symbol, dbStreaming, client):
+    def __init__(self, symbol, dbStreaming, client, dbTrade):
         email = Email()
         self.symbol = symbol
         self.dbStreaming = dbStreaming
+        self.dbTrade = dbTrade
         self.client = client
 
     ################## ordre avec limit #################################################
@@ -44,9 +44,8 @@ class Order:
             }
             print("buy limit :", detail)
             resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
-            respString = json.dumps(resp) + "forex robot Action"
-            detailString = json.dumps(detail)
-            self.sendMail(respString, detailString)
+            detail['resp'] = resp
+            self.dbTrade.insert_one(detail)
 
         except Exception as exc:
             logger.info("le programe a déclenché une erreur")
@@ -78,9 +77,8 @@ class Order:
             print("sell limit :", detail)
             #logger.info("detail :", detail)
             resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
-            respString = json.dumps(resp) + "forex robot Action"
-            detailString = json.dumps(detail)
-            self.sendMail(respString, detailString)
+            detail['resp'] = resp
+            self.dbTrade.insert_one(detail)
         except Exception as exc:
             logger.info("le programe a déclenché une erreur")
             logger.info("exception de mtype ", exc.__class__)
@@ -110,11 +108,16 @@ class Order:
             "type": 0,
             "volume": nbrelot
         }
-        logger.info("sellnow :", detail)
         resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
+
+        detail['resp'] = resp
+        self.dbTrade.insert_one(detail)
+        '''
         respString = json.dumps(resp) + "forex robot Action"
         detailString = json.dumps(detail)
         self.sendMail(respString, detailString)
+        '''
+
 
     def buyNow(self, sl, tp, price, balance, vnl):
         tp = round(tp, 1)
@@ -134,12 +137,9 @@ class Order:
             "type": 0,
             "volume": nbrelot
         }
-        logger.info("buy now :", detail)
         resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
-        # logger.info("|||||||||||||||||||| resp :", resp)
-        respString = json.dumps(resp) + "forex robot Action"
-        detailString = json.dumps(detail)
-        self.sendMail(respString, detailString)
+        detail['resp'] = resp
+        self.dbTrade .insert_one(detail)
 
     ############################ move stop après ordre executé ###########################
 
