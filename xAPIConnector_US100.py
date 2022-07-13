@@ -565,7 +565,7 @@ async def main():
                             tp = 0
                             o.sellNow(sl, tp, tick, balance, VNL)
                 else:
-                    print("ordre encours ...")
+                    print("ordre encours ...........................................")
                     for trade in tradeOpenDic['returnData']:
                         print(trade)
                         print("c.getProfit(): ", c.getProfit())
@@ -623,7 +623,7 @@ async def main():
                             else:
                                 sl = round(bougie1M01["EMA120"] + ecart / 4, 2)
                                 o.moveStopSell(trade, sl, tick)
-
+                    print("ordre en cours   END...........................................")
             time.sleep(2)
 
     except Exception as exc:
