@@ -292,8 +292,12 @@ class Order:
                                                  }
                                          })
         else:
-
-
+            print("delete order sell !!!!!!!!!!!! because volume is differente")
+            resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": {
+                "cmd": trade['cmd'],
+                "order": trade['order'],
+                "type": 4
+            }})
 
 def NbrLot(balance, position, stp, vnl):
     '''
