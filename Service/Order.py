@@ -289,6 +289,7 @@ class Order:
 
         '''
         try:
+            print("calcul du nombre de lot #############################################################################")
             print("balance :", balance)
             print("vnl :", vnl)
             perteAcceptable = round(balance * 0.05, 0)
@@ -306,6 +307,8 @@ class Order:
             if nbrelot > qtMax:
                 nbrelot = qtMax
             """
+            print(
+                "calcul du nombre de lot #############################################################################")
 
 
             return round(nbrelot, 2)
