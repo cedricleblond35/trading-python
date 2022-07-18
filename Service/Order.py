@@ -237,18 +237,29 @@ class Order:
             tp = round(tp, 1)
             sl = round(sl, 1)
             nbrelot = NbrLot(balance, price, sl, vnl)
-            detail = {
-                                                          "cmd": trade['cmd'],
-                                                          "order": trade['order'],
-                                                          "sl": sl,
-                                                          "price": price,  # TICK["bid"],
-                                                          "symbol": self.symbol,
-                                                          "volume": nbrelot,
-                                                          "tp": tp,
-                                                          "type": 3
-                                                      }
-            print("movebuyLimitWait :",detail)
-            resp = self.client.commandExecute('tradeTransaction', { "tradeTransInfo": detail})
+
+            if trade['order'] == nbrelot:
+                detail = {
+                                                              "cmd": trade['cmd'],
+                                                              "order": trade['order'],
+                                                              "sl": sl,
+                                                              "price": price,  # TICK["bid"],
+                                                              "symbol": self.symbol,
+                                                              "volume": nbrelot,
+                                                              "tp": tp,
+                                                              "type": 3
+                                                          }
+                print("movebuyLimitWait :",detail)
+                resp = self.client.commandExecute('tradeTransaction', { "tradeTransInfo": detail})
+            else:
+                resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": {
+                                                              "cmd": trade['cmd'],
+                                                              "order": trade['order'],
+                                                              "type": 4
+                                                          }})
+
+
+
             #logger.info("resp :", resp)
         except Exception as exc:
             logger.info("le programe a déclenché une erreur")
