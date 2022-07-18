@@ -12,6 +12,7 @@ from Service.TransactionSide import TransactionSide
 
 
 logger = logging.getLogger("jsonSocket")
+
 class Order:
     def __init__(self, symbol, dbStreaming, client, dbTrade):
         email = Email()
@@ -29,7 +30,7 @@ class Order:
             h = self.client.commandExecute('getServerTime')
             timeExpiration = h['returnData']['time'] + 3600000
 
-            nbrelot = self.NbrLot(balance, price, sl, vnl)
+            nbrelot = NbrLot(balance, price, sl, vnl)
             detail = {
                 "cmd": TransactionSide.BUY_LIMIT,
                 "customComment": "Achat limit",
@@ -51,7 +52,7 @@ class Order:
             logger.info("le programe a déclenché une erreur")
             logger.info("exception de mtype ", exc.__class__)
             logger.info("message", exc)
-            self.sendMail("Erreur ordre", exc)
+            sendMail("Erreur ordre", exc)
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
             print(exc_type, fname, exc_tb.tb_lineno)
@@ -61,7 +62,7 @@ class Order:
             h = self.client.commandExecute('getServerTime')
             timeExpiration = h['returnData']['time'] + 3600000
 
-            nbrelot = self.NbrLot(balance, price, sl, vnl)
+            nbrelot = NbrLot(balance, price, sl, vnl)
             detail = {
                 "cmd": TransactionSide.SELL_LIMIT,
                 "customComment": "Vente limit",
@@ -83,7 +84,7 @@ class Order:
             logger.info("le programe a déclenché une erreur")
             logger.info("exception de mtype ", exc.__class__)
             logger.info("message", exc)
-            self.sendMail("Erreur ordre", exc)
+            sendMail("Erreur ordre", exc)
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
             logger.info(exc_type, fname, exc_tb.tb_lineno)
@@ -95,7 +96,7 @@ class Order:
 
         h = self.client.commandExecute('getServerTime')
         timeExpiration = h['returnData']['time'] + 3600000
-        nbrelot = self.NbrLot(balance, price, sl, vnl)
+        nbrelot = NbrLot(balance, price, sl, vnl)
         detail = {
             "cmd": TransactionSide.SELL,
             "customComment": "Vente direct",
@@ -124,7 +125,7 @@ class Order:
         sl = round(sl, 1)
         h = self.client.commandExecute('getServerTime')
         timeExpiration = h['returnData']['time'] + 3600000
-        nbrelot = self.NbrLot(balance, price, sl, vnl)
+        nbrelot = NbrLot(balance, price, sl, vnl)
         detail = {
             "cmd": 0,
             "customComment": "Achat direct",
@@ -146,6 +147,7 @@ class Order:
     def moveStopBuy(self, trade, sl, tick):
         try:
             if sl > trade["sl"]:
+
                 detail = {
                      "order": trade['order'],
                      "sl": sl,
@@ -162,7 +164,7 @@ class Order:
             logger.info("le programe a déclenché une erreur")
             logger.info("exception de mtype ", exc.__class__)
             logger.info("message", exc)
-            self.sendMail("Erreur ordre", exc)
+            sendMail("Erreur ordre", exc)
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
             logger.info(exc_type, fname, exc_tb.tb_lineno)
@@ -187,7 +189,7 @@ class Order:
             logger.info("le programe a déclenché une erreur")
             logger.info("exception de mtype ", exc.__class__)
             logger.info("message", exc)
-            self.sendMail("Erreur ordre", exc)
+            sendMail("Erreur ordre", exc)
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
             logger.info(exc_type, fname, exc_tb.tb_lineno)
@@ -204,7 +206,7 @@ class Order:
             h = self.client.commandExecute('getServerTime')
             timeExpiration = h['returnData']['time'] + 3600000
 
-            nbrelot = self.NbrLot(balance, price, sl)
+            nbrelot = NbrLot(balance, price, sl)
             detail = {
                   "cmd": trade['order'],
                   "order": trade['order'],
@@ -223,7 +225,7 @@ class Order:
             logger.info("le programe a déclenché une erreur")
             logger.info("exception de mtype ", exc.__class__)
             logger.info("message", exc)
-            self.sendMail("Erreur ordre", exc)
+            sendMail("Erreur ordre", exc)
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
             logger.info(exc_type, fname, exc_tb.tb_lineno)
@@ -234,7 +236,7 @@ class Order:
             print("trade :", trade)
             tp = round(tp, 1)
             sl = round(sl, 1)
-            nbrelot = self.NbrLot(balance, price, sl, vnl)
+            nbrelot = NbrLot(balance, price, sl, vnl)
             detail = {
                                                           "cmd": trade['cmd'],
                                                           "order": trade['order'],
@@ -252,7 +254,7 @@ class Order:
             logger.info("le programe a déclenché une erreur")
             logger.info("exception de mtype ", exc.__class__)
             logger.info("message", exc)
-            self.sendMail("Erreur ordre", exc)
+            sendMail("Erreur ordre", exc)
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
             logger.info(exc_type, fname, exc_tb.tb_lineno)
@@ -262,7 +264,7 @@ class Order:
         print("trade :", trade)
         tp = round(tp, 1)
         sl = round(sl, 1)
-        nbrelot = self.NbrLot(balance, price, sl, vnl)
+        nbrelot = NbrLot(balance, price, sl, vnl)
         resp = self.client.commandExecute('tradeTransaction',
                                      {
                                          "tradeTransInfo":
@@ -278,75 +280,80 @@ class Order:
                                              }
                                      })
 
-    def NbrLot(self, balance, position, stp, vnl):
-        '''
-        Calcul le nombre de posible à prendre
-        GER30 : 2,5 € de perte max, Stop loss : 10, valeur nominale du lot : 25 €
-        calcul: 2,5 / 10 / 25 = 0,01 lot
-
-        NASDAQ : 2,5 de perte, Stop loss : 10, vaLeur nominale du lot : 20 $  mettre 35
-        calcul : 2,5 / 10 / 35 =
-
-        '''
-        try:
-            print("calcul du nombre de lot #############################################################################")
-            print("balance :", balance)
-            print("vnl :", vnl)
-            perteAcceptable = round(balance * 0.05, 0)
-
-            print("perteAcceptable :", perteAcceptable)
-            print("position :", position)
-            print("stp :", stp)
-            ecartPip = abs((position - stp))
-
-            print("ecart type :", ecartPip)
-            nbrelot = perteAcceptable / ecartPip / vnl
-            print("nbrelot :", nbrelot)
-            """
-            qtMax = self.round_down((balance["equityFX"] / 20000), 2)
-            if nbrelot > qtMax:
-                nbrelot = qtMax
-            """
-            print(
-                "calcul du nombre de lot #############################################################################")
 
 
-            return round(nbrelot, 2)
-        except (RuntimeError, TypeError, NameError):
-            pass
+def NbrLot(balance, position, stp, vnl):
+    '''
+    Calcul le nombre de posible à prendre
+    GER30 : 2,5 € de perte max, Stop loss : 10, valeur nominale du lot : 25 €
+    calcul: 2,5 / 10 / 25 = 0,01 lot
 
-    def round_up(self, n, decimals=0):
-        '''
-        Arrondi au superieur
-        :param n:
-        :param decimals:
-        :return:
-        '''
-        multiplier = 10 ** decimals
-        return math.ceil(n * multiplier) / multiplier
+    NASDAQ : 2,5 de perte, Stop loss : 10, vaLeur nominale du lot : 20 $  mettre 35
+    calcul : 2,5 / 10 / 35 =
 
-    def round_down(self, n, decimals=0):
-        '''
-        Arrondi à l inférieur
-        :param n:
-        :param decimals:
-        :return:
-        '''
-        multiplier = 10 ** decimals
-        return math.floor(n * multiplier) / multiplier
+    '''
+    try:
+        print("calcul du nombre de lot #############################################################################")
+        print("balance :", balance)
+        print("vnl :", vnl)
+        perteAcceptable = round(balance * 0.05, 0)
 
-    def sendMail(self, subject, message):
-        msg = MIMEMultipart()
-        msg['From'] = 'cedricleb35@gmail.com'
-        msg['To'] = 'cedricleb35@gmail.com'
-        msg['Subject'] = subject
-        message = message
-        msg.attach(MIMEText(message))
-        mailserver = smtplib.SMTP('smtp.gmail.com', 587)
-        mailserver.ehlo()
-        mailserver.starttls()
-        mailserver.ehlo()
-        mailserver.login('drick35@gmail.com', 'hdfykpdsoireyedl')
-        mailserver.sendmail('drick35@gmail.com', 'drick35@gmail.com', msg.as_string())
-        mailserver.quit()
+        print("perteAcceptable :", perteAcceptable)
+        print("position :", position)
+        print("stp :", stp)
+        ecartPip = abs((position - stp))
+
+        print("ecart type :", ecartPip)
+        nbrelot = perteAcceptable / ecartPip / vnl
+        print("nbrelot :", nbrelot)
+        """
+        qtMax = self.round_down((balance["equityFX"] / 20000), 2)
+        if nbrelot > qtMax:
+            nbrelot = qtMax
+        """
+        print(
+            "calcul du nombre de lot #############################################################################")
+
+
+        return round(nbrelot, 2)
+    except (RuntimeError, TypeError, NameError):
         pass
+
+
+def round_up(n, decimals=0):
+    '''
+    Arrondi au superieur
+    :param n:
+    :param decimals:
+    :return:
+    '''
+    multiplier = 10 ** decimals
+    return math.ceil(n * multiplier) / multiplier
+
+
+def round_down(n, decimals=0):
+    '''
+    Arrondi à l inférieur
+    :param n:
+    :param decimals:
+    :return:
+    '''
+    multiplier = 10 ** decimals
+    return math.floor(n * multiplier) / multiplier
+
+
+def sendMail(subject, message):
+    msg = MIMEMultipart()
+    msg['From'] = 'cedricleb35@gmail.com'
+    msg['To'] = 'cedricleb35@gmail.com'
+    msg['Subject'] = subject
+    message = message
+    msg.attach(MIMEText(message))
+    mailserver = smtplib.SMTP('smtp.gmail.com', 587)
+    mailserver.ehlo()
+    mailserver.starttls()
+    mailserver.ehlo()
+    mailserver.login('drick35@gmail.com', 'hdfykpdsoireyedl')
+    mailserver.sendmail('drick35@gmail.com', 'drick35@gmail.com', msg.as_string())
+    mailserver.quit()
+    pass
