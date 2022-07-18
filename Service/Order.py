@@ -238,7 +238,7 @@ class Order:
             sl = round(sl, 1)
             nbrelot = NbrLot(balance, price, sl, vnl)
 
-            if trade['order'] == nbrelot:
+            if trade['volume'] == nbrelot:
                 detail = {
                                                               "cmd": trade['cmd'],
                                                               "order": trade['order'],
@@ -252,6 +252,7 @@ class Order:
                 print("movebuyLimitWait :",detail)
                 resp = self.client.commandExecute('tradeTransaction', { "tradeTransInfo": detail})
             else:
+                print("delete order buy !!!!!!!!!!!! because volume is differente")
                 resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": {
                                                               "cmd": trade['cmd'],
                                                               "order": trade['order'],
