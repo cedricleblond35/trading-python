@@ -230,12 +230,13 @@ class Order:
 
     def movebuyLimitWait(self,trade, sl , tp, price, balance, vnl):
         try:
-            #logger.info("------------- movebuyLimitWait ************************-----------------")
+            logger.info("------------- movebuyLimitWait ************************-----------------")
+            print("trade :", trade)
             tp = round(tp, 1)
             sl = round(sl, 1)
             nbrelot = self.NbrLot(balance, price, sl, vnl)
             detail = {
-                                                          "cmd": trade['order'],
+                                                          "cmd": trade['cmd'],
                                                           "order": trade['order'],
                                                           "sl": sl,
                                                           "price": price,  # TICK["bid"],
@@ -257,7 +258,8 @@ class Order:
             logger.info(exc_type, fname, exc_tb.tb_lineno)
 
     def moveSellLimitWait(self,trade, sl , tp, price, balance, vnl):
-        #logger.info("------------- moveSellLimit ************************-----------------")
+        logger.info("------------- moveSellLimit ************************-----------------")
+        print("trade :", trade)
         tp = round(tp, 1)
         sl = round(sl, 1)
         nbrelot = self.NbrLot(balance, price, sl, vnl)
@@ -265,7 +267,7 @@ class Order:
                                      {
                                          "tradeTransInfo":
                                              {
-                                                 "cmd": 3,
+                                                 "cmd": trade['cmd'],
                                                  "order": trade['order'],
                                                  "sl": sl,
                                                  "price": price , # TICK["bid"],
