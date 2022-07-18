@@ -258,6 +258,7 @@ class Order:
                                                               "order": trade['order'],
                                                               "type": 4
                                                           }})
+                print("resp :", resp)
 
             #logger.info("resp :", resp)
         except Exception as exc:
@@ -299,6 +300,7 @@ class Order:
                 "order": trade['order'],
                 "type": 4
             }})
+            print("reponse :", resp)
 
 def NbrLot(balance, position, stp, vnl):
     '''
