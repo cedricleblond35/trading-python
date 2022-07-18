@@ -254,11 +254,13 @@ class Order:
                 resp = self.client.commandExecute('tradeTransaction', { "tradeTransInfo": detail})
             else:
                 print("delete order buy !!!!!!!!!!!! because volume is differente")
-                resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": {
+                detail = {
                     "cmd": trade['cmd'],
                     "order": trade['order'],
                     "type": 4
-                  }})
+                  }
+                print("detail :", detail)
+                resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
                 print("resp :", resp)
 
             #logger.info("resp :", resp)
