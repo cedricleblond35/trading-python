@@ -252,14 +252,12 @@ class Order:
                 print("movebuyLimitWait :",detail)
                 resp = self.client.commandExecute('tradeTransaction', { "tradeTransInfo": detail})
             else:
-                print("delete order buy !!!!!!!!!!!! because volume is differente")
+                print("delete order sell !!!!!!!!!!!! because volume is differente")
                 resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": {
                                                               "cmd": trade['cmd'],
                                                               "order": trade['order'],
                                                               "type": 4
                                                           }})
-
-
 
             #logger.info("resp :", resp)
         except Exception as exc:
@@ -277,20 +275,23 @@ class Order:
         tp = round(tp, 1)
         sl = round(sl, 1)
         nbrelot = NbrLot(balance, price, sl, vnl)
-        resp = self.client.commandExecute('tradeTransaction',
-                                     {
-                                         "tradeTransInfo":
-                                             {
-                                                 "cmd": trade['cmd'],
-                                                 "order": trade['order'],
-                                                 "sl": sl,
-                                                 "price": price , # TICK["bid"],
-                                                 "symbol": self.symbol,
-                                                 "volume": nbrelot,
-                                                 "tp": tp,
-                                                 "type": 3
-                                             }
-                                     })
+
+        if trade['volume'] == nbrelot:
+            resp = self.client.commandExecute('tradeTransaction',
+                                         {
+                                             "tradeTransInfo":
+                                                 {
+                                                     "cmd": trade['cmd'],
+                                                     "order": trade['order'],
+                                                     "sl": sl,
+                                                     "price": price , # TICK["bid"],
+                                                     "symbol": self.symbol,
+                                                     "volume": nbrelot,
+                                                     "tp": tp,
+                                                     "type": 3
+                                                 }
+                                         })
+        else:
 
 
 
