@@ -239,6 +239,7 @@ class Order:
             nbrelot = NbrLot(balance, price, sl, vnl)
 
             if trade['volume'] == nbrelot:
+                print("move order buy !!!!!!!!!!!!")
                 detail = {
                                                               "cmd": trade['cmd'],
                                                               "order": trade['order'],
@@ -277,6 +278,7 @@ class Order:
         nbrelot = NbrLot(balance, price, sl, vnl)
 
         if trade['volume'] == nbrelot:
+            print("move order sell !!!!!!!!!!!!")
             resp = self.client.commandExecute('tradeTransaction',
                                          {
                                              "tradeTransInfo":
@@ -291,6 +293,7 @@ class Order:
                                                      "type": 3
                                                  }
                                          })
+
         else:
             print("delete order sell !!!!!!!!!!!! because volume is differente")
             resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": {
