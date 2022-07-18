@@ -332,8 +332,8 @@ class Order:
 
     def sendMail(self, subject, message):
         msg = MIMEMultipart()
-        msg['From'] = 'drick35@gmail.com'
-        msg['To'] = 'drick35@gmail.com'
+        msg['From'] = 'cedricleb35@gmail.com'
+        msg['To'] = 'cedricleb35@gmail.com'
         msg['Subject'] = subject
         message = message
         msg.attach(MIMEText(message))
