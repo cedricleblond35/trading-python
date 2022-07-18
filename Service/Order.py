@@ -255,9 +255,10 @@ class Order:
             else:
                 print("delete order buy !!!!!!!!!!!! because volume is differente")
                 resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": {
-                                                              "order": trade['order'],
-                                                              "type": 4
-                                                          }})
+                    "cmd": trade['cmd'],
+                    "order": trade['order'],
+                    "type": 4
+                  }})
                 print("resp :", resp)
 
             #logger.info("resp :", resp)
@@ -297,6 +298,7 @@ class Order:
         else:
             print("delete order sell !!!!!!!!!!!! because volume is differente")
             resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": {
+                "cmd": trade['cmd'],
                 "order": trade['order'],
                 "type": 4
             }})
