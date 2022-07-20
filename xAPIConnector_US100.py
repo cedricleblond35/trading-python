@@ -388,8 +388,9 @@ async def pivot():
     # R1D, S1D = await P.demark()  # valeurs ok
 
     PPW, R1W, R2W, S1W, S2W = await P.woodie()  # valeurs ok
-    PPC, R1C, R2C, R3C, R4C, S1C, S2C, S3C, S4C = await P.camarilla()  # valeurs ok
-    zone = np.array([PPC, R1C, R2C, R3C, R4C, S1C, S2C, S3C, S4C, R1W, R2W, S1W, S2W])
+    #PPC, R1C, R2C, R3C, R4C, S1C, S2C, S3C, S4C = await P.camarilla()  # valeurs ok
+    #zone = np.array([PPC, R1C, R2C, R3C, R4C, S1C, S2C, S3C, S4C, R1W, R2W, S1W, S2W])
+    zone = np.array([PPW, R1W, R2W, S1W, S2W])
     return np.sort(zone)
 
 
@@ -425,6 +426,7 @@ async def main():
         await moyMobil_01_120.EMA(70)
         await moyMobil_01_120.EMA(26)
         await moyMobil_05_120.EMA(120)
+        await moyMobil_05_120.EMA(250)
         ao05 = Awesome(SYMBOL, "M05")
         await ao05.calculAllCandles()
         ao01 = Awesome(SYMBOL, "M01")
@@ -440,6 +442,7 @@ async def main():
             if updatePivot():
                 zone = await pivot()
 
+            print("pivot :", zone)
             ####################################################################################################
             startTime = await majData(client, startTime, SYMBOL, db)
             ####################################################################################################
@@ -447,6 +450,7 @@ async def main():
             await moyMobil_01_120.EMA(70)
             await moyMobil_01_120.EMA(26)
             await moyMobil_05_120.EMA(120)
+            await moyMobil_05_120.EMA(250)
             # AO ###################################################################################
             await ao05.calculLastCandle(10)
             await ao01.calculLastCandle(10)
@@ -547,19 +551,19 @@ async def main():
                         tack profit : infini
                     '''
                     if tick < superM05_1003T1 <= superM05_1003T2 and tick < superM05_1003T0 \
-                            and tick < bougie1M01["EMA120"] < superM05_1003T1:
+                            and tick < bougie1M01["EMA120"] < superM05_1003T1 and bougie1M05["EMA250"] < zone[2]:
                         sl = superM05_1003T1
                         tp = 0
                         o.sellLimit(sl, tp, bougie1M01["EMA120"], balance, VNL)
 
                     elif tick > superM05_1003T1 >= superM05_1003T2 and tick > superM05_1003T0 \
-                            and tick > bougie1M01["EMA120"] > superM05_1003T1:
+                            and tick > bougie1M01["EMA120"] > superM05_1003T1 and bougie1M05["EMA250"] > zone[2]:
                         sl = superM05_1003T1
                         tp = 0
                         o.buyLimit(sl, tp, bougie1M01["EMA120"], balance, VNL)
 
                     elif bougie1M01.get("EMA70") and bougie1M01.get("AW") and bougie1M01.get(
-                            "EMA70") and bougie1M05.get("EMA120"):
+                            "EMA70") and bougie1M05.get("EMA120") :
                         ######################## achat ###################################
                         if tick > superM05_1003T1 >= superM05_1003T2 and bougie1M01["EMA70"] > bougie1M05["EMA120"] \
                                 and tick > superM05_1003T0:
