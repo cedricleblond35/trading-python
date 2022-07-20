@@ -573,7 +573,7 @@ async def main():
                             tp = 0
                             o.sellNow(sl, tp, tick, balance, VNL)
                 else:
-                    print("ordre encours ...........................................")
+                    print("ordre en cours ...........................................")
                     for trade in tradeOpenDic['returnData']:
                         print(trade)
                         print("c.getProfit(): ", c.getProfit())

@@ -241,15 +241,15 @@ class Order:
             if trade['volume'] == nbrelot:
                 print("move order buy !!!!!!!!!!!!")
                 detail = {
-                                                              "cmd": trade['cmd'],
-                                                              "order": trade['order'],
-                                                              "sl": sl,
-                                                              "price": price,  # TICK["bid"],
-                                                              "symbol": self.symbol,
-                                                              "volume": nbrelot,
-                                                              "tp": tp,
-                                                              "type": 3
-                                                          }
+                          "cmd": trade['cmd'],
+                          "order": trade['order'],
+                          "sl": sl,
+                          "price": price,  # TICK["bid"],
+                          "symbol": self.symbol,
+                          "volume": nbrelot,
+                          "tp": tp,
+                          "type": 3
+                      }
                 print("movebuyLimitWait :",detail)
                 resp = self.client.commandExecute('tradeTransaction', { "tradeTransInfo": detail})
             else:
@@ -257,8 +257,13 @@ class Order:
                 detail = {
                     "cmd": trade['cmd'],
                     "order": trade['order'],
+                    "sl": sl,
+                    "price": price,  # TICK["bid"],
+                    "symbol": self.symbol,
+                    "volume": nbrelot,
+                    "tp": tp,
                     "type": 4
-                  }
+                }
                 print("detail :", detail)
                 resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
                 print("resp :", resp)
@@ -299,12 +304,20 @@ class Order:
 
         else:
             print("delete order sell !!!!!!!!!!!! because volume is differente")
-            resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": {
-                "cmd": trade['cmd'],
-                "order": trade['order'],
-                "type": 4
-            }})
-            print("reponse :", resp)
+            resp = self.client.commandExecute('tradeTransaction',
+                                              {
+                                                  "tradeTransInfo":
+                                                      {
+                                                          "cmd": trade['cmd'],
+                                                          "order": trade['order'],
+                                                          "sl": sl,
+                                                          "price": price,  # TICK["bid"],
+                                                          "symbol": self.symbol,
+                                                          "volume": nbrelot,
+                                                          "tp": tp,
+                                                          "type": 4
+                                                      }
+                                              })
 
 def NbrLot(balance, position, stp, vnl):
     '''
