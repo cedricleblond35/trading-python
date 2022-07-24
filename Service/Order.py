@@ -111,7 +111,7 @@ class Order:
         }
         resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
 
-        detail['resp'] = resp
+        #detail['resp'] = resp    verifier si c'est compatible pour mongo !!!!!!!!!!!!!!
         self.dbTrade.insert_one(detail)
         '''
         respString = json.dumps(resp) + "forex robot Action"
@@ -139,8 +139,8 @@ class Order:
             "volume": nbrelot
         }
         resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
-        detail['resp'] = resp
-        self.dbTrade .insert_one(detail)
+        #detail['resp'] = resp
+        self.dbTrade.insert_one(detail)
 
     ############################ move stop après ordre executé ###########################
 
