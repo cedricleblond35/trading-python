@@ -596,7 +596,7 @@ async def main():
                             o.sellLimit(support, objectif, round(supportHight, 2), balance, VNL)
                     """
                     print("tick :", tick, " ema120", bougie1M01["EMA120"], "superM05_1003T0:", superM05_1003T0)
-
+                    print("zone 2 :", zone[2])
                     '''
                     Strategie EMA: 
                         Ouverture d ordre au niveau : suivre la EMA120 de 5 min
