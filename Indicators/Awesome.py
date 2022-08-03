@@ -26,6 +26,7 @@ class Awesome(Price):
         await self.__calcul()
 
     async def __calcul(self):
+        print("calcul AW ", self.__timeframe)
         for i in range(self.__MMS2, len(self._listData)):
             list1 = self._listData.copy()[i - self.__MMS2 + 1: i + 1]
             if "AW" not in list(list1)[-1]:

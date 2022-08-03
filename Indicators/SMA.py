@@ -74,6 +74,7 @@ class MM(Price):
         """
         try:
             name = "EMA" + str(duration)
+            print("calcul ", name)
             nameSMA = "SMA" + str(duration)
             α = round(2 / (duration + 1), 5)
             self._prepareListData()                         #toutes les bougies
@@ -109,6 +110,7 @@ class MM(Price):
 
 
                 list = self._listData[start:len(self._listData) - 1]
+                print("nombre :", len(list))
                 for i in range(0, len(list)):
                     if EMAPrecedent > 0:
                         close = list[i]["close"]
@@ -139,6 +141,7 @@ class MM(Price):
                         myquery = {"ctm": list[i]["ctm"]}
                         self._db[self.__timeframe].update_one(myquery, newvalues)
                         EMAPrecedent = mm
+            print("calcul ", name)
         except Exception as exc:
             print("le programe a déclenché une erreur SMA.py")
             print("exception de mtype ", exc.__class__)
