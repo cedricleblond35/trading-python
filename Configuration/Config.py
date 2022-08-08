@@ -18,7 +18,7 @@ class Config:
     DEFAULT_XAPI_ADDRESS = 'xapi.xtb.com'
     DEFAULT_XAPI_PORT = 5112
     DEFUALT_XAPI_STREAMING_PORT = 5113
-    userId = "13667266"
+    userId = "1502064"
     password = "1976Drick!"
 
     API_SEND_TIMEOUT = 100  # API inter-command timeout (in ms)
