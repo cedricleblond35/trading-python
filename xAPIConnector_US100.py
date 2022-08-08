@@ -89,7 +89,7 @@ PROFIT = False
 # PRICE = 6.95
 # PIP = 0.01
 SYMBOL = "US100"
-VNL = 45
+VNL = 15
 # SPREAD = 0.04
 
 # logger properties
