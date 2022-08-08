@@ -652,42 +652,37 @@ async def main():
 
                         #############" ordre execute ##################"
                         elif TransactionSide.BUY == trade['cmd']:
-                            if trade['customComment'] == "Achat direct":
-                                # Pour garantir pas de perte : monter le stop  a 5pip de benef :
-                                #   Si cours en dessus de l ouverture avec ecart 20pip
-                                #   Et si AW change de tendance
-                                if trade['sl'] < trade['open_price'] and tick > trade['open_price'] + 20 and bougie0M05[
-                                    'AW'] < bougie1M05['AW']:
-                                    sl = trade['open_price'] + 5
-                                    o.moveStopBuy(trade, sl, tick)
-                                else:
-                                    sl = round(superM05_1003T1 - ecart / 4, 2)
-                                    print("sl superM05_1003T1:", sl)
-                                    o.moveStopBuy(trade, sl, tick)
-                            else:
-                                sl = round(bougie1M01["EMA120"] - ecart / 4, 2)
-                                print("sl EMA120 :", sl)
+                            #if trade['customComment'] == "Achat direct":
+                            # Pour garantir pas de perte : monter le stop  a 5pip de benef :
+                            #   Si cours en dessus de l ouverture avec ecart 20pip
+                            #   Et si AW change de tendance
+                            if trade['sl'] < trade['open_price'] and tick > trade['open_price'] + 20 and bougie0M05[
+                                'AW'] < bougie1M05['AW']:
+                                sl = trade['open_price'] + 5
                                 o.moveStopBuy(trade, sl, tick)
+                            else:
+                                sl = round(superM05_1003T1 - ecart / 4, 2)
+                                print("sl superM05_1003T1:", sl)
+                                o.moveStopBuy(trade, sl, tick)
+
 
                         elif TransactionSide.SELL == trade['cmd']:
                             print("trade['customComment'] :", trade['customComment'])
-                            if trade['customComment'] == "Vente direct":
+                            #if trade['customComment'] == "Vente direct":
 
-                                # descendre le stop  a 5pip de benef :
-                                #   Si cours en dessous de l ouverture avec ecart 20pip
-                                #   Et si AW change de tendance
-                                if trade['sl'] > trade['open_price'] and tick < trade['open_price'] - 20 and bougie0M05[
-                                    'AW'] > \
-                                        bougie1M05['AW']:
-                                    sl = trade['open_price'] - 5
-                                    o.moveStopSell(trade, sl, tick)
-                                else:
-                                    print("vente direct ok : sl :", superM05_1003T1)
-                                    sl = round(superM05_1003T1 + ecart / 4, 2)
-                                    o.moveStopSell(trade, sl, tick)
-                            else:
-                                sl = round(bougie1M01["EMA120"] + ecart / 4, 2)
+                            # descendre le stop  a 5pip de benef :
+                            #   Si cours en dessous de l ouverture avec ecart 20pip
+                            #   Et si AW change de tendance
+                            if trade['sl'] > trade['open_price'] and tick < trade['open_price'] - 20 and bougie0M05[
+                                'AW'] > \
+                                    bougie1M05['AW']:
+                                sl = trade['open_price'] - 5
                                 o.moveStopSell(trade, sl, tick)
+                            else:
+                                print("vente direct ok : sl :", superM05_1003T1)
+                                sl = round(superM05_1003T1 + ecart / 4, 2)
+                                o.moveStopSell(trade, sl, tick)
+
                     print("ordre en cours   END...........................................")
             time.sleep(2)
 
