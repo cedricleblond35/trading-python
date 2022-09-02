@@ -399,7 +399,7 @@ def main():
                         "objectif": order["objectif"],
                         "type": order["type"],
                         "Awesome": order["Awesome"],
-                        "gain" : round(gain,1)
+                        "gain" : round(gain,20)
                     }}
                     db["simulation"].update_one(filter_order, newvalues)
                     print("stop touch")
@@ -424,7 +424,7 @@ def main():
                         "objectif": order["objectif"],
                         "type": order["type"],
                         "Awesome": order["Awesome"],
-                        "gain" : round(gain,10)
+                        "gain" : round(gain,20)
                     }}
                     print("-----------------------------------------------------------------")
                     print(order)
