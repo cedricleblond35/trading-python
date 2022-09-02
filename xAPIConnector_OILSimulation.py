@@ -540,6 +540,7 @@ def main():
                     print("journée : ", bougies_d)
                     print("periode :", b_m01["close"] )
                     print("woodie : ", bougies_d["PWoodie_PP"])
+                    print("woodie : ", b_m01["AW"])
                     if b_m01["close"] > bougies_d["PWoodie_PP"] and b_m01["AW"] > bougies0_m01["AW"] and b_m01["AW"] > 0.50:  # condition strategique
                         type_order = TransactionSide.BUY_LIMIT
                         ####################################"
