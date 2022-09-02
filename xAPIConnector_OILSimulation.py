@@ -4,6 +4,8 @@
 import json
 import time
 import asyncio
+
+import os
 import math as math
 import numpy as np
 from datetime import datetime
@@ -665,9 +667,12 @@ def main():
         print("bilan :", bilan)
 
     except Exception as exc:
-        print("le programe a déclenché une erreur")
-        print("exception de mtype ", exc.__class__)
-        print("message", exc)
+        logger.info("le programe a déclenché une erreur xApiconnector_US100")
+        logger.info("exception de mtype ", exc.__class__)
+        logger.info("message", exc)
+        exc_type, exc_obj, exc_tb = sys.exc_info()
+        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+        logger.info(exc_type, fname, exc_tb.tb_lineno)
         # client.disconnect()
     except OSError as err:
         print("OS error: {0}".format(err))
