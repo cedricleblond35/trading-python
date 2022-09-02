@@ -424,7 +424,7 @@ def main():
                         "objectif": order["objectif"],
                         "type": order["type"],
                         "Awesome": order["Awesome"],
-                        "gain" : round(gain,1)
+                        "gain" : round(gain,10)
                     }}
                     print("-----------------------------------------------------------------")
                     print(order)
