@@ -536,7 +536,7 @@ def main():
                 #         pass
                 if trade_open is None and bougies0_m01 is not False:
                     bougies_d = db["D"].find_one({"ctmString": {"$regex": b_m01["ctmString"][:12]}})
-                    if b_m01["close"] > bougies_d["PWoodie_PP"] and b_m01["Awesome"] > bougies0_m01["Awesome"] and b_m01["Awesome"] > 0.50:  # condition strategique
+                    if b_m01["close"] > bougies_d["PWoodie_PP"] and b_m01["AW"] > bougies0_m01["AW"] and b_m01["AW"] > 0.50:  # condition strategique
                         type_order = TransactionSide.BUY_LIMIT
                         ####################################"
                         zone = np.array(
@@ -579,7 +579,7 @@ def main():
                             "stop": support,
                             "objectif": objectif,
                             "type": "achat",
-                            "Awesome": b_m01["Awesome"]
+                            "Awesome": b_m01["AW"]
                         }
                         print("----------achat------------------")
                         print(zone)
@@ -588,7 +588,7 @@ def main():
                         # sys.exit()
 
                         db["simulation"].insert_one(newvalues)
-                    elif b_m01["close"] < bougies_d["PWoodie_PP"] and b_m01["Awesome"] < bougies0_m01["Awesome"] and b_m01["Awesome"] < -0.50:  # check if touch
+                    elif b_m01["close"] < bougies_d["PWoodie_PP"] and b_m01["AW"] < bougies0_m01["AW"] and b_m01["AW"] < -0.50:  # check if touch
                         type_order = TransactionSide.SELL_LIMIT
 
                         ####################################"
@@ -631,7 +631,7 @@ def main():
                             "stop": support,
                             "objectif": objectif,
                             "type": "vente",
-                            "Awesome": b_m01["Awesome"]
+                            "Awesome": b_m01["AW"]
                         }
 
                         print("----------vente------------------")
