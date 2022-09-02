@@ -359,7 +359,7 @@ def main():
 
         # Charger les bougies
         bougies0_m01 = False
-        bougies_m01 = db["M01"].find({"ctm": {"$gt": 1660514400000, "$lt": 1661983200000}, "EMA120": {"$exists": True}})
+        bougies_m01 = db["M01"].find({"ctm": {"$gt": 1659909600000, "$lt": 1661983200000}, "EMA120": {"$exists": True}})
 
 
         trade_open = 0
