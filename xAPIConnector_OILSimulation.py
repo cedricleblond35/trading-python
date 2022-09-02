@@ -537,7 +537,9 @@ def main():
                 if trade_open is None and bougies0_m01 is not False:
                     print("aucun ordre en cours ********************")
                     bougies_d = db["D"].find_one({"ctmString": {"$regex": b_m01["ctmString"][:12]}})
-                    print(bougies_d)
+                    print("journée : ", bougies_d)
+                    print("periode :", b_m01["close"] )
+                    print("woodie : ", bougies_d["PWoodie_PP"])
                     if b_m01["close"] > bougies_d["PWoodie_PP"] and b_m01["AW"] > bougies0_m01["AW"] and b_m01["AW"] > 0.50:  # condition strategique
                         type_order = TransactionSide.BUY_LIMIT
                         ####################################"
