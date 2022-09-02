@@ -364,7 +364,7 @@ def main():
         bougies_m01 = db["M01"].find({"ctm": {"$gt": 1661983200000, "$lt": 1662069600000}, "EMA120": {"$exists": True}})
 
 
-        trade_open = 0
+        order_number = 0
         type_order = 0
         db["simulation"]
         i = 0
@@ -548,22 +548,11 @@ def main():
                         ####################################"
                         zone = np.array(
                             [
-                                bougies_d["PCamarilla_PP"],
-                                bougies_d["PCamarilla_r1"],
-                                bougies_d["PCamarilla_r2"],
-                                bougies_d["PCamarilla_r3"],
-                                bougies_d["PCamarilla_r4"],
-                                bougies_d["PCamarilla_s1"],
-                                bougies_d["PCamarilla_s2"],
-                                bougies_d["PCamarilla_s3"],
-                                bougies_d["PCamarilla_s4"],
                                 bougies_d["PWoodie_PP"],
                                 bougies_d["PWoodie_r1"],
                                 bougies_d["PWoodie_r2"],
                                 bougies_d["PWoodie_s1"],
-                                bougies_d["PWoodie_s2"],
-                                bougies_d["demark_r1"],
-                                bougies_d["demark_s1"]
+                                bougies_d["PWoodie_s2"]
                             ])
                         zone = np.sort(zone)
 
@@ -578,6 +567,7 @@ def main():
                         ######################################################""
 
                         newvalues = {
+                            "order_number": order_number,
                             "type_order": type_order,
                             "ctm": b_m01['ctm'],
                             "openCtmString": b_m01['ctmString'],
@@ -595,6 +585,7 @@ def main():
                         # sys.exit()
 
                         db["simulation"].insert_one(newvalues)
+                        order_number = order_number+1
                     elif b_m01["close"] < bougies_d["PWoodie_PP"] and b_m01["AW"] < bougies0_m01["AW"] and b_m01["AW"] < -0.50:  # check if touch
                         type_order = TransactionSide.SELL_LIMIT
 
@@ -619,6 +610,7 @@ def main():
                         ######################################################""
 
                         newvalues = {
+                            "order_number" : order_number,
                             "type_order": type_order,
                             "ctm": b_m01['ctm'],
                             "openCtmString": b_m01['ctmString'],
@@ -635,6 +627,8 @@ def main():
                         print(newvalues)
                         print("--------------------------------")
                         db["simulation"].insert_one(newvalues)
+                        order_number = order_number + 1
+
                     print("type_order :", type_order)
                     print("traitement de la bougie fini")
                 else:
