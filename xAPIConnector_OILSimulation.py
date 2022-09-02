@@ -644,7 +644,8 @@ def main():
                         print(newvalues)
                         print("--------------------------------")
                         db["simulation"].insert_one(newvalues)
-
+                    print("type_order :", type_order)
+                    print("traitement de la bougie fini")
                 else:
                     if type_order == TransactionSide.BUY_LIMIT:
                         pass
