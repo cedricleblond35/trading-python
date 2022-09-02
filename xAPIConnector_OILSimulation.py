@@ -356,9 +356,12 @@ def main():
         connection = MongoClient('localhost', 27017)
         db = connection[SYMBOL]
 
+        #vider la table de simulation
+        db["simulation"].remove({})
+
         # Charger les bougies
         bougies0_m01 = False
-        bougies_m01 = db["M01"].find({"ctm": {"$gt": 1652220000000, "$lt": 1652470800000}, "SMA120": {"$exists": True}})
+        bougies_m01 = db["M01"].find({"ctm": {"$gt": 1652220000000, "$lt": 1662109500000}, "SMA120": {"$exists": True}})
 
         trade_open = 0
         type_order = 0
@@ -370,9 +373,11 @@ def main():
         super_t0, super_t1, super_t2 = sp_m01.getST()
 
         import re
+
         for b_m01 in bougies_m01:
             order = db["simulation"].find_one({"close": 0})
             if order is not None:
+
                 if b_m01["low"] < order["stop"] < b_m01["high"]:
                     # verifier si le stop est touché
                     filter_order= {'ctm': order["ctm"]}

@@ -67,6 +67,34 @@ repnse
 	"volume": 0.10
 }
 
+
+
+
+
+
+
+
+
+Strategie
+
+Periode 5 min :
+A) Acheter pivot Woodie si la EMA7 repasse au dessus de la ligne de soutien
+B) Acheter 
+    si EMa7 > EAM25 et Awesome > 20 (3 bars verte au dessus de 20)
+    et  Prix a touché S2 de Woodie
+: Position achat: EAM25  stop au plus bas des 10 derniers periodes si supertrend est ko sinon faire  avec super tr
+
+
+
+
+
+
+
+
+
+
+
+
 '''
 
 
@@ -79,7 +107,7 @@ TradeStartTime = 4
 TradeStopTime = 22
 # gestion managment-----
 Risk = 2.00  # risk %
-ObjectfDay = 3.00  # %
+ObjectfDay = 5.00  # %
 
 BALANCE = 0
 TICK = False
@@ -473,13 +501,17 @@ async def main():
         # # pivot##################################################################################################
         zone = await pivot()
 
+        # # moyen mobile ##################################################################################################
         moyMobil_01_120 = MM(SYMBOL, "M01", 0)
         moyMobil_05_120 = MM(SYMBOL, "M05", 0)
         await moyMobil_01_120.EMA(120)
         await moyMobil_01_120.EMA(70)
         await moyMobil_01_120.EMA(26)
+
         await moyMobil_05_120.EMA(120)
         await moyMobil_05_120.EMA(250)
+
+        # Awesome ##################################################################################################
         ao05 = Awesome(SYMBOL, "M05")
         await ao05.calculAllCandles()
         ao01 = Awesome(SYMBOL, "M01")
@@ -504,14 +536,19 @@ async def main():
             await moyMobil_01_120.EMA(26)
             await moyMobil_05_120.EMA(120)
             await moyMobil_05_120.EMA(250)
+
             # AO ###################################################################################
             await ao05.calculLastCandle(10)
             await ao01.calculLastCandle(10)
+
             # supertrend ###################################################################################
             # spM013012 = Supertrend(SYMBOL, "M01", 30, 12)
             # superM013012T0, superM013012T1, superM013012T2 = spM013012.getST()
             spM05_1003 = Supertrend(SYMBOL, "M05", 10, 4)
             superM05_1003T0, superM05_1003T1, superM05_1003T2 = spM05_1003.getST()
+
+            spM05_1003 = Supertrend(SYMBOL, "M01", 10, 3)
+            superM01_1003T0, superM01_1003T1, superM01_1003T2 = spM01_1003.getST()
 
             now = datetime.now()
             current_time = now.strftime("%H:%M:%S")
