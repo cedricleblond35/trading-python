@@ -359,7 +359,7 @@ def main():
 
         # Charger les bougies
         bougies0_m01 = False
-        bougies_m01 = db["M01"].find({"ctm": {"$gt": 1659909600000, "$lt": 1661983200000}, "EMA120": {"$exists": True}})
+        bougies_m01 = db["M01"].find({"ctm": {"$gt": 1661983200000, "$lt": 1662069600000}, "EMA120": {"$exists": True}})
 
 
         trade_open = 0
@@ -537,6 +537,7 @@ def main():
                 if trade_open is None and bougies0_m01 is not False:
                     print("aucun ordre en cours ********************")
                     bougies_d = db["D"].find_one({"ctmString": {"$regex": b_m01["ctmString"][:12]}})
+                    print(bougies_d)
                     if b_m01["close"] > bougies_d["PWoodie_PP"] and b_m01["AW"] > bougies0_m01["AW"] and b_m01["AW"] > 0.50:  # condition strategique
                         type_order = TransactionSide.BUY_LIMIT
                         ####################################"
