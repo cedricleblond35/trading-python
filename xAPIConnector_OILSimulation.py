@@ -601,22 +601,11 @@ def main():
                         ####################################"
                         zone = np.array(
                             [
-                                bougies_d["PCamarilla_PP"],
-                                bougies_d["PCamarilla_r1"],
-                                bougies_d["PCamarilla_r2"],
-                                bougies_d["PCamarilla_r3"],
-                                bougies_d["PCamarilla_r4"],
-                                bougies_d["PCamarilla_s1"],
-                                bougies_d["PCamarilla_s2"],
-                                bougies_d["PCamarilla_s3"],
-                                bougies_d["PCamarilla_s4"],
                                 bougies_d["PWoodie_PP"],
                                 bougies_d["PWoodie_r1"],
                                 bougies_d["PWoodie_r2"],
                                 bougies_d["PWoodie_s1"],
-                                bougies_d["PWoodie_s2"],
-                                bougies_d["demark_r1"],
-                                bougies_d["demark_s1"]
+                                bougies_d["PWoodie_s2"]
                             ])
                         zone = np.sort(zone)
                         supportDown, supportHight = zoneSoutien(b_m01["close"], zone)
@@ -667,7 +656,7 @@ def main():
         print("bilan :", bilan)
 
     except Exception as exc:
-        logger.info("le programe a déclenché une erreur xApiconnector_US100")
+        logger.info("le programe a déclenché une erreur apisimulator")
         logger.info("exception de mtype ", exc.__class__)
         logger.info("message", exc)
         exc_type, exc_obj, exc_tb = sys.exc_info()
