@@ -356,8 +356,6 @@ def main():
         connection = MongoClient('localhost', 27017)
         db = connection[SYMBOL]
 
-        #vider la table de simulation
-        db["simulation"].remove({})
 
         # Charger les bougies
         bougies0_m01 = False
