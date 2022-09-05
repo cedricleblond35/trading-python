@@ -554,9 +554,7 @@ async def main():
             current_time = now.strftime("%H:%M:%S")
             print("fin de la mise à jour ", current_time)
 
-
             if c.getTick() is not None:
-
                 print("go stategie ***************************************")
                 print("c.getTick() :", c.getTick())
                 tick = c.getTick()["ask"]
@@ -705,7 +703,6 @@ async def main():
                                     sl = round(superM05_1003T1 - ecart / 4, 2)
                                     print("sl superM05_1003T1:", sl)
                                     o.moveStopBuy(trade, sl, tick)
-
 
                         elif TransactionSide.SELL == trade['cmd']:
                             print("trade['customComment'] :", trade['customComment'])
