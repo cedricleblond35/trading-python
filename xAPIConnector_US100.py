@@ -473,11 +473,11 @@ async def pivot():
     print('calcul pivot ')
     P = Pivot(SYMBOL, "D")
     # PPF, R1F, R2F, R3F, S1F, S2F, S3F = await P.fibonacci()  # valeurs ok
-    # R1D, S1D = await P.demark()  # valeurs ok
+    R1D, S1D = await P.demark()  # valeurs ok
 
     PPW, R1W, R2W, S1W, S2W = await P.woodie()  # valeurs ok
-    PPC, R1C, R2C, R3C, R4C, S1C, S2C, S3C, S4C = await P.camarilla()  # valeurs ok
-    zone = np.array([PPW, PPC, R1C, R2C, R3C, R4C, S1C, S2C, S3C, S4C, R1W, R2W, S1W, S2W])
+     #PPC, R1C, R2C, R3C, R4C, S1C, S2C, S3C, S4C = await P.camarilla()  # valeurs ok
+    zone = np.array([PPW, R1W, R2W, S1W, S2W, R1D, S1D ])
     #zone = np.array([PPW, R1W, R2W, S1W, S2W])
     return np.sort(zone)
 
@@ -607,14 +607,6 @@ async def main():
                         + abs(round(bougie5M01["high"] - bougie3M01["low"], 2))
 
 
-                ecart2 = abs(round(bougie0M01["high"] - bougie0M01["low"], 2)) \
-                        + abs(round(bougie1M01["high"] - bougie1M01["low"], 2)) \
-                        + abs(round(bougie2M01["high"] - bougie2M01["low"], 2))
-
-
-                print("ecart : ", ecart, " ecart 2:", ecart2)
-
-
                 print("recherche de type dordre à executer : nouvel ordre ou move SL")
                 if len(tradeOpen['returnData']) == 0:
                     print("-- Aucun ordre   ***************************************")
@@ -654,7 +646,7 @@ async def main():
                             o.sellLimit(support, objectif, round(supportHight, 2), balance, VNL)
                     """
                     print("tick :", tick, " ema120", bougie1M01["EMA120"], "superM05_1003T0:", superM05_1003T0)
-                    print("zone 2 :", zone[2])
+                    print("zone 0 :", zone[0])
                     '''
                     Strategie EMA: 
                         Ouverture d ordre au niveau : suivre la EMA120 de 5 min
@@ -662,14 +654,20 @@ async def main():
                         tack profit : infini
                     '''
                     if tick < superM01_1003T1 <= superM01_1003T2 and tick < superM01_1003T0 \
-                            and tick < bougie1M01["EMA120"] < superM05_1003T1 and bougie1M05["EMA250"] < zone[2]:
+                            and tick < bougie1M01["EMA120"] < superM05_1003T1 and bougie1M05["EMA250"] < zone[0]:
+                        # vente limit *************************************************************************************
                         sl = superM05_1003T1
                         tp = 0
                         o.sellLimit(sl, tp, bougie1M01["EMA120"], balance, VNL)
 
                     elif tick > superM05_1003T1 >= superM05_1003T2 and tick > superM05_1003T0 \
-                            and tick > bougie1M01["EMA120"] > superM05_1003T1 and bougie1M01["EMA120"] > zone[0] and bougie1M01["EMA120"] > bougie2M01["EMA120"]:
-                        sl = superM05_1003T1
+                            and tick > bougie1M01["EMA120"] > superM05_1003T1 and bougie1M01["EMA120"] > zone[0] and bougie1M01["EMA120"] > bougie2M01["EMA120"] and bougie1M01["EMA120"] > bougie0M05["EMA120"]:
+                        # Achat limit *************************************************************************************
+                        if superM05_1003T1 < bougie0M05["EMA120"]:
+                            sl = superM05_1003T1
+                        else:
+                            sl = bougie0M05["EMA120"]
+
                         tp = 0
                         price = bougie1M01["EMA120"]
                         resistance = zoneResistance(price, zone)
@@ -679,20 +677,20 @@ async def main():
                         if ecartResistance > ecartStop*2.5 :
                             o.buyLimit(sl, tp, price, balance, VNL)
 
-                    elif bougie1M01.get("EMA70") and bougie1M01.get("AW") and bougie1M01.get(
-                            "EMA70") and bougie1M05.get("EMA120") :
-                        ######################## achat ###################################
-                        if tick > superM01_1003T1 >= superM01_1003T2 and bougie1M01["EMA70"] > bougie1M01["EMA120"] \
-                                and tick > superM05_1003T0:
-                            sl = superM01_1003T1-4
-                            tp = 0
-                            o.buyNow(sl, tp, tick, balance, VNL)
-                        ######################## vente ###################################
-                        elif tick < superM01_1003T1 <= superM01_1003T2 and bougie1M01["EMA70"] < bougie1M01["EMA120"] \
-                                and tick < superM05_1003T0:
-                            sl = superM01_1003T1 + 4
-                            tp = 0
-                            o.sellNow(sl, tp, tick, balance, VNL)
+                    # elif bougie1M01.get("EMA70") and bougie1M01.get("AW") and bougie1M01.get(
+                    #         "EMA70") and bougie1M05.get("EMA120") :
+                    #     ######################## achat ###################################
+                    #     if tick > superM01_1003T1 >= superM01_1003T2 and bougie1M01["EMA70"] > bougie1M01["EMA120"] \
+                    #             and tick > superM05_1003T0:
+                    #         sl = superM01_1003T1-4
+                    #         tp = 0
+                    #         o.buyNow(sl, tp, tick, balance, VNL)
+                    #     ######################## vente ###################################
+                    #     elif tick < superM01_1003T1 <= superM01_1003T2 and bougie1M01["EMA70"] < bougie1M01["EMA120"] \
+                    #             and tick < superM05_1003T0:
+                    #         sl = superM01_1003T1 + 4
+                    #         tp = 0
+                    #         o.sellNow(sl, tp, tick, balance, VNL)
                 else:
                     print("ordre en cours ...........................................")
                     for trade in tradeOpenDic['returnData']:
@@ -724,6 +722,8 @@ async def main():
                                 # Pour garantir pas de perte : monter le stop  a 5pip de benef :
                                 #   Si cours en dessus de l ouverture avec ecart 20pip
                                 #   Et si AW change de tendance
+
+                                # Si il touche une resistance et AW change de tendance, monter le stop  au ST01 ?? A FAIRE ???????
                                 if trade['sl'] < trade['open_price'] and tick > trade['open_price'] + 20 and bougie0M05[
                                     'AW'] < bougie1M05['AW']:
                                     sl = trade['open_price'] + 5
