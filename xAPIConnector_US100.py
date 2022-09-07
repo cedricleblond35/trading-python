@@ -441,6 +441,13 @@ def zoneSoutien(close, zone):
     # print(supportDown, " / ", supportHigt)
     return supportDown, supportHigt
 
+def zoneResistance(close, zone):
+    arrayT = sorted(zone)
+    resistance = 0
+    for v in arrayT:
+        if v > close and resistance == 0:
+            resistance = v
+    return resistance
 
 def subscribe(loginResponse):
     c = Command()
@@ -470,7 +477,7 @@ async def pivot():
 
     PPW, R1W, R2W, S1W, S2W = await P.woodie()  # valeurs ok
     PPC, R1C, R2C, R3C, R4C, S1C, S2C, S3C, S4C = await P.camarilla()  # valeurs ok
-    zone = np.array([PPC, R1C, R2C, R3C, R4C, S1C, S2C, S3C, S4C, R1W, R2W, S1W, S2W])
+    zone = np.array([PPW, PPC, R1C, R2C, R3C, R4C, S1C, S2C, S3C, S4C, R1W, R2W, S1W, S2W])
     #zone = np.array([PPW, R1W, R2W, S1W, S2W])
     return np.sort(zone)
 
@@ -661,10 +668,16 @@ async def main():
                         o.sellLimit(sl, tp, bougie1M01["EMA120"], balance, VNL)
 
                     elif tick > superM05_1003T1 >= superM05_1003T2 and tick > superM05_1003T0 \
-                            and tick > bougie1M01["EMA120"] > superM05_1003T1 and bougie1M05["EMA250"] > zone[2]:
+                            and tick > bougie1M01["EMA120"] > superM05_1003T1 and bougie1M01["EMA120"] > zone[0] and bougie1M01["EMA120"] > bougie2M01["EMA120"]:
                         sl = superM05_1003T1
                         tp = 0
-                        o.buyLimit(sl, tp, bougie1M01["EMA120"], balance, VNL)
+                        price = bougie1M01["EMA120"]
+                        resistance = zoneResistance(price, zone)
+
+                        ecartStop = price - sl
+                        ecartResistance = resistance - price
+                        if ecartResistance > ecartStop*2.5 :
+                            o.buyLimit(sl, tp, price, balance, VNL)
 
                     elif bougie1M01.get("EMA70") and bougie1M01.get("AW") and bougie1M01.get(
                             "EMA70") and bougie1M05.get("EMA120") :
