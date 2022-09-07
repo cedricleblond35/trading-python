@@ -592,7 +592,7 @@ async def main():
 
                 # print("--------------------------------------------------")
                 supportDown, supportHight = zoneSoutien(tick, zone)
-                ecart = abs(round(bougie0M01["high"] - bougie1M01["low"], 2)) \
+                ecart = abs(round(bougie0M01["high"] - bougie0M01["low"], 2)) \
                         + abs(round(bougie1M01["high"] - bougie1M01["low"], 2)) \
                         + abs(round(bougie2M01["high"] - bougie2M01["low"], 2)) \
                         + abs(round(bougie3M01["high"] - bougie3M01["low"], 2))\
@@ -600,7 +600,7 @@ async def main():
                         + abs(round(bougie5M01["high"] - bougie3M01["low"], 2))
 
 
-                ecart2 = abs(round(bougie0M01["high"] - bougie1M01["low"], 2)) \
+                ecart2 = abs(round(bougie0M01["high"] - bougie0M01["low"], 2)) \
                         + abs(round(bougie1M01["high"] - bougie1M01["low"], 2)) \
                         + abs(round(bougie2M01["high"] - bougie2M01["low"], 2))
 
@@ -614,6 +614,8 @@ async def main():
                     print("-- variable ************")
                     print("superM05_1003T1 :", superM05_1003T1)
                     print("superM05_1003T2 :", superM05_1003T2)
+                    print("superM01_1003T1 :", superM01_1003T1)
+                    print("superM01_1003T2 :", superM01_1003T2)
                     print("EMA70 1min:", bougie1M01["EMA70"], "   bougie1M01 EMA120 5min:", bougie1M05.get("EMA120"))
                     print("bougie1M01 :", bougie1M01)
                     print("-- variable fin ************")
