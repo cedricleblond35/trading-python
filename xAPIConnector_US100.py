@@ -544,7 +544,7 @@ async def main():
             # supertrend ###################################################################################
             # spM013012 = Supertrend(SYMBOL, "M01", 30, 12)
             # superM013012T0, superM013012T1, superM013012T2 = spM013012.getST()
-            spM05_1003 = Supertrend(SYMBOL, "M05", 10, 4)
+            spM05_1003 = Supertrend(SYMBOL, "M05", 10, 3)
             superM05_1003T0, superM05_1003T1, superM05_1003T2 = spM05_1003.getST()
 
             spM01_1003 = Supertrend(SYMBOL, "M01", 10, 3)
@@ -575,6 +575,9 @@ async def main():
                 bougie1M01 = db["M01"].find({}, sort=[('ctm', -1)]).limit(1).skip(1)[0]
                 bougie2M01 = db["M01"].find({}, sort=[('ctm', -1)]).limit(1).skip(2)[0]
                 bougie3M01 = db["M01"].find({}, sort=[('ctm', -1)]).limit(1).skip(3)[0]
+                bougie4M01 = db["M01"].find({}, sort=[('ctm', -1)]).limit(1).skip(4)[0]
+                bougie5M01 = db["M01"].find({}, sort=[('ctm', -1)]).limit(1).skip(5)[0]
+                bougie6M01 = db["M01"].find({}, sort=[('ctm', -1)]).limit(1).skip(6)[0]
 
                 bougie0M05 = db["M05"].find({}, sort=[('ctm', -1)]).limit(1).skip(0)[0]
                 bougie1M05 = db["M05"].find({}, sort=[('ctm', -1)]).limit(1).skip(1)[0]
@@ -589,10 +592,21 @@ async def main():
 
                 # print("--------------------------------------------------")
                 supportDown, supportHight = zoneSoutien(tick, zone)
-                ecart = abs(round(bougie1M01["high"] - bougie1M01["low"], 2)) \
-                        + abs(round(bougie0M01["high"] - bougie1M01["low"], 2)) \
-                        + abs(round(bougie1M01["high"] - bougie2M01["low"], 2)) \
-                        + abs(round(bougie3M01["high"] - bougie3M01["low"], 2))
+                ecart = abs(round(bougie0M01["high"] - bougie1M01["low"], 2)) \
+                        + abs(round(bougie1M01["high"] - bougie1M01["low"], 2)) \
+                        + abs(round(bougie2M01["high"] - bougie2M01["low"], 2)) \
+                        + abs(round(bougie3M01["high"] - bougie3M01["low"], 2))\
+                        + abs(round(bougie4M01["high"] - bougie2M01["low"], 2)) \
+                        + abs(round(bougie5M01["high"] - bougie3M01["low"], 2))
+
+
+                ecart2 = abs(round(bougie0M01["high"] - bougie1M01["low"], 2)) \
+                        + abs(round(bougie1M01["high"] - bougie1M01["low"], 2)) \
+                        + abs(round(bougie2M01["high"] - bougie2M01["low"], 2))
+
+
+                print("ecart : ", ecart, " ecart 2:", ecart2)
+
 
                 print("recherche de type dordre à executer : nouvel ordre ou move SL")
                 if len(tradeOpen['returnData']) == 0:
@@ -638,7 +652,7 @@ async def main():
                         SL : superM05_1003T1
                         tack profit : infini
                     '''
-                    if tick < superM05_1003T1 <= superM05_1003T2 and tick < superM05_1003T0 \
+                    if tick < superM01_1003T1 <= superM01_1003T2 and tick < superM01_1003T0 \
                             and tick < bougie1M01["EMA120"] < superM05_1003T1 and bougie1M05["EMA250"] < zone[2]:
                         sl = superM05_1003T1
                         tp = 0
