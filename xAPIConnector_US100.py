@@ -469,9 +469,9 @@ async def pivot():
     # R1D, S1D = await P.demark()  # valeurs ok
 
     PPW, R1W, R2W, S1W, S2W = await P.woodie()  # valeurs ok
-    #PPC, R1C, R2C, R3C, R4C, S1C, S2C, S3C, S4C = await P.camarilla()  # valeurs ok
-    #zone = np.array([PPC, R1C, R2C, R3C, R4C, S1C, S2C, S3C, S4C, R1W, R2W, S1W, S2W])
-    zone = np.array([PPW, R1W, R2W, S1W, S2W])
+    PPC, R1C, R2C, R3C, R4C, S1C, S2C, S3C, S4C = await P.camarilla()  # valeurs ok
+    zone = np.array([PPC, R1C, R2C, R3C, R4C, S1C, S2C, S3C, S4C, R1W, R2W, S1W, S2W])
+    #zone = np.array([PPW, R1W, R2W, S1W, S2W])
     return np.sort(zone)
 
 
@@ -671,13 +671,13 @@ async def main():
                         ######################## achat ###################################
                         if tick > superM01_1003T1 >= superM01_1003T2 and bougie1M01["EMA70"] > bougie1M01["EMA120"] \
                                 and tick > superM05_1003T0:
-                            sl = superM01_1003T1
+                            sl = superM01_1003T1-4
                             tp = 0
                             o.buyNow(sl, tp, tick, balance, VNL)
                         ######################## vente ###################################
                         elif tick < superM01_1003T1 <= superM01_1003T2 and bougie1M01["EMA70"] < bougie1M01["EMA120"] \
                                 and tick < superM05_1003T0:
-                            sl = superM01_1003T1
+                            sl = superM01_1003T1 + 4
                             tp = 0
                             o.sellNow(sl, tp, tick, balance, VNL)
                 else:
