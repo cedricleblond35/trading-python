@@ -623,7 +623,7 @@ async def main():
 
                     if tick > superM01_1003T1:
                         sl = superM01_1003T1
-                        tp = zoneResistance(price, zone)
+                        tp = zoneResistance(tick, zone)
                         price = tick + 15
                         o.buyNow(sl, tp, price, balance, VNL)
 
