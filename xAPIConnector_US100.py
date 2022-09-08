@@ -311,10 +311,8 @@ async def majDatAall(client, symbol, db):
         json_data_Day = client.commandExecute('getChartRangeRequest', arguments)
         dataDAY = json.dumps(json_data_Day)
         dataDAYDownload = json.loads(dataDAY)
-        listDataDBDAY = db["D"].find_one({}, sort=[('ctm', -1)])
+        listDataDBDAY = db["D"].find_one({}, sort=[('ctm', -1)]).skip(1)
         print(listDataDBDAY)
-        ctmRefStart = db["D"].find().sort("ctm", -1).skip(1).limit(1)
-        print("ctmRefStart : ",ctmRefStart)
 
         await insertData(db["D"], dataDAYDownload, listDataDBDAY)
 
