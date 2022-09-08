@@ -667,9 +667,9 @@ async def main():
                                 if bougie1M01["EMA120"] > zone[0]:
                                     print("Achat level 4")
                                     if bougie1M01["EMA120"] > bougie2M01["EMA120"]:
-                                        print("Achat level 2")
-                                        if bougie1M01["EMA70"] > bougie0M01["EMA120"]:
-                                            print("Achat level 2")
+                                        print("Achat level 5")
+                                        if bougie1M01["EMA70"] > bougie1M01["EMA120"]:
+                                            print("Achat level 6")
 
                     print("buy ???? :", tick, ">", superM05_1003T1, ">=", superM05_1003T2, "and", tick, ">",
                           superM05_1003T0, "and", tick, ">", bougie1M01["EMA120"], ">", superM05_1003T1, "and",
