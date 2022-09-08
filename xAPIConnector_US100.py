@@ -529,6 +529,7 @@ async def main():
         while True:
             now = datetime.now()
             current_time = now.strftime("%H:%M:%S")
+            print("*****************************************************************************************************")
             print("Current Time =", current_time)
             print("mise à jour des indicateurs : ", current_time, " -----------------------------------------------")
             if updatePivot():
@@ -565,8 +566,8 @@ async def main():
                 print("go stategie ***************************************")
                 print("c.getTick() :", c.getTick())
                 tick = c.getTick()["ask"]
-                print("tick :", tick)
-                print("c.getTrade() :", c.getTrade())
+                #print("tick :", tick)
+                #print("c.getTrade() :", c.getTrade())
 
                 ###############################################################################################################
                 # order
