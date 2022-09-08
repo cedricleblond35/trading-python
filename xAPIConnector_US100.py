@@ -744,7 +744,7 @@ async def main():
                         elif TransactionSide.BUY == trade['cmd']:
                             if trade['customComment'] == "Achat direct":
                                 if superM01_1003T1 > trade['sl']:
-                                    o.moveStopBuy(trade, superM05_1003T1, tick)
+                                    o.moveStopBuy(trade, superM01_1003T1, tick)
 
                             else:
                                 # Pour garantir pas de perte : monter le stop  a 5pip de benef :
