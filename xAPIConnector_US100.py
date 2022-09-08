@@ -654,6 +654,25 @@ async def main():
                         SL : superM05_1003T1
                         tack profit : infini
                     '''
+                    print("stragegie EMA :")
+                    print("sell ???? :",tick ,"<", superM01_1003T1 ,"<=", superM01_1003T2 ,"and", tick ,"<", superM01_1003T0 ,"and", tick ,"<", bougie1M01["EMA120"] ,"<", superM05_1003T1 ,"and", bougie1M05["EMA250"] ,"<", zone[0])
+
+
+                    if tick > superM05_1003T1 >= superM05_1003T2:
+                        print("Achat level 1")
+                        if tick > superM05_1003T0:
+                            print("Achat level 2")
+                            if tick > bougie1M01["EMA120"] > superM05_1003T1:
+                                print("Achat level 3")
+                                if bougie1M01["EMA120"] > zone[0]:
+                                    print("Achat level 4")
+                                    if bougie1M01["EMA120"] > bougie2M01["EMA120"]:
+                                        print("Achat level 5")
+                                        if bougie1M01["EMA70"] > bougie0M01["EMA120"]:
+                                            print("Achat level 6")
+
+
+
                     if tick < superM01_1003T1 <= superM01_1003T2 and tick < superM01_1003T0 \
                             and tick < bougie1M01["EMA120"] < superM05_1003T1 and bougie1M05["EMA250"] < zone[0]:
                         # vente limit *************************************************************************************
@@ -662,7 +681,7 @@ async def main():
                         o.sellLimit(sl, tp, bougie1M01["EMA120"], balance, VNL)
 
                     elif tick > superM05_1003T1 >= superM05_1003T2 and tick > superM05_1003T0 \
-                            and tick > bougie1M01["EMA120"] > superM05_1003T1 and bougie1M01["EMA120"] > zone[0] and bougie1M01["EMA120"] > bougie2M01["EMA120"] and bougie1M01["EMA120"] > bougie0M05["EMA120"]:
+                            and tick > bougie1M01["EMA120"] > superM05_1003T1 and bougie1M01["EMA120"] > zone[0] and bougie1M01["EMA120"] > bougie2M01["EMA120"] and bougie1M01["EMA70"] > bougie0M01["EMA120"]:
                         # Achat limit *************************************************************************************
                         if superM05_1003T1 < bougie0M05["EMA120"]:
                             sl = superM05_1003T1
