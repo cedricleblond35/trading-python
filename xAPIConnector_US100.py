@@ -625,6 +625,7 @@ async def main():
                         sl = superM01_1003T1
                         tp = zoneResistance(tick, zone)
                         price = tick + 15
+                        print("sl, tp, price :", sl, "  tp:", tp, "  price",  price)
                         o.buyNow(sl, tp, price, balance, VNL)
 
 
