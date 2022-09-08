@@ -320,6 +320,8 @@ async def majDatAall(client, symbol, db):
             listDataDBDAY = db["D"].find().sort("ctm", -1).skip(1).limit(1)   #selection de l avant dernier pour mise à jour pour les pivot
 
         print("listDataDBDAY : ",listDataDBDAY)
+        print("dataDAYDownload")
+        exit(0)
         await insertData(db["D"], dataDAYDownload, listDataDBDAY)
 
         # on recupere les 4 dernieres heures pour eviter de tt scanner afin que le traitement soit plus rapide
