@@ -160,6 +160,7 @@ async def insertData(collection, dataDownload, listDataDB):
     '''
 
     ctm = ''
+    print("----------------- collection :", collection)
     if dataDownload['status'] and len(dataDownload["returnData"]['rateInfos']) > 0:
         for value in dataDownload["returnData"]['rateInfos']:
             ctm = value['ctm']
@@ -181,6 +182,7 @@ async def insertData(collection, dataDownload, listDataDB):
                 }
                 collection.insert_one(newvalues)
             elif value['ctm'] == listDataDB["ctm"]:
+                print("mise a jour :", value['ctm'])
                 myquery = {"ctm": value['ctm']}
                 newvalues = {
                     "$set": {
@@ -311,7 +313,7 @@ async def majDatAall(client, symbol, db):
         json_data_Day = client.commandExecute('getChartRangeRequest', arguments)
         dataDAY = json.dumps(json_data_Day)
         dataDAYDownload = json.loads(dataDAY)
-        listDataDBDAY = db["D"].find_one({}, sort=[('ctm', -1)]).skip(1)
+        listDataDBDAY = db["D"].find_one({}, sort=[('ctm', -1)])
         print(listDataDBDAY)
 
         await insertData(db["D"], dataDAYDownload, listDataDBDAY)
