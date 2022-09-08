@@ -152,7 +152,7 @@ def updatePivot():
 
 async def insertData(collection, dataDownload, listDataDB):
     '''
-    Insertion des données dans l base de donnée ou mise à jour de a dernière donnée de la collection
+    Insertion des données dans la base de donnée ou mise à jour de la dernière donnée de la collection
     :param collection: collection à la quelle on insere des données
     :param dataDownload: (dict) données
     :param listDataDB: dernière ligne de données provenant de la collection
@@ -311,7 +311,11 @@ async def majDatAall(client, symbol, db):
         json_data_Day = client.commandExecute('getChartRangeRequest', arguments)
         dataDAY = json.dumps(json_data_Day)
         dataDAYDownload = json.loads(dataDAY)
-        listDataDBDAY = db["D"].find().sort("ctm", -1).skip(1).limit(1)
+        listDataDBDAY = db["D"].find_one({}, sort=[('ctm', -1)])
+        print(listDataDBDAY)
+        ctmRefStart = db["H4"].find().sort("ctm", -1).skip(1).limit(1)
+        print("ctmRefStart : ",ctmRefStart)
+
         await insertData(db["D"], dataDAYDownload, listDataDBDAY)
 
         # on recupere les 4 dernieres heures pour eviter de tt scanner afin que le traitement soit plus rapide
