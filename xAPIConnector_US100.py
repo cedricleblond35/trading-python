@@ -628,6 +628,12 @@ async def main():
                         print("sl, tp, price :", sl, "  tp:", tp, "  price",  price)
                         o.buyNow(sl, tp, price, balance, VNL)
 
+                    if tick < superM01_1003T1:
+                        sl = superM01_1003T1
+                        tp = zoneResistance(tick, zone)
+                        price = tick - 15
+                        print("sl, tp, price :", sl, "  tp:", tp, "  price",  price)
+                        o.buyNow(sl, tp, price, balance, VNL)
 
                     # elif bougie1M01.get("EMA26") and bougie1M01.get("EMA70") and bougie1M01.get(
                     #         "EMA120") and bougie1M05.get("EMA120"):
