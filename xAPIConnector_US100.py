@@ -620,7 +620,7 @@ async def main():
                     print("bougie1M01 :", bougie1M01)
                     print("-- variable fin ************")
                     print("demarrage de selection d un futur ordre")
-                    """
+
                     if bougie1M01.get("EMA26") and bougie1M01.get("EMA70") and bougie1M01.get(
                             "EMA120") and bougie1M05.get("EMA120"):
                         ######################## achat ###################################
@@ -632,7 +632,6 @@ async def main():
                             objectif = supportHight - 5
                             # o.buyNow(support, objectif, round(price, 2), balance, VNL)
                             o.buyLimit(support, objectif, round(supportDown, 2), balance, VNL)
-                    
 
 
                         ######################## vente ###################################
@@ -645,7 +644,7 @@ async def main():
                             objectif = supportDown + 5
                             # o.sellNow(support, objectif, round(price, 2), balance, VNL)
                             o.sellLimit(support, objectif, round(supportHight, 2), balance, VNL)
-                    """
+
                     print("tick :", tick, " ema120", bougie1M01["EMA120"], "superM05_1003T0:", superM05_1003T0)
                     print("zone 0 :", zone[0])
                     '''
@@ -656,7 +655,6 @@ async def main():
                     '''
                     print("stragegie EMA :")
                     print("sell ???? :",tick ,"<", superM01_1003T1 ,"<=", superM01_1003T2 ,"and", tick ,"<", superM01_1003T0 ,"and", tick ,"<", bougie1M01["EMA120"] ,"<", superM05_1003T1 ,"and", bougie1M05["EMA250"] ,"<", zone[0])
-
 
                     if tick > superM05_1003T1 >= superM05_1003T2:
                         print("Achat level 1")
