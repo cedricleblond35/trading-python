@@ -313,7 +313,7 @@ async def majDatAall(client, symbol, db):
         dataDAYDownload = json.loads(dataDAY)
         listDataDBDAY = db["D"].find_one({}, sort=[('ctm', -1)])
         print(listDataDBDAY)
-        ctmRefStart = db["H4"].find().sort("ctm", -1).skip(1).limit(1)
+        ctmRefStart = db["D"].find().sort("ctm", -1).skip(1).limit(1)
         print("ctmRefStart : ",ctmRefStart)
 
         await insertData(db["D"], dataDAYDownload, listDataDBDAY)
