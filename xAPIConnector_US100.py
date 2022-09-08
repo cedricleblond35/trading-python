@@ -152,7 +152,7 @@ def updatePivot():
 
 async def insertData(collection, dataDownload, listDataDB):
     '''
-    Insertion des données dans la base de donnée ou mise à jour de la dernière donnée de la collection
+    Insertion des données dans l base de donnée ou mise à jour de a dernière donnée de la collection
     :param collection: collection à la quelle on insere des données
     :param dataDownload: (dict) données
     :param listDataDB: dernière ligne de données provenant de la collection
@@ -160,7 +160,6 @@ async def insertData(collection, dataDownload, listDataDB):
     '''
 
     ctm = ''
-    print("----------------- collection :", collection)
     if dataDownload['status'] and len(dataDownload["returnData"]['rateInfos']) > 0:
         for value in dataDownload["returnData"]['rateInfos']:
             ctm = value['ctm']
@@ -182,7 +181,6 @@ async def insertData(collection, dataDownload, listDataDB):
                 }
                 collection.insert_one(newvalues)
             elif value['ctm'] == listDataDB["ctm"]:
-                print("mise a jour :", value['ctm'])
                 myquery = {"ctm": value['ctm']}
                 newvalues = {
                     "$set": {
@@ -314,14 +312,6 @@ async def majDatAall(client, symbol, db):
         dataDAY = json.dumps(json_data_Day)
         dataDAYDownload = json.loads(dataDAY)
         listDataDBDAY = db["D"].find_one({}, sort=[('ctm', -1)])
-        print("listDataDBDAY : ",listDataDBDAY)
-        if listDataDBDAY is not None:
-            print("dans le if listDataDBDAY")
-            listDataDBDAY = db["D"].find().sort("ctm", -1).skip(1).limit(1)   #selection de l avant dernier pour mise à jour pour les pivot
-
-        print("listDataDBDAY : ",listDataDBDAY)
-        print("dataDAYDownload")
-        exit(0)
         await insertData(db["D"], dataDAYDownload, listDataDBDAY)
 
         # on recupere les 4 dernieres heures pour eviter de tt scanner afin que le traitement soit plus rapide
@@ -677,12 +667,13 @@ async def main():
                                 if bougie1M01["EMA120"] > zone[0]:
                                     print("Achat level 4")
                                     if bougie1M01["EMA120"] > bougie2M01["EMA120"]:
-                                        print("Achat level 5")
+                                        print("Achat level 2")
                                         if bougie1M01["EMA70"] > bougie0M01["EMA120"]:
-                                            print("Achat level 6")
+                                            print("Achat level 2")
 
-
-
+                    print("buy ???? :", tick, ">", superM05_1003T1, ">=", superM05_1003T2, "and", tick, ">",
+                          superM05_1003T0, "and", tick, ">", bougie1M01["EMA120"], ">", superM05_1003T1, "and",
+                          bougie1M05["EMA250"], "<", zone[0])
                     if tick < superM01_1003T1 <= superM01_1003T2 and tick < superM01_1003T0 \
                             and tick < bougie1M01["EMA120"] < superM05_1003T1 and bougie1M05["EMA250"] < zone[0]:
                         # vente limit *************************************************************************************
