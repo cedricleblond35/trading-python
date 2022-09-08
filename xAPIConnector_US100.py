@@ -679,22 +679,28 @@ async def main():
                         tp = 0
                         o.sellLimit(sl, tp, bougie1M01["EMA120"], balance, VNL)
 
-                    elif tick > superM05_1003T1 >= superM05_1003T2 and tick > superM05_1003T0 \
-                            and tick > bougie1M01["EMA120"] > superM05_1003T1 and bougie1M01["EMA120"] > zone[0] and bougie1M01["EMA120"] > bougie2M01["EMA120"] and bougie1M01["EMA70"] > bougie0M01["EMA120"]:
+                    # elif tick > superM05_1003T1 >= superM05_1003T2 and tick > superM05_1003T0 \
+                    #         and tick > bougie1M01["EMA120"] > superM05_1003T1 and bougie1M01["EMA120"] > zone[0] and bougie1M01["EMA120"] > bougie2M01["EMA120"] and bougie1M01["EMA70"] > bougie0M01["EMA120"]:
+                    #     if superM05_1003T1 < bougie0M05["EMA120"]:
+                    #         sl = superM05_1003T1
+                    #     else:
+                    #         sl = bougie0M05["EMA120"]
+                    #
+                    #     tp = 0
+                    #     price = bougie1M01["EMA120"]
+                    #     resistance = zoneResistance(price, zone)
+                    #
+                    #     ecartStop = price - sl
+                    #     ecartResistance = resistance - price
+                    #     if ecartResistance > ecartStop*2.5 :
+                    #         o.buyLimit(sl, tp, price, balance, VNL)
+                    elif tick > superM01_1003T1 >= superM01_1003T2 and superM01_1003T1 > zone[0] :
                         # Achat limit *************************************************************************************
-                        if superM05_1003T1 < bougie0M05["EMA120"]:
-                            sl = superM05_1003T1
-                        else:
-                            sl = bougie0M05["EMA120"]
+                        sl = superM01_1003T1
+                        tp = zoneResistance(price, zone)
+                        price = tick+15
 
-                        tp = 0
-                        price = bougie1M01["EMA120"]
-                        resistance = zoneResistance(price, zone)
-
-                        ecartStop = price - sl
-                        ecartResistance = resistance - price
-                        if ecartResistance > ecartStop*2.5 :
-                            o.buyLimit(sl, tp, price, balance, VNL)
+                        o.buyLimit(sl, tp, price, balance, VNL)
 
                     # elif bougie1M01.get("EMA70") and bougie1M01.get("AW") and bougie1M01.get(
                     #         "EMA70") and bougie1M05.get("EMA120") :
