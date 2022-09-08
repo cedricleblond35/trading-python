@@ -449,6 +449,14 @@ def zoneResistance(close, zone):
             resistance = v
     return resistance
 
+def zoneResistanceVente(close, zone):
+    arrayT = sorted(zone, reverse=True)
+    resistance = 0
+    for v in arrayT:
+        if v < close and resistance == 0:
+            resistance = v
+    return resistance
+
 def subscribe(loginResponse):
     c = Command()
     ssid = loginResponse['streamSessionId']
@@ -630,10 +638,10 @@ async def main():
 
                     if tick < superM01_1003T1:
                         sl = superM01_1003T1
-                        tp = zoneResistance(tick, zone)
+                        tp = zoneResistanceVente(tick, zone)
                         price = tick - 15
                         print("sl, tp, price :", sl, "  tp:", tp, "  price",  price)
-                        o.buyNow(sl, tp, price, balance, VNL)
+                        o.sellNow(sl, tp, price, balance, VNL)
 
                     # elif bougie1M01.get("EMA26") and bougie1M01.get("EMA70") and bougie1M01.get(
                     #         "EMA120") and bougie1M05.get("EMA120"):
