@@ -316,7 +316,7 @@ async def majDatAall(client, symbol, db):
         listDataDBDAY = db["D"].find_one({}, sort=[('ctm', -1)])
         print("listDataDBDAY : ",listDataDBDAY)
         if listDataDBDAY is not None:
-            print(listDataDBDAY)
+            print("dans le if listDataDBDAY")
             listDataDBDAY = db["D"].find().sort("ctm", -1).skip(1).limit(1)   #selection de l avant dernier pour mise à jour pour les pivot
 
         print("listDataDBDAY : ",listDataDBDAY)
