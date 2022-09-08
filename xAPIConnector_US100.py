@@ -629,14 +629,14 @@ async def main():
                     print("-- variable fin ************")
                     print("demarrage de selection d un futur ordre")
 
-                    if tick > superM01_1003T1 and bougie1M01.get("EMA26"):
+                    if tick > superM01_1003T1 and bougie1M01.get("EMA26") > bougie1M01.get("EMA120") and superM01_1003T1 < bougie1M01.get("EMA120"):
                         sl = superM01_1003T1
                         tp = zoneResistance(tick, zone)
                         price = bougie1M01.get("EMA120")
                         o.buyLimit(sl, 0, price, balance, VNL)
 
 
-                    if tick < superM01_1003T1:
+                    if tick < superM01_1003T1 and bougie1M01.get("EMA26") < bougie1M01.get("EMA120") and superM01_1003T1 > bougie1M01.get("EMA120"):
                         sl = superM01_1003T1
                         tp = zoneResistanceVente(tick, zone)
                         price = bougie1M01.get("EMA120")
@@ -742,14 +742,14 @@ async def main():
                         #############" ordre en attente ##################"
                         if TransactionSide.BUY_LIMIT == trade['cmd']:
                             print("move price buy !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-                            sl = superM05_1003T1
+                            sl = superM01_1003T1
                             tp = 0
                             o.movebuyLimitWait(trade, sl, tp, bougie1M01["EMA120"], balance, VNL)
 
                         elif TransactionSide.SELL_LIMIT == trade['cmd']:
 
                             print("move price dell !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-                            sl = superM05_1003T1
+                            sl = superM01_1003T1
                             tp = 0
                             o.moveSellLimitWait(trade, sl, tp, bougie1M01["EMA120"], balance, VNL)
 
@@ -770,8 +770,8 @@ async def main():
                                     sl = trade['open_price'] + 5
                                     o.moveStopBuy(trade, sl, tick)
                                 else:
-                                    sl = round(superM05_1003T1 - ecart / 4, 2)
-                                    print("sl superM05_1003T1:", sl)
+                                    sl = round(superM01_1003T1 - ecart / 4, 2)
+                                    print("sl superM01_1003T1:", sl)
                                     o.moveStopBuy(trade, sl, tick)
 
                         elif TransactionSide.SELL == trade['cmd']:
