@@ -314,8 +314,11 @@ async def majDatAall(client, symbol, db):
         dataDAY = json.dumps(json_data_Day)
         dataDAYDownload = json.loads(dataDAY)
         listDataDBDAY = db["D"].find_one({}, sort=[('ctm', -1)])
-        print(listDataDBDAY)
+        if listDataDBDAY is not None:
+            print(listDataDBDAY)
+            listDataDBDAY = db["D"].find().sort("ctm", -1).skip(1).limit(1)   #selection de l avant dernier pour mise à jour pour les pivot
 
+        print("listDataDBDAY : ",listDataDBDAY)
         await insertData(db["D"], dataDAYDownload, listDataDBDAY)
 
         # on recupere les 4 dernieres heures pour eviter de tt scanner afin que le traitement soit plus rapide
