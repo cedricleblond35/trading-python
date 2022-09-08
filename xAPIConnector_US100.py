@@ -743,7 +743,7 @@ async def main():
                         #############" ordre execute ##################"
                         elif TransactionSide.BUY == trade['cmd']:
                             if trade['customComment'] == "Achat direct":
-                                if trade['sl'] > superM01_1003T1:
+                                if superM01_1003T1 > trade['sl']:
                                     o.moveStopBuy(trade, superM05_1003T1, tick)
 
                             else:
