@@ -505,6 +505,8 @@ async def main():
 
     try:
         sclient, c = subscribe(loginResponse)
+
+
         connection = MongoClient('localhost', 27017)
         db = connection[SYMBOL]
         dbStreaming = connection["STREAMING"]
@@ -639,7 +641,8 @@ async def main():
                         if dif > 5:
                             o.buyLimit(sl, tp, price, balance, VNL)
 
-
+                    price = c.getTick()
+                    print("price :", price)
                     if tick < superM01_1003T1 and bougie1M01.get("EMA26") < bougie1M01.get("EMA120") :
                         sl = superM01_1003T1
                         tp = zoneResistanceVente(tick, zone)
