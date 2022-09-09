@@ -47,6 +47,22 @@ class Price:
         for v in self._db[self.__timeframe].find({link_id: {'$exists': False}}).skip(skipValue).limit(limitValue):
             self._listDataLast.append(v)
 
+    def _prepareListAW(self, limitValue=0, skipValue=0, link_id='ctm'):
+        #qelect le nombre de bougie à traiter
+        self.__connectionDB()
+        self._listDataLast.clear()
+
+        nb = self._db[self.__timeframe].count({"AW":{'$exists': False}})
+        if nb < 35:
+            skipValue = nb + 34
+
+        for v in self._db[self.__timeframe].find().sort("ctm", -1).skip(skipValue).limit(limitValue):
+            self._listData.append(v)
+
+        self._listData.reverse()
+
+
+
     def _avgClose(self, limit, skip=0, sort=1):
         self.__connectionDB()
         for v in self._db[self.__timeframe].aggregate([{ "$sort" : { "ctm" : sort}},{ "$skip":skip},{ "$limit":limit},{'$group': {"_id": "$Branch", 'avg_val': {'$avg': '$close'}}}]):

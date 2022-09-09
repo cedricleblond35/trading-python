@@ -28,7 +28,7 @@ class Awesome(Price):
     async def __calcul(self):
         print("calcul AW ", self.__timeframe)
         print("nombre 1: ",  len(self._listData))
-        self._prepareListEMA(0, self.__MMS2 , "AW")  # toutes les bougies ne possédant pas EMA (HORS LES X PREMIÈRES)
+        self._prepareListAW()  # toutes les bougies ne possédant pas EMA (HORS LES X PREMIÈRES)
 
 
 
