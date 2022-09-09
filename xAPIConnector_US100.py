@@ -629,14 +629,16 @@ async def main():
                     print("-- variable fin ************")
                     print("demarrage de selection d un futur ordre")
 
-                    if tick > superM01_1003T1 and bougie1M01.get("EMA26") > bougie1M01.get("EMA120") and superM01_1003T1 < bougie1M01.get("EMA120"):
+                    print("tick ", tick, " superM01_1003T1:", superM01_1003T1, "    eam26:", bougie1M01.get("EMA26"), " eam120:", bougie1M01.get("EMA26"))
+
+                    if tick > superM01_1003T1 and bougie1M01.get("EMA26") > bougie1M01.get("EMA120"):
                         sl = superM01_1003T1
                         tp = zoneResistance(tick, zone)
                         price = bougie1M01.get("EMA120")
                         o.buyLimit(sl, tp, price, balance, VNL)
 
 
-                    if tick < superM01_1003T1 and bougie1M01.get("EMA26") < bougie1M01.get("EMA120") and superM01_1003T1 > bougie1M01.get("EMA120"):
+                    if tick < superM01_1003T1 and bougie1M01.get("EMA26") < bougie1M01.get("EMA120") :
                         sl = superM01_1003T1
                         tp = zoneResistanceVente(tick, zone)
                         price = bougie1M01.get("EMA120")
