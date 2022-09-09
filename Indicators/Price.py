@@ -52,7 +52,7 @@ class Price:
         self.__connectionDB()
         self._listDataLast.clear()
 
-        nb = self._db[self.__timeframe].count({'AW': {'$exists': False}})
+        nb = self._db[self.__timeframe].find({'AW': {'$exists': False}}).count()
         if nb < 35:
             skipValue = nb + 34
 
