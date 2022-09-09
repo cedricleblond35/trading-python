@@ -332,16 +332,16 @@ def NbrLot(balance, position, stp, vnl):
     try:
         print("calcul du nombre de lot #############################################################################")
         print("balance :", balance)
-        print("vnl :", vnl)
         perteAcceptable = round(balance * 0.03, 0)
 
         print("perteAcceptable :", perteAcceptable)
         print("position :", position)
         print("stp :", stp)
+        print("vnl :", vnl)
         ecartPip = abs((position - stp))
 
         print("ecart type :", ecartPip)
-        nbrelot = perteAcceptable / ecartPip / vnl
+        nbrelot = round(perteAcceptable / ecartPip / vnl)
         print("nbrelot :", nbrelot)
         """
         qtMax = self.round_down((balance["equityFX"] / 20000), 2)
@@ -352,7 +352,8 @@ def NbrLot(balance, position, stp, vnl):
             "calcul du nombre de lot #############################################################################")
 
 
-        return round(nbrelot, 2)
+        return nbrelot
+
     except (RuntimeError, TypeError, NameError):
         pass
 

@@ -619,6 +619,8 @@ async def main():
 
 
                 print("recherche de type dordre à executer : nouvel ordre ou move SL")
+                price = c.getTick()
+                print("price :", price)
                 if len(tradeOpen['returnData']) == 0:
                     print("-- Aucun ordre   ***************************************")
                     print("-- variable ************")
@@ -633,7 +635,7 @@ async def main():
 
                     print("tick ", tick, " superM01_1003T1:", superM01_1003T1, "    eam26:", bougie1M01.get("EMA26"), " eam120:", bougie1M01.get("EMA26"))
 
-                    if tick > superM01_1003T1 and bougie1M01.get("EMA26") > bougie1M01.get("EMA120"):
+                    if bougie0M01["close"] > superM01_1003T1 and bougie1M01.get("EMA26") > bougie1M01.get("EMA120"):
                         sl = superM01_1003T1
                         tp = zoneResistance(tick, zone)
                         price = bougie1M01.get("EMA120")
@@ -641,9 +643,8 @@ async def main():
                         if dif > 5:
                             o.buyLimit(sl, tp, price, balance, VNL)
 
-                    price = c.getTick()
-                    print("price :", price)
-                    if tick < superM01_1003T1 and bougie1M01.get("EMA26") < bougie1M01.get("EMA120") :
+
+                    if bougie0M01["close"] < superM01_1003T1 and bougie1M01.get("EMA26") < bougie1M01.get("EMA120") :
                         sl = superM01_1003T1
                         tp = zoneResistanceVente(tick, zone)
                         price = bougie1M01.get("EMA120")
