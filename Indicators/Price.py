@@ -47,12 +47,12 @@ class Price:
         for v in self._db[self.__timeframe].find({link_id: {'$exists': False}}).skip(skipValue).limit(limitValue):
             self._listDataLast.append(v)
 
-    def _prepareListAW(self, limitValue=0, skipValue=0, link_id='ctm'):
+    def _prepareListAW(self, limitValue=0, skipValue=0):
         #qelect le nombre de bougie à traiter
         self.__connectionDB()
         self._listDataLast.clear()
 
-        nb = self._db[self.__timeframe].count({"AW":{'$exists': False}})
+        nb = self._db[self.__timeframe].count({'AW': {'$exists': False}})
         if nb < 35:
             skipValue = nb + 34
 
