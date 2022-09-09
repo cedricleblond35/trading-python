@@ -635,14 +635,19 @@ async def main():
                         sl = superM01_1003T1
                         tp = zoneResistance(tick, zone)
                         price = bougie1M01.get("EMA120")
-                        o.buyLimit(sl, tp, price, balance, VNL)
+                        dif = price - sl
+                        if dif > 5:
+                            o.buyLimit(sl, tp, price, balance, VNL)
 
 
                     if tick < superM01_1003T1 and bougie1M01.get("EMA26") < bougie1M01.get("EMA120") :
                         sl = superM01_1003T1
                         tp = zoneResistanceVente(tick, zone)
                         price = bougie1M01.get("EMA120")
-                        o.sellNow(sl, tp, price, balance, VNL)
+                        #l ecart doit avoir un minimum
+                        dif = sl-price
+                        if dif > 5 :
+                            o.sellNow(sl, tp, price, balance, VNL)
 
                     # elif bougie1M01.get("EMA26") and bougie1M01.get("EMA70") and bougie1M01.get(
                     #         "EMA120") and bougie1M05.get("EMA120"):
