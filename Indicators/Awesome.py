@@ -33,7 +33,7 @@ class Awesome(Price):
 
 
         print("nombre : ",  len(self._listData))
-        for i in range(self.__MMS2, len(self._listData)):
+        for i in self._listData:
             list1 = self._listData.copy()[i - self.__MMS2 + 1: i + 1]
             if "AW" not in list(list1)[-1]:
                 pointMedian = 0
