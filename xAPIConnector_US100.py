@@ -563,7 +563,7 @@ async def main():
             spM05_1003 = Supertrend(SYMBOL, "M05", 10, 3)
             superM05_1003T0, superM05_1003T1, superM05_1003T2 = spM05_1003.getST()
 
-            spM01_1003 = Supertrend(SYMBOL, "M01", 10, 3)
+            spM01_1003 = Supertrend(SYMBOL, "M01", 10, 4)
             superM01_1003T0, superM01_1003T1, superM01_1003T2 = spM01_1003.getST()
 
             now = datetime.now()
