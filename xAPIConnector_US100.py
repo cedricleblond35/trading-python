@@ -368,7 +368,14 @@ async def majDatAall(client, symbol, db):
         if countH4 == 0:
             startTimeM01 = int(round(time.time() * 1000)) - (60 * 60 * 24 * 30) * 1000
         else:
-            startTimeM01 = start
+            startTimebdd = db["M05"].find({'start': {'$exists': False}})
+            if startTimebdd is None:
+                startTimeM01 = int(round(time.time() * 1000)) - (60 * 60 * 250) * 1000
+            else:
+                startTimeM01 = start
+
+
+
         json_data_M01 = client.commandExecute('getChartRangeRequest', {
             "info": {"start": startTimeM01, "end": endTime, "period": 1,
                      "symbol": symbol,
@@ -382,7 +389,12 @@ async def majDatAall(client, symbol, db):
         if countH4 == 0:
             startTimeM05 = int(round(time.time() * 1000)) - (60 * 60 * 24 * 30) * 1000
         else:
-            startTimeM05 = start
+            startTimebdd = db["M05"].find({'start': {'$exists': False}})
+            if startTimebdd is None:
+                startTimeM05 = int(round(time.time() * 1000)) - (60 * 60 * 24 * 45) * 1000
+            else:
+                startTimeM05 = start
+
         json_data_M05 = client.commandExecute('getChartRangeRequest', {
             "info": {"start": startTimeM05, "end": endTime, "period": 5,
                      "symbol": symbol,
