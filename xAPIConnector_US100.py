@@ -552,6 +552,8 @@ async def main():
             await moyMobil_01_120.EMA(120)
             await moyMobil_01_120.EMA(70)
             await moyMobil_01_120.EMA(26)
+
+
             await moyMobil_05_120.EMA(120)
             await moyMobil_05_120.EMA(250)
 
@@ -599,6 +601,8 @@ async def main():
 
                 bougie0M05 = db["M05"].find({}, sort=[('ctm', -1)]).limit(1).skip(0)[0]
                 bougie1M05 = db["M05"].find({}, sort=[('ctm', -1)]).limit(1).skip(1)[0]
+                bougie2M05 = db["M05"].find({}, sort=[('ctm', -1)]).limit(1).skip(2)[0]
+                bougie3M05 = db["M05"].find({}, sort=[('ctm', -1)]).limit(1).skip(3)[0]
 
                 ###################################################################################################
                 balance = c.getBalance()
@@ -634,6 +638,13 @@ async def main():
                     print("demarrage de selection d un futur ordre")
 
                     print("tick ", tick, " superM01_1003T1:", superM01_1003T1, "    eam26:", bougie1M01.get("EMA26"), " eam120:", bougie1M01.get("EMA26"))
+
+                    if bougie1M05.get("EMA120") > zone[0] and bougie2M05.get("EMA120") > bougie2M05.get("EMA120") > bougie1M05.get("EMA120") \
+                            and bougie1M05.get("AW") > bougie2M05.get("AW") > bougie3M05.get("AW"):
+                        sl = zoneSoutien(tick, zone)
+                        tp = 0
+                        price = bougie1M01.get("EMA120")
+                        o.buyLimit(sl, tp, price, balance, VNL)
 
                     if bougie0M01["close"] > superM01_1003T1 and bougie1M01.get("EMA26") > bougie1M01.get("EMA120"):
                         sl = superM01_1003T1
