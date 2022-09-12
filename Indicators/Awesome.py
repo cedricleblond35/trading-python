@@ -27,12 +27,13 @@ class Awesome(Price):
 
     async def __calcul(self):
         print("calcul AW ", self.__timeframe)
-        print("nombre 1: ",  len(self._listData))
-        self._prepareListAW()  # toutes les bougies ne possédant pas EMA (HORS LES X PREMIÈRES)
-
-
-
-        print("nombre 2: ",  len(self._listData))
+        # print("nombre 1: ",  len(self._listData))
+        #
+        # self._prepareListEMA(0, self.__MMS2 , "AW")  # toutes les bougies ne possédant pas EMA (HORS LES X PREMIÈRES)
+        #
+        #
+        #
+        # print("nombre 2: ",  len(self._listData))
         for i in range(self.__MMS2, len(self._listData)):
             list1 = self._listData.copy()[i - self.__MMS2 + 1: i + 1]
             if "AW" not in list(list1)[-1]:
