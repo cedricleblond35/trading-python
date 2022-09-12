@@ -366,11 +366,11 @@ async def majDatAall(client, symbol, db):
 
         # MAJ Minute : 1 mois max------------------------------------------------------------------------
         if countH4 == 0:
-            startTimeM01 = int(round(time.time() * 1000)) - (60 * 60 * 24 * 45) * 1000
+            startTimeM01 = int(round(time.time() * 1000)) - (60 * 60 * 5) * 1000
         else:
             startTimeM01 = start
 
-
+        print("startTimeM01 :", startTimeM01)
         json_data_M01 = client.commandExecute('getChartRangeRequest', {
             "info": {"start": startTimeM01, "end": endTime, "period": 1,
                      "symbol": symbol,
@@ -385,6 +385,7 @@ async def majDatAall(client, symbol, db):
             startTimeM05 = int(round(time.time() * 1000)) - (60 * 60 * 24 * 30) * 1000
         else:
             startTimebdd = db["M05"].find({'start': {'$exists': False}})
+            print("startTimebdd 5:", startTimebdd)
             if startTimebdd is None:
                 startTimeM05 = int(round(time.time() * 1000)) - (60 * 60 * 24 * 45) * 1000
             else:
