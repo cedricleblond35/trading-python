@@ -365,13 +365,17 @@ async def majDatAall(client, symbol, db):
         await insertData(db["M15"], dataM15Download, listDataDBM15)
 
         # MAJ Minute : 1 mois max------------------------------------------------------------------------
-        startTimebdd = db["M01"].find({'_id': {'$exists': True}})
-        print("startTimebdd 1:", startTimebdd)
-        print("startTimebdd M01:", len(list(startTimebdd)))
-        if startTimebdd < 249:
-            startTimeM01 = int(round(time.time() * 1000)) - 250 * 1000
+        if countH4 == 0:
+            startTimeM01 = int(round(time.time() * 1000)) - (60 * 60 * 24 * 30) * 1000
         else:
-            startTimeM01 = start
+            startTimebdd = db["M05"].find({'start': {'$exists': False}})
+            if startTimebdd is None:
+                startTimeM05 = int(round(time.time() * 1000)) - (60 * 60 * 24 * 45) * 1000
+            else:
+                startTimeM01 = start
+
+
+
         json_data_M01 = client.commandExecute('getChartRangeRequest', {
             "info": {"start": startTimeM01, "end": endTime, "period": 1,
                      "symbol": symbol,
@@ -382,15 +386,11 @@ async def majDatAall(client, symbol, db):
         await insertData(db["M01"], dataM01Download, listDataDBM01)
 
         # MAJ 5 min ------------------------------------------------------------------------
-        startTimebdd = db["M05"].find({'start': {'$exists': True}})
-        print("startTimebdd 5:", startTimebdd)
-        print("nombre de m05 :", len(list(startTimebdd)))
-        if startTimebdd < 44:
+        if countH4 == 0:
             startTimeM05 = int(round(time.time() * 1000)) - (60 * 60 * 24 * 30) * 1000
         else:
-            startTimebdd = db["M05"].find({'start': {'$exists': True}})
-            print("nombre de m05 :", len(list(startTimebdd)))
-            if len(list(startTimebdd)) < 45:
+            startTimebdd = db["M05"].find({'start': {'$exists': False}})
+            if startTimebdd is None:
                 startTimeM05 = int(round(time.time() * 1000)) - (60 * 60 * 24 * 45) * 1000
             else:
                 startTimeM05 = start
