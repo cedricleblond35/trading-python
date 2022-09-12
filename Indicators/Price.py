@@ -53,7 +53,7 @@ class Price:
         self._listDataLast.clear()
 
         v = self._db[self.__timeframe].find({'AW': {'$exists': False}})
-        nb = len(v)
+        nb = len(list(v))
         if nb < 35:
             skipValue = nb + 34
 
