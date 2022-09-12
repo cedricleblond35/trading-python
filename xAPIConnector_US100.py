@@ -533,7 +533,9 @@ async def main():
         await moyMobil_01_120.EMA(26)
 
         await moyMobil_05_120.EMA(120)
-        await moyMobil_05_120.EMA(250)
+        await moyMobil_05_120.EMA(70)
+        await moyMobil_05_120.EMA(26)
+
 
         # Awesome ##################################################################################################
         ao05 = Awesome(SYMBOL, "M05")
@@ -560,9 +562,9 @@ async def main():
             await moyMobil_01_120.EMA(70)
             await moyMobil_01_120.EMA(26)
 
-
             await moyMobil_05_120.EMA(120)
-            await moyMobil_05_120.EMA(250)
+            await moyMobil_05_120.EMA(70)
+            await moyMobil_05_120.EMA(26)
 
             # AO ###################################################################################
             await ao05.calculLastCandle(10)
@@ -646,7 +648,7 @@ async def main():
 
                     print("tick ", tick, " superM01_1003T1:", superM01_1003T1, "    eam26:", bougie1M01.get("EMA26"), " eam120:", bougie1M01.get("EMA26"))
 
-                    if bougie1M05.get("EMA120") > zone[0] and bougie2M05.get("EMA120") > bougie2M05.get("EMA120") > bougie1M05.get("EMA120") \
+                    if bougie1M05.get("EMA120") > zone[0] and bougie3M05.get("EMA120") > bougie2M05.get("EMA120") > bougie1M05.get("EMA120") \
                             and bougie1M05.get("AW") > bougie2M05.get("AW") > bougie3M05.get("AW"):
                         sl = zoneSoutien(tick, zone)
                         tp = 0
