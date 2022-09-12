@@ -365,18 +365,12 @@ async def majDatAall(client, symbol, db):
         await insertData(db["M15"], dataM15Download, listDataDBM15)
 
         # MAJ Minute : 1 mois max------------------------------------------------------------------------
-        if countH4 == 0:
-            startTimeM01 = int(round(time.time() * 1000)) - (60 * 60 * 24 * 30) * 1000
+        startTimebdd = db["M01"].find({'_id': {'$exists': True}})
+        print("startTimebdd M01:", len(list(startTimebdd)))
+        if startTimebdd < 249:
+            startTimeM01 = int(round(time.time() * 1000)) - 250 * 1000
         else:
-            startTimebdd = db["M01"].find({'start': {'$exists': True}})
-            print("nombre de m01 :", len(list(startTimebdd)) )
-            if len(list(startTimebdd)) < 250:
-                startTimeM01 = int(round(time.time() * 1000)) - (60 * 60 * 250) * 1000
-            else:
-                startTimeM01 = start
-
-
-
+            startTimeM01 = start
         json_data_M01 = client.commandExecute('getChartRangeRequest', {
             "info": {"start": startTimeM01, "end": endTime, "period": 1,
                      "symbol": symbol,
@@ -387,7 +381,9 @@ async def majDatAall(client, symbol, db):
         await insertData(db["M01"], dataM01Download, listDataDBM01)
 
         # MAJ 5 min ------------------------------------------------------------------------
-        if countH4 == 0:
+        startTimebdd = db["M05"].find({'start': {'$exists': True}})
+        print("nombre de m05 :", len(list(startTimebdd)))
+        if startTimebdd < 44:
             startTimeM05 = int(round(time.time() * 1000)) - (60 * 60 * 24 * 30) * 1000
         else:
             startTimebdd = db["M05"].find({'start': {'$exists': True}})
