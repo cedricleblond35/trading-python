@@ -641,7 +641,7 @@ async def main():
                     print("superM05_1003T2 :", superM05_1003T2)
                     print("superM01_1003T1 :", superM01_1003T1)
                     print("superM01_1003T2 :", superM01_1003T2)
-                    print("EMA70 1min:", bougie1M01["EMA70"], "   bougie1M01 EMA120 5min:", bougie1M05.get("EMA120"))
+                    print("EMA70 1min:", bougie1M01.get("EMA70"), "   bougie1M01 EMA120 5min:", bougie1M05.get("EMA120"))
                     print("bougie1M01 :", bougie1M01)
                     print("-- variable fin ************")
                     print("demarrage de selection d un futur ordre")
