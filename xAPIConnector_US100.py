@@ -366,6 +366,7 @@ async def majDatAall(client, symbol, db):
 
         # MAJ Minute : 1 mois max------------------------------------------------------------------------
         startTimebdd = db["M01"].find({'_id': {'$exists': True}})
+        print("startTimebdd 1:", startTimebdd)
         print("startTimebdd M01:", len(list(startTimebdd)))
         if startTimebdd < 249:
             startTimeM01 = int(round(time.time() * 1000)) - 250 * 1000
@@ -382,6 +383,7 @@ async def majDatAall(client, symbol, db):
 
         # MAJ 5 min ------------------------------------------------------------------------
         startTimebdd = db["M05"].find({'start': {'$exists': True}})
+        print("startTimebdd 5:", startTimebdd)
         print("nombre de m05 :", len(list(startTimebdd)))
         if startTimebdd < 44:
             startTimeM05 = int(round(time.time() * 1000)) - (60 * 60 * 24 * 30) * 1000
