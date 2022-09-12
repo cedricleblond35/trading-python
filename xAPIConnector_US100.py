@@ -368,9 +368,9 @@ async def majDatAall(client, symbol, db):
         if countH4 == 0:
             startTimeM01 = int(round(time.time() * 1000)) - (60 * 60 * 24 * 30) * 1000
         else:
-            startTimebdd = db["M05"].find({'start': {'$exists': True}})
-            print("nombre de m05 :", len(list(startTimebdd)) )
-            if startTimebdd is None or len(list(startTimebdd)) < 250:
+            startTimebdd = db["M01"].find({'start': {'$exists': True}})
+            print("nombre de m01 :", len(list(startTimebdd)) )
+            if len(list(startTimebdd)) < 250:
                 startTimeM01 = int(round(time.time() * 1000)) - (60 * 60 * 250) * 1000
             else:
                 startTimeM01 = start
@@ -391,7 +391,8 @@ async def majDatAall(client, symbol, db):
             startTimeM05 = int(round(time.time() * 1000)) - (60 * 60 * 24 * 30) * 1000
         else:
             startTimebdd = db["M05"].find({'start': {'$exists': True}})
-            if startTimebdd is None  or len(list(startTimebdd)) < 45:
+            print("nombre de m05 :", len(list(startTimebdd)))
+            if len(list(startTimebdd)) < 45:
                 startTimeM05 = int(round(time.time() * 1000)) - (60 * 60 * 24 * 45) * 1000
             else:
                 startTimeM05 = start
