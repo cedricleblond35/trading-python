@@ -369,7 +369,7 @@ async def majDatAall(client, symbol, db):
             startTimeM01 = int(round(time.time() * 1000)) - (60 * 60 * 24 * 30) * 1000
         else:
             startTimebdd = db["M05"].find({'start': {'$exists': False}})
-            if startTimebdd is None:
+            if startTimebdd is None or len(list(startTimebdd)) < 250:
                 startTimeM01 = int(round(time.time() * 1000)) - (60 * 60 * 250) * 1000
             else:
                 startTimeM01 = start
@@ -390,7 +390,7 @@ async def majDatAall(client, symbol, db):
             startTimeM05 = int(round(time.time() * 1000)) - (60 * 60 * 24 * 30) * 1000
         else:
             startTimebdd = db["M05"].find({'start': {'$exists': False}})
-            if startTimebdd is None:
+            if startTimebdd is None  or len(list(startTimebdd)) < 45:
                 startTimeM05 = int(round(time.time() * 1000)) - (60 * 60 * 24 * 45) * 1000
             else:
                 startTimeM05 = start
