@@ -157,6 +157,7 @@ async def insertData(collection, dataDownload, lastBougieDB):
         ctm = ''
         if dataDownload['status'] and len(dataDownload["returnData"]['rateInfos']) > 0:
             for value in dataDownload["returnData"]['rateInfos']:
+                print("insertData : ",value['ctm'] , " == ", lastBougieDB)
                 ctm = value['ctm']
                 close = (value['open'] + value['close']) / 100.0
                 high = (value['open'] + value['high']) / 100.0
