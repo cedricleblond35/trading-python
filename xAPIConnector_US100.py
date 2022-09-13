@@ -153,8 +153,9 @@ async def insertData(collection, dataDownload, lastBougieDB):
     :param listDataDB: dernière ligne de données provenant de la collection
     :return: time traité
     '''
+    ctm = ''
     try:
-        ctm = ''
+
         if dataDownload['status'] and len(dataDownload["returnData"]['rateInfos']) > 0:
             for value in dataDownload["returnData"]['rateInfos']:
                 print("insertData : ",value['ctm'] , " == ", lastBougieDB)
@@ -190,9 +191,6 @@ async def insertData(collection, dataDownload, lastBougieDB):
                             "pointMedian": pointMedian
                         }}
                     collection.update_many(myquery, newvalues)
-
-
-
     except Exception as exc:
         print("insertData a déclenché une erreur")
         print("exception de mtype ", exc.__class__)
