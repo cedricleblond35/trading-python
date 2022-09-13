@@ -312,6 +312,7 @@ async def majDatAall(client, symbol, db):
         dataDAY = json.dumps(json_data_Day)
         dataDAYDownload = json.loads(dataDAY)
         listDataDBDAY = db["D"].find_one({}, sort=[('ctm', -1)])
+        print("dayyyyyyyyyyyyyyyyyy :", listDataDBDAY)
         await insertData(db["D"], dataDAYDownload, listDataDBDAY)
 
         # on recupere les 4 dernieres heures pour eviter de tt scanner afin que le traitement soit plus rapide
