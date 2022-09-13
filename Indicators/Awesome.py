@@ -26,7 +26,7 @@ class Awesome(Price):
         await self.__calcul()
 
     async def __calcul(self):
-        print("calcul AW ", self.__timeframe)
+        #print("calcul AW ", self.__timeframe)
         # print("nombre 1: ",  len(self._listData))
         #
         # self._prepareListEMA(0, self.__MMS2 , "AW")  # toutes les bougies ne possédant pas EMA (HORS LES X PREMIÈRES)

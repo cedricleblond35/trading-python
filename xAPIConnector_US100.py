@@ -656,6 +656,8 @@ async def main():
                         comment = "Achat : strategie 1"
                         o.buyLimit(sl, tp, price, balance, VNL, comment)
 
+                    print("strategie 2")
+                    print(bougie0M01["close"] ,">", superM01_1003T1 ,"and", bougie1M01.get("EMA26") ,">", bougie1M01.get("EMA120"))
                     if bougie0M01["close"] > superM01_1003T1 and bougie1M01.get("EMA26") > bougie1M01.get("EMA120"):
                         print("strategie 2 Achat ***********************************************")
                         sl = superM01_1003T1
