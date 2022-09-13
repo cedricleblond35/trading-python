@@ -150,7 +150,7 @@ def updatePivot():
         return False
 
 
-async def insertData(collection, dataDownload, listDataDB):
+async def insertData(collection, dataDownload, lastBougieDB):
     '''
     Insertion des données dans l base de donnée ou mise à jour de a dernière donnée de la collection
     :param collection: collection à la quelle on insere des données
@@ -167,7 +167,7 @@ async def insertData(collection, dataDownload, listDataDB):
             high = (value['open'] + value['high']) / 100.0
             low = (value['open'] + value['low']) / 100.0
             pointMedian = round((high + low) / 2, 2)
-            if (listDataDB is None) or (value['ctm'] > listDataDB["ctm"]):
+            if lastBougieDB is None:
                 open = value['open'] / 100.0
                 newvalues = {
                     "ctm": ctm,
@@ -180,7 +180,7 @@ async def insertData(collection, dataDownload, listDataDB):
                     "pointMedian": pointMedian
                 }
                 collection.insert_one(newvalues)
-            elif value['ctm'] == listDataDB["ctm"]:
+            elif value['ctm'] == lastBougieDB["ctm"]:
                 myquery = {"ctm": value['ctm']}
                 newvalues = {
                     "$set": {
@@ -302,30 +302,29 @@ async def majDatAall(client, symbol, db):
         # ctmRefStart = db["D"].find().sort("ctm", -1).skip(1).limit(1)
         endTime = int(round(time.time() * 1000)) + (6 * 60 * 1000)
 
+
         # MAJ DAY : 13 mois------------------------------------------------------------------------
+        listDataDBDAY = db["D"].find_one({}, sort=[('ctm', -1)])
+
         startTimeDay = int(round(time.time() * 1000)) - (60 * 60 * 24 * 30 * 13) * 1000
-        arguments = {
-            "info": {"start": startTimeDay, "end": endTime, "period": 1440,
-                     "symbol": symbol,
-                     "ticks": 0}}
-        json_data_Day = client.commandExecute('getChartRangeRequest', arguments)
+        if listDataDBDAY is not None:
+            startTimeDay = listDataDBDAY["ctm"]
+
+
+        json_data_Day = client.commandExecute(
+            'getChartRangeRequest',
+            {"info": {"start": startTimeDay, "end": endTime, "period": 1440,"symbol": symbol,"ticks": 0}})
         dataDAY = json.dumps(json_data_Day)
         dataDAYDownload = json.loads(dataDAY)
-        listDataDBDAY = db["D"].find_one({}, sort=[('ctm', -1)])
+
         print("dayyyyyyyyyyyyyyyyyy :", listDataDBDAY)
         await insertData(db["D"], dataDAYDownload, listDataDBDAY)
 
         # on recupere les 4 dernieres heures pour eviter de tt scanner afin que le traitement soit plus rapide
-        ctmRefStart = db["H4"].find().sort("ctm", -1).skip(1).limit(1)
-        start = 0
-        countH4 = 0
-        for n in ctmRefStart:
-            startTime = n['ctm']
-            start = n['ctm']
-            countH4 = 1
-
-        if countH4 == 0:
-            startTime = int(round(time.time() * 1000)) - (60 * 60 * 24 * 30 * 13) * 1000
+        lastBougie = db["H4"].find_one({}, sort=[('ctm', -1)])
+        startTime = int(round(time.time() * 1000)) - (60 * 60 * 24 * 30 * 13) * 1000
+        if lastBougie is not None:
+            startTime = lastBougie["ctm"]
 
         # MAJ H4 : 13 mois max------------------------------------------------------------------------
         json_data_H4 = client.commandExecute('getChartRangeRequest', {
@@ -334,72 +333,69 @@ async def majDatAall(client, symbol, db):
                      "ticks": 0}})
         data_H4 = json.dumps(json_data_H4)
         dataH4Download = json.loads(data_H4)
-        listDataDB = db["H4"].find_one({}, sort=[('ctm', -1)])
-        await insertData(db["H4"], dataH4Download, listDataDB)
+        await insertData(db["H4"], dataH4Download, lastBougie)
         # MAJ H1 : 13 mois max------------------------------------------------------------------------
-        if countH4 == 0:
-            startTimeH1 = int(round(time.time() * 1000)) - (60 * 60 * 24 * 30 * 13) * 1000
-        else:
-            startTimeH1 = start
-
-        json_data_H1 = client.commandExecute('getChartRangeRequest', {
-            "info": {"start": startTimeH1, "end": endTime, "period": 60,
-                     "symbol": symbol,
-                     "ticks": 0}})
-        data_H1 = json.dumps(json_data_H1)
-        dataH1Download = json.loads(data_H1)
-        listDataDB = db["H1"].find_one({}, sort=[('ctm', -1)])
-        await insertData(db["H1"], dataH1Download, listDataDB)
+        # lastBougie = db["H4"].find_one({}, sort=[('ctm', -1)])
+        # startTime = int(round(time.time() * 1000)) - (60 * 60 * 24 * 30 * 13) * 1000
+        # if lastBougie is not None:
+        #     startTime = lastBougie["ctm"]
+        #
+        # json_data_H1 = client.commandExecute('getChartRangeRequest', {
+        #     "info": {"start": startTime, "end": endTime, "period": 60,
+        #              "symbol": symbol,
+        #              "ticks": 0}})
+        # data_H1 = json.dumps(json_data_H1)
+        # dataH1Download = json.loads(data_H1)
+        #
+        # await insertData(db["H1"], dataH1Download, lastBougie)
 
         # MAJ 15 min ------------------------------------------------------------------------
-        if countH4 == 0:
-            startTimeM15 = int(round(time.time() * 1000)) - (60 * 60 * 24 * 30 * 15) * 1000
-        else:
-            startTimeM15 = start
-        json_data_M15 = client.commandExecute('getChartRangeRequest', {
-            "info": {"start": startTimeM15, "end": endTime, "period": 15,
-                     "symbol": symbol,
-                     "ticks": 0}})
-        dataM15 = json.dumps(json_data_M15)
-        dataM15Download = json.loads(dataM15)
-        listDataDBM15 = db["M15"].find_one({}, sort=[('ctm', -1)])
-        await insertData(db["M15"], dataM15Download, listDataDBM15)
+        # if countH4 == 0:
+        #     startTimeM15 = int(round(time.time() * 1000)) - (60 * 60 * 24 * 30 * 15) * 1000
+        # else:
+        #     startTimeM15 = start
+        # json_data_M15 = client.commandExecute('getChartRangeRequest', {
+        #     "info": {"start": startTimeM15, "end": endTime, "period": 15,
+        #              "symbol": symbol,
+        #              "ticks": 0}})
+        # dataM15 = json.dumps(json_data_M15)
+        # dataM15Download = json.loads(dataM15)
+        # listDataDBM15 = db["M15"].find_one({}, sort=[('ctm', -1)])
+        # await insertData(db["M15"], dataM15Download, listDataDBM15)
+
 
         # MAJ Minute : 1 mois max------------------------------------------------------------------------
-        if countH4 == 0:
-            startTimeM01 = int(round(time.time() * 1000)) - (60 * 60 * 5) * 1000
-        else:
-            startTimeM01 = start
+        lastBougie = db["M01"].find_one({}, sort=[('ctm', -1)])
+        startTime = int(round(time.time() * 1000)) - (60 * 60 * 5) * 1000
+        if lastBougie is not None:
+            startTime = lastBougie["ctm"]
 
-        print("startTimeM01 :", startTimeM01)
+
+        print("startTimeM01 :", startTime)
         json_data_M01 = client.commandExecute('getChartRangeRequest', {
-            "info": {"start": startTimeM01, "end": endTime, "period": 1,
+            "info": {"start": startTime, "end": endTime, "period": 1,
                      "symbol": symbol,
                      "ticks": 0}})
         dataM01 = json.dumps(json_data_M01)
         dataM01Download = json.loads(dataM01)
-        listDataDBM01 = db["M01"].find_one({}, sort=[('ctm', -1)])
-        await insertData(db["M01"], dataM01Download, listDataDBM01)
+
+        await insertData(db["M01"], dataM01Download, startTime)
 
         # MAJ 5 min ------------------------------------------------------------------------
-        if countH4 == 0:
-            startTimeM05 = int(round(time.time() * 1000)) - (60 * 60 * 24 * 30) * 1000
-        else:
-            startTimebdd = db["M05"].find({'start': {'$exists': False}})
-            print("startTimebdd 5:", startTimebdd)
-            if startTimebdd is None:
-                startTimeM05 = int(round(time.time() * 1000)) - (60 * 60 * 24 * 45) * 1000
-            else:
-                startTimeM05 = start
+        lastBougie = db["M01"].find_one({}, sort=[('ctm', -1)])
+        startTime = int(round(time.time() * 1000)) - (60 * 60 * 24 * 45) * 1000
+        if lastBougie is not None:
+            startTime = lastBougie["ctm"]
+
 
         json_data_M05 = client.commandExecute('getChartRangeRequest', {
-            "info": {"start": startTimeM05, "end": endTime, "period": 5,
+            "info": {"start": startTime, "end": endTime, "period": 5,
                      "symbol": symbol,
                      "ticks": 0}})
         dataM05 = json.dumps(json_data_M05)
         dataM05Download = json.loads(dataM05)
-        listDataDBM05 = db["M05"].find_one({}, sort=[('ctm', -1)])
-        newTime = await insertData(db["M05"], dataM05Download, listDataDBM05)
+
+        newTime = await insertData(db["M05"], dataM05Download, lastBougie)
 
         # on retourne le dernier temps "ctm" enregistré
         return newTime
