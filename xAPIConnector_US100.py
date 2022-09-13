@@ -158,40 +158,46 @@ async def insertData(collection, dataDownload, lastBougieDB):
     :param listDataDB: dernière ligne de données provenant de la collection
     :return: time traité
     '''
-
-    ctm = ''
-    if dataDownload['status'] and len(dataDownload["returnData"]['rateInfos']) > 0:
-        for value in dataDownload["returnData"]['rateInfos']:
-            ctm = value['ctm']
-            close = (value['open'] + value['close']) / 100.0
-            high = (value['open'] + value['high']) / 100.0
-            low = (value['open'] + value['low']) / 100.0
-            pointMedian = round((high + low) / 2, 2)
-            if lastBougieDB is None:
-                open = value['open'] / 100.0
-                newvalues = {
-                    "ctm": ctm,
-                    "ctmString": value['ctmString'],
-                    "open": open,
-                    "close": close,
-                    "high": high,
-                    "low": low,
-                    "vol": value['vol'],
-                    "pointMedian": pointMedian
-                }
-                collection.insert_one(newvalues)
-            elif value['ctm'] == lastBougieDB["ctm"]:
-                myquery = {"ctm": value['ctm']}
-                newvalues = {
-                    "$set": {
+    try:
+        ctm = ''
+        if dataDownload['status'] and len(dataDownload["returnData"]['rateInfos']) > 0:
+            for value in dataDownload["returnData"]['rateInfos']:
+                ctm = value['ctm']
+                close = (value['open'] + value['close']) / 100.0
+                high = (value['open'] + value['high']) / 100.0
+                low = (value['open'] + value['low']) / 100.0
+                pointMedian = round((high + low) / 2, 2)
+                if lastBougieDB is None:
+                    open = value['open'] / 100.0
+                    newvalues = {
+                        "ctm": ctm,
+                        "ctmString": value['ctmString'],
+                        "open": open,
                         "close": close,
                         "high": high,
                         "low": low,
                         "vol": value['vol'],
                         "pointMedian": pointMedian
-                    }}
-                collection.update_many(myquery, newvalues)
-
+                    }
+                    collection.insert_one(newvalues)
+                elif value['ctm'] == lastBougieDB["ctm"]:
+                    myquery = {"ctm": value['ctm']}
+                    newvalues = {
+                        "$set": {
+                            "close": close,
+                            "high": high,
+                            "low": low,
+                            "vol": value['vol'],
+                            "pointMedian": pointMedian
+                        }}
+                    collection.update_many(myquery, newvalues)
+    except Exception as exc:
+        print("insertData a déclenché une erreur")
+        print("exception de mtype ", exc.__class__)
+        print("message", exc)
+        exc_type, exc_obj, exc_tb = sys.exc_info()
+        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+        print(exc_type, fname, exc_tb.tb_lineno)
     return ctm
 
 
