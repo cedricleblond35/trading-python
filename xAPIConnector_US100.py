@@ -623,10 +623,13 @@ async def main():
                               " < ", bougie3M05.get("EMA120"))
                         print("AW ", bougie1M05.get("AW"), " > ", bougie2M05.get("AW"), " > ", bougie3M05.get("AW"))
                         sl = zoneSoutien(tick, zone)
+                        print(sl)
+                        print(sl[0])
                         tp = 0
                         price = bougie1M01.get("EMA120")
                         comment = "Achat : strategie 1"
-                        o.buyLimit(sl, tp, price, balance, VNL, comment)
+
+                        o.buyLimit(sl[0], tp, price, balance, VNL, comment)
 
                     print("strategie 2")
                     print(bougie0M01["close"] ,">", superM01_1003T1 ,"and", bougie1M01.get("EMA26") ,">", bougie1M01.get("EMA120"))
