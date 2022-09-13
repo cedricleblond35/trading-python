@@ -359,7 +359,7 @@ async def majDatAall(client, symbol, db):
         await insertData(db["M01"], dataM01Download, startTime)
 
         # MAJ 5 min ------------------------------------------------------------------------
-        lastBougie = db["M01"].find_one({}, sort=[('ctm', -1)])
+        lastBougie = db["M05"].find_one({}, sort=[('ctm', -1)])
         startTime = int(round(time.time() * 1000)) - (60 * 60 * 24 * 45) * 1000
         if lastBougie is not None:
             startTime = lastBougie["ctm"]
