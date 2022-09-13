@@ -829,7 +829,7 @@ async def main():
                                     o.moveStopSell(trade, sl, tick)
 
                     print("ordre en cours   END...........................................")
-            time.sleep(2)
+            time.sleep(1)
 
     except Exception as exc:
         logger.info("le programe a déclenché une erreur xApiconnector_US100")
