@@ -371,6 +371,7 @@ async def majDatAall(client, symbol, db):
         dataM05 = json.dumps(json_data_M05)
         dataM05Download = json.loads(dataM05)
         print("M05 :", lastBougie)
+        print("dataM05Download :", dataM05Download)
 
         newTime = await insertData(db["M05"], dataM05Download, lastBougie)
         print("newTime majDatAall:", newTime)
