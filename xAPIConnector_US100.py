@@ -153,7 +153,7 @@ async def insertData(collection, dataDownload, lastBougieDB):
     :param listDataDB: dernière ligne de données provenant de la collection
     :return: time traité
     '''
-    ctm = lastBougieDB
+    ctm = ''
     try:
         if dataDownload['status'] and len(dataDownload["returnData"]['rateInfos']) > 0:
             for value in dataDownload["returnData"]['rateInfos']:
