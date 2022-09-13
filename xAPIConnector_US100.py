@@ -170,7 +170,7 @@ async def insertData(collection, dataDownload, lastBougieDB):
 
                 print("lastBougieDB :", lastBougieDB)
                 print("value :", value)
-                print("value :", value['ctm'], " lastBougieDB:",lastBougieDB["ctm"])
+                print("value :", value['ctm'], " lastBougieDB:",lastBougieDB)
                 if lastBougieDB is None:
                     open = value['open'] / 100.0
                     newvalues = {
@@ -184,7 +184,7 @@ async def insertData(collection, dataDownload, lastBougieDB):
                         "pointMedian": pointMedian
                     }
                     collection.insert_one(newvalues)
-                elif value['ctm'] == lastBougieDB["ctm"]:
+                elif value['ctm'] == lastBougieDB:
                     myquery = {"ctm": value['ctm']}
                     newvalues = {
                         "$set": {
