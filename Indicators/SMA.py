@@ -74,7 +74,6 @@ class MM(Price):
         """
         try:
             name = "EMA" + str(duration)
-            print("calcul ", name)
             nameSMA = "SMA" + str(duration)
             α = round(2 / (duration + 1), 5)
             self._prepareListData()                         #toutes les bougies
