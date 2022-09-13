@@ -491,7 +491,7 @@ async def main():
         print("insert db fini ctm :", startTime)
 
         # # # pivot##################################################################################################
-        zone = await pivot()
+        #zone = await pivot()
         #
         # # # moyen mobile ##################################################################################################
         # moyMobil_01_120 = MM(SYMBOL, "M01", 0)
@@ -519,13 +519,13 @@ async def main():
                 "*****************************************************************************************************")
             print("Current Time =", current_time)
             print("mise à jour des indicateurs : ", current_time, " -----------------------------------------------")
-            if updatePivot():
-                zone = await pivot()
-
-            print("pivot :", zone)
+            # if updatePivot():
+            #     zone = await pivot()
+            #
+            # print("pivot :", zone)
             # ####################################################################################################
-            # startTime = await majData(client, startTime, SYMBOL, db)
-            # print("ctm majData: ", startTime)
+            startTime = await majData(client, startTime, SYMBOL, db)
+            print("ctm majData: ", startTime)
             # ####################################################################################################
             # await moyMobil_01_120.EMA(120)
             # await moyMobil_01_120.EMA(70)
