@@ -155,7 +155,6 @@ async def insertData(collection, dataDownload, lastBougieDB):
     '''
     ctm = ''
     try:
-
         if dataDownload['status'] and len(dataDownload["returnData"]['rateInfos']) > 0:
             for value in dataDownload["returnData"]['rateInfos']:
                 print("insertData : ",value['ctm'] , " == ", lastBougieDB)
@@ -191,6 +190,9 @@ async def insertData(collection, dataDownload, lastBougieDB):
                             "pointMedian": pointMedian
                         }}
                     collection.update_many(myquery, newvalues)
+
+            print("ctm :", ctm)
+            return ctm
     except Exception as exc:
         print("insertData a déclenché une erreur")
         print("exception de mtype ", exc.__class__)
@@ -198,7 +200,7 @@ async def insertData(collection, dataDownload, lastBougieDB):
         exc_type, exc_obj, exc_tb = sys.exc_info()
         fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
         print(exc_type, fname, exc_tb.tb_lineno)
-    return ctm
+
 
 
 def findTradesHistory(client, start):
