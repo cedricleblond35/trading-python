@@ -517,7 +517,7 @@ async def main():
         print("insert db")
 
         startTime = await majDatAall(client, SYMBOL, db)
-        print("insert db fini")
+        print("insert db fini ctm :", startTime)
 
         # # pivot##################################################################################################
         zone = await pivot()
@@ -554,6 +554,7 @@ async def main():
             print("pivot :", zone)
             ####################################################################################################
             startTime = await majData(client, startTime, SYMBOL, db)
+            print("ctm majData: ", startTime)
             ####################################################################################################
             await moyMobil_01_120.EMA(120)
             await moyMobil_01_120.EMA(70)
