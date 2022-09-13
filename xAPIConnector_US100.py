@@ -157,14 +157,14 @@ async def insertData(collection, dataDownload, lastBougieDB):
     try:
         if dataDownload['status'] and len(dataDownload["returnData"]['rateInfos']) > 0:
             for value in dataDownload["returnData"]['rateInfos']:
-                print("insertData : ",value['ctm'] , " == ", lastBougieDB)
+                print("insertData : ",value['ctm'] , " == ", lastBougieDB['ctm'])
                 ctm = value['ctm']
                 close = (value['open'] + value['close']) / 100.0
                 high = (value['open'] + value['high']) / 100.0
                 low = (value['open'] + value['low']) / 100.0
                 pointMedian = round((high + low) / 2, 2)
 
-                if lastBougieDB is None or value['ctm'] != lastBougieDB:
+                if lastBougieDB is None or value['ctm'] != lastBougieDB['ctm']:
                     print("insert")
                     open = value['open'] / 100.0
                     newvalues = {
@@ -178,7 +178,7 @@ async def insertData(collection, dataDownload, lastBougieDB):
                         "pointMedian": pointMedian
                     }
                     collection.insert_one(newvalues)
-                elif value['ctm'] == lastBougieDB:
+                elif value['ctm'] == lastBougieDB['ctm']:
                     print("modif")
                     myquery = {"ctm": value['ctm']}
                     newvalues = {
