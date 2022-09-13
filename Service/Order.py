@@ -22,7 +22,7 @@ class Order:
         self.client = client
 
     ################## ordre avec limit #################################################
-    def buyLimit(self,  sl, tp, price, balance, vnl):
+    def buyLimit(self,  sl, tp, price, balance, vnl, comment=""):
         try:
             tp = round(tp, 1)
             sl = round(sl, 1)
@@ -46,6 +46,7 @@ class Order:
             print("buy limit :", detail)
             resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
             detail['resp'] = resp
+            detail['comment'] = comment
             self.dbTrade.insert_one(detail)
 
         except Exception as exc:
@@ -90,7 +91,7 @@ class Order:
             logger.info(exc_type, fname, exc_tb.tb_lineno)
 
     ################### ordre direct ##################################################
-    def sellNow(self, sl, tp, price, balance, vnl):
+    def sellNow(self, sl, tp, price, balance, vnl, comment=""):
         tp = round(tp, 1)
         sl = round(sl, 1)
 
@@ -110,8 +111,8 @@ class Order:
             "volume": nbrelot
         }
         resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
-
-        #detail['resp'] = resp    verifier si c'est compatible pour mongo !!!!!!!!!!!!!!
+        detail['resp'] = resp
+        detail['comment'] = comment
         self.dbTrade.insert_one(detail)
         '''
         respString = json.dumps(resp) + "forex robot Action"
@@ -119,8 +120,7 @@ class Order:
         self.sendMail(respString, detailString)
         '''
 
-
-    def buyNow(self, sl, tp, price, balance, vnl):
+    def buyNow(self, sl, tp, price, balance, vnl, comment=""):
         tp = round(tp, 1)
         sl = round(sl, 1)
         h = self.client.commandExecute('getServerTime')
@@ -139,7 +139,8 @@ class Order:
             "volume": nbrelot
         }
         resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
-        #detail['resp'] = resp
+        detail['resp'] = resp
+        detail['comment'] = comment
         self.dbTrade.insert_one(detail)
 
     ############################ move stop après ordre executé ###########################
