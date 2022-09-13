@@ -157,15 +157,13 @@ async def insertData(collection, dataDownload, lastBougieDB):
     try:
         if dataDownload['status'] and len(dataDownload["returnData"]['rateInfos']) > 0:
             for value in dataDownload["returnData"]['rateInfos']:
-                print("insertData : ",value['ctm'] , " == ", lastBougieDB['ctm'])
                 ctm = value['ctm']
                 close = (value['open'] + value['close']) / 100.0
                 high = (value['open'] + value['high']) / 100.0
                 low = (value['open'] + value['low']) / 100.0
                 pointMedian = round((high + low) / 2, 2)
 
-                if lastBougieDB is None or value['ctm'] != lastBougieDB['ctm']:
-                    print("insert")
+                if lastBougieDB is None or value['ctm'] != lastBougieDB:
                     open = value['open'] / 100.0
                     newvalues = {
                         "ctm": ctm,
@@ -178,7 +176,7 @@ async def insertData(collection, dataDownload, lastBougieDB):
                         "pointMedian": pointMedian
                     }
                     collection.insert_one(newvalues)
-                elif value['ctm'] == lastBougieDB['ctm']:
+                elif value['ctm'] == lastBougieDB:
                     print("modif")
                     myquery = {"ctm": value['ctm']}
                     newvalues = {
@@ -244,7 +242,7 @@ async def majData(client, startTime, symbol, db):
     dataM01 = json.dumps(json_data_M01)
     dataM01Download = json.loads(dataM01)
     listDataDBM01 = db["M01"].find_one({}, sort=[('ctm', -1)])
-    await insertData(db["M01"], dataM01Download, listDataDBM01)
+    await insertData(db["M01"], dataM01Download, listDataDBM01["ctm"])
 
     startTimeDay = int(round(time.time() * 1000)) - (60 * 60 * 24 * 3) * 1000
     arguments = {
@@ -255,7 +253,7 @@ async def majData(client, startTime, symbol, db):
     data_D = json.dumps(json_data_D)
     dataDayDownload = json.loads(data_D)
     listDataDB = db["D"].find_one({}, sort=[('ctm', -1)])
-    await insertData(db["D"], dataDayDownload, listDataDB)
+    await insertData(db["D"], dataDayDownload, listDataDB["ctm"])
 
     # MAJ H4 ------------------------------------------------------------------------
     # 20 jours x 24 heures x 3600 secondes x 1000
@@ -267,16 +265,8 @@ async def majData(client, startTime, symbol, db):
     data_H4 = json.dumps(json_data_H4)
     dataH4Download = json.loads(data_H4)
     listDataDB = db["H4"].find_one({}, sort=[('ctm', -1)])
-    await insertData(db["H4"], dataH4Download, listDataDB)
+    await insertData(db["H4"], dataH4Download, listDataDB["ctm"])
 
-    json_data_M15 = client.commandExecute('getChartRangeRequest', {
-        "info": {"start": startTime - (6 * 60 * 1000), "end": endTime, "period": 15,
-                 "symbol": symbol,
-                 "ticks": 0}})
-    dataM15 = json.dumps(json_data_M15)
-    dataM15Download = json.loads(dataM15)
-    listDataDBM15 = db["M15"].find_one({}, sort=[('ctm', -1)])
-    await insertData(db["M15"], dataM15Download, listDataDBM15)
 
     # MAJ M05 ------------------------------------------------------------------------
     json_data_M05 = client.commandExecute('getChartRangeRequest', {
@@ -286,7 +276,7 @@ async def majData(client, startTime, symbol, db):
     dataM05 = json.dumps(json_data_M05)
     dataM05Download = json.loads(dataM05)
     listDataDBM05 = db["M05"].find_one({}, sort=[('ctm', -1)])
-    newTime = await insertData(db["M05"], dataM05Download, listDataDBM05)
+    newTime = await insertData(db["M05"], dataM05Download, listDataDBM05["ctm"])
     print("newTime :", newTime)
 
     return newTime
@@ -324,7 +314,6 @@ async def majDatAall(client, symbol, db):
             {"info": {"start": startTimeDay, "end": endTime, "period": 1440, "symbol": symbol, "ticks": 0}})
         dataDAY = json.dumps(json_data_Day)
         dataDAYDownload = json.loads(dataDAY)
-        print("day :", listDataDBDAY)
         await insertData(db["D"], dataDAYDownload, listDataDBDAY)
 
         # MAJ H4 : 13 mois max------------------------------------------------------------------------
