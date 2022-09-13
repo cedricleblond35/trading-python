@@ -373,6 +373,7 @@ async def majDatAall(client, symbol, db):
         print("M05 :", lastBougie)
 
         newTime = await insertData(db["M05"], dataM05Download, lastBougie)
+        print("newTime majDatAall:", newTime)
 
         # on retourne le dernier temps "ctm" enregistré
         return newTime
