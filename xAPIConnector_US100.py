@@ -235,6 +235,7 @@ async def majData(client, startTime, symbol, db):
     :return:
     '''
     # print("**************************************** mise à jour start ****************************************")
+    print("startTime :", startTime)
     endTime = int(round(time.time() * 1000)) + (6 * 60 * 1000)
     json_data_M01 = client.commandExecute('getChartRangeRequest', {
         "info": {"start": startTime - (6 * 60 * 1000), "end": endTime, "period": 1,
