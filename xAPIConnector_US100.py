@@ -168,9 +168,6 @@ async def insertData(collection, dataDownload, lastBougieDB):
                 low = (value['open'] + value['low']) / 100.0
                 pointMedian = round((high + low) / 2, 2)
 
-                print("lastBougieDB :", lastBougieDB)
-                print("value :", value)
-                print("value :", value['ctm'], " lastBougieDB:",lastBougieDB)
                 if lastBougieDB is None:
                     open = value['open'] / 100.0
                     newvalues = {
