@@ -20,7 +20,6 @@ from Service.Command import Command
 from Indicators.Supertrend import Supertrend
 from Service.TransactionSide import TransactionSide
 
-
 '''
 Grace à lza liste des trade enregistrés ds la table trade
 ex : 
@@ -96,10 +95,6 @@ B) Acheter
 
 
 '''
-
-
-
-
 
 # Variables perso--------------------------------------------------------------------------------------------------------
 # horaire---------------
@@ -309,7 +304,6 @@ async def majDatAall(client, symbol, db):
         # ctmRefStart = db["D"].find().sort("ctm", -1).skip(1).limit(1)
         endTime = int(round(time.time() * 1000)) + (6 * 60 * 1000)
 
-
         # MAJ DAY : 13 mois------------------------------------------------------------------------
         listDataDBDAY = db["D"].find_one({}, sort=[('ctm', -1)])
 
@@ -317,10 +311,9 @@ async def majDatAall(client, symbol, db):
         if listDataDBDAY is not None:
             startTimeDay = listDataDBDAY["ctm"]
 
-
         json_data_Day = client.commandExecute(
             'getChartRangeRequest',
-            {"info": {"start": startTimeDay, "end": endTime, "period": 1440,"symbol": symbol,"ticks": 0}})
+            {"info": {"start": startTimeDay, "end": endTime, "period": 1440, "symbol": symbol, "ticks": 0}})
         dataDAY = json.dumps(json_data_Day)
         dataDAYDownload = json.loads(dataDAY)
 
@@ -370,13 +363,11 @@ async def majDatAall(client, symbol, db):
         # listDataDBM15 = db["M15"].find_one({}, sort=[('ctm', -1)])
         # await insertData(db["M15"], dataM15Download, listDataDBM15)
 
-
         # MAJ Minute : 1 mois max------------------------------------------------------------------------
         lastBougie = db["M01"].find_one({}, sort=[('ctm', -1)])
         startTime = int(round(time.time() * 1000)) - (60 * 60 * 5) * 1000
         if lastBougie is not None:
             startTime = lastBougie["ctm"]
-
 
         print("startTimeM01 :", startTime)
         json_data_M01 = client.commandExecute('getChartRangeRequest', {
@@ -393,7 +384,6 @@ async def majDatAall(client, symbol, db):
         startTime = int(round(time.time() * 1000)) - (60 * 60 * 24 * 45) * 1000
         if lastBougie is not None:
             startTime = lastBougie["ctm"]
-
 
         json_data_M05 = client.commandExecute('getChartRangeRequest', {
             "info": {"start": startTime, "end": endTime, "period": 5,
@@ -453,6 +443,7 @@ def zoneSoutien(close, zone):
     # print(supportDown, " / ", supportHigt)
     return supportDown, supportHigt
 
+
 def zoneResistance(close, zone):
     arrayT = sorted(zone)
     resistance = 0
@@ -461,6 +452,7 @@ def zoneResistance(close, zone):
             resistance = v
     return resistance
 
+
 def zoneResistanceVente(close, zone):
     arrayT = sorted(zone, reverse=True)
     resistance = 0
@@ -468,6 +460,7 @@ def zoneResistanceVente(close, zone):
         if v < close and resistance == 0:
             resistance = v
     return resistance
+
 
 def subscribe(loginResponse):
     c = Command()
@@ -496,9 +489,9 @@ async def pivot():
     R1D, S1D = await P.demark()  # valeurs ok
 
     PPW, R1W, R2W, S1W, S2W = await P.woodie()  # valeurs ok
-     #PPC, R1C, R2C, R3C, R4C, S1C, S2C, S3C, S4C = await P.camarilla()  # valeurs ok
-    zone = np.array([PPW, R1W, R2W, S1W, S2W, R1D, S1D ])
-    #zone = np.array([PPW, R1W, R2W, S1W, S2W])
+    # PPC, R1C, R2C, R3C, R4C, S1C, S2C, S3C, S4C = await P.camarilla()  # valeurs ok
+    zone = np.array([PPW, R1W, R2W, S1W, S2W, R1D, S1D])
+    # zone = np.array([PPW, R1W, R2W, S1W, S2W])
     return np.sort(zone)
 
 
@@ -517,7 +510,6 @@ async def main():
 
     try:
         sclient, c = subscribe(loginResponse)
-
 
         connection = MongoClient('localhost', 27017)
         db = connection[SYMBOL]
@@ -541,7 +533,6 @@ async def main():
         await moyMobil_05_120.EMA(70)
         await moyMobil_05_120.EMA(26)
 
-
         # Awesome ##################################################################################################
         ao05 = Awesome(SYMBOL, "M05")
         await ao05.calculAllCandles()
@@ -553,7 +544,8 @@ async def main():
         while True:
             now = datetime.now()
             current_time = now.strftime("%H:%M:%S")
-            print("*****************************************************************************************************")
+            print(
+                "*****************************************************************************************************")
             print("Current Time =", current_time)
             print("mise à jour des indicateurs : ", current_time, " -----------------------------------------------")
             if updatePivot():
@@ -592,8 +584,8 @@ async def main():
                 print("go stategie ***************************************")
                 print("c.getTick() :", c.getTick())
                 tick = c.getTick()["ask"]
-                #print("tick :", tick)
-                #print("c.getTrade() :", c.getTrade())
+                # print("tick :", tick)
+                # print("c.getTrade() :", c.getTrade())
 
                 ###############################################################################################################
                 # order
@@ -631,10 +623,9 @@ async def main():
                 ecart = abs(round(bougie0M01["high"] - bougie0M01["low"], 2)) \
                         + abs(round(bougie1M01["high"] - bougie1M01["low"], 2)) \
                         + abs(round(bougie2M01["high"] - bougie2M01["low"], 2)) \
-                        + abs(round(bougie3M01["high"] - bougie3M01["low"], 2))\
+                        + abs(round(bougie3M01["high"] - bougie3M01["low"], 2)) \
                         + abs(round(bougie4M01["high"] - bougie2M01["low"], 2)) \
                         + abs(round(bougie5M01["high"] - bougie3M01["low"], 2))
-
 
                 print("recherche de type dordre à executer : nouvel ordre ou move SL")
                 if len(tradeOpen['returnData']) == 0:
@@ -644,12 +635,19 @@ async def main():
                     print("superM05_1003T2 :", superM05_1003T2)
                     print("superM01_1003T1 :", superM01_1003T1)
                     print("superM01_1003T2 :", superM01_1003T2)
-                    print("EMA70 1min:", bougie1M01.get("EMA70"), "   bougie1M01 EMA120 5min:", bougie1M05.get("EMA120"))
+                    print("EMA70 1min:", bougie1M01.get("EMA70"), "   bougie1M01 EMA120 5min:",
+                          bougie1M05.get("EMA120"))
                     print("bougie1M01 :", bougie1M01)
                     print("-- variable fin ************")
                     print("demarrage de selection d un futur ordre")
 
-                    print("tick ", tick, " superM01_1003T1:", superM01_1003T1, "    eam26:", bougie1M01.get("EMA26"), " eam120:", bougie1M01.get("EMA26"))
+                    print("tick ", tick, " superM01_1003T1:", superM01_1003T1, "    eam26:", bougie1M01.get("EMA26"),
+                          " eam120:", bougie1M01.get("EMA120"))
+
+                    print("strategie 1***********************************************")
+                    print("zone[0] ", zone[0], " EMA120:", bougie3M05.get("EMA120"), " < ", bougie3M05.get("EMA120"),
+                          " < ", bougie3M05.get("EMA120"))
+                    print("AW ", bougie1M05.get("AW"), " > ", bougie2M05.get("AW"), " > ", bougie3M05.get("AW"))
 
                     if zone[0] < bougie3M05.get("EMA120") < bougie2M05.get("EMA120") < bougie1M05.get("EMA120") \
                             and bougie1M05.get("AW") > bougie2M05.get("AW") > bougie3M05.get("AW"):
@@ -666,14 +664,13 @@ async def main():
                         if dif > 5:
                             o.buyLimit(sl, tp, price, balance, VNL)
 
-
-                    if bougie0M01["close"] < superM01_1003T1 and bougie1M01.get("EMA26") < bougie1M01.get("EMA120") :
+                    if bougie0M01["close"] < superM01_1003T1 and bougie1M01.get("EMA26") < bougie1M01.get("EMA120"):
                         sl = superM01_1003T1
                         tp = zoneResistanceVente(tick, zone)
                         price = bougie1M01.get("EMA120")
-                        #l ecart doit avoir un minimum
-                        dif = sl-price
-                        if dif > 5 :
+                        # l ecart doit avoir un minimum
+                        dif = sl - price
+                        if dif > 5:
                             o.sellNow(sl, tp, price, balance, VNL)
 
                     # elif bougie1M01.get("EMA26") and bougie1M01.get("EMA70") and bougie1M01.get(
