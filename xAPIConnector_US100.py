@@ -287,6 +287,7 @@ async def majData(client, startTime, symbol, db):
     dataM05Download = json.loads(dataM05)
     listDataDBM05 = db["M05"].find_one({}, sort=[('ctm', -1)])
     newTime = await insertData(db["M05"], dataM05Download, listDataDBM05)
+    print("newTime :", newTime)
 
     return newTime
 
