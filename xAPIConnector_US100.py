@@ -359,7 +359,7 @@ async def majDatAall(client, symbol, db):
         if lastBougie is not None:
             startTime = lastBougie["ctm"]
             print("une bougie de 5 min ds startTime:", startTime)
-            startTime = startTime - (60 * 10) * 1000
+            startTime = startTime - (60 * 5) * 1000
             print("on recule le time:", startTime)
 
         json_data_M05 = client.commandExecute('getChartRangeRequest', {
@@ -368,7 +368,6 @@ async def majDatAall(client, symbol, db):
                      "ticks": 0}})
         dataM05 = json.dumps(json_data_M05)
         dataM05Download = json.loads(dataM05)
-        print("M05 :", lastBougie)
         print("dataM05Download :", dataM05Download)
 
         newTime = await insertData(db["M05"], dataM05Download, lastBougie)
