@@ -353,9 +353,13 @@ async def majDatAall(client, symbol, db):
 
         # MAJ 5 min ------------------------------------------------------------------------
         lastBougie = db["M05"].find_one({}, sort=[('ctm', -1)])
+        print(lastBougie)
         startTime = int(round(time.time() * 1000)) - (60 * 60 * 24 * 45) * 1000
         if lastBougie is not None:
             startTime = lastBougie["ctm"]
+            print("une bougie de 5 min ds startTime:", startTime)
+            startTime = startTime - (60 * 10) * 1000
+            print("on recule le time:", startTime)
 
         json_data_M05 = client.commandExecute('getChartRangeRequest', {
             "info": {"start": startTime, "end": endTime, "period": 5,
