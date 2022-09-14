@@ -177,7 +177,6 @@ async def insertData(collection, dataDownload, lastBougieDB):
                     }
                     collection.insert_one(newvalues)
                 elif value['ctm'] == lastBougieDB['ctm']:
-                    print("modif")
                     myquery = {"ctm": value['ctm']}
                     newvalues = {
                         "$set": {
