@@ -153,7 +153,7 @@ async def insertData(collection, dataDownload, lastBougieDB):
     :param listDataDB: dernière ligne de données provenant de la collection
     :return: time traité
     '''
-    ctm = ''
+
     try:
         if dataDownload['status'] and len(dataDownload["returnData"]['rateInfos']) > 0:
             for value in dataDownload["returnData"]['rateInfos']:
@@ -220,68 +220,6 @@ def findopenOrder(client):
     return json.loads(tradeOpenJson)
 
 
-async def majData(client, startTime, symbol, db):
-    '''
-    Mise à jour de la base de données
-    :param client: parametre de connexion
-    :param startTime: date de départ en ms
-    :param symbol: Indice
-    :param db: collection selectionné selon symbol
-    :return:
-    '''
-    # print("**************************************** mise à jour start ****************************************")
-    print("startTime :", startTime)
-    if startTime is None:
-        startTime = time.time()
-
-    startTime = int(round(time.time() * 1000))
-    endTime = int(round(time.time() * 1000)) + (6 * 60 * 1000)
-    json_data_M01 = client.commandExecute('getChartRangeRequest', {
-        "info": {"start": startTime - (6 * 60 * 1000), "end": endTime, "period": 1,
-                 "symbol": symbol,
-                 "ticks": 0}})
-    dataM01 = json.dumps(json_data_M01)
-    dataM01Download = json.loads(dataM01)
-    listDataDBM01 = db["M01"].find_one({}, sort=[('ctm', -1)])
-    await insertData(db["M01"], dataM01Download, listDataDBM01["ctm"])
-
-    startTimeDay = int(round(time.time() * 1000)) - (60 * 60 * 24 * 3) * 1000
-    arguments = {
-        "info": {"start": startTimeDay, "end": endTime, "period": 1440,
-                 "symbol": symbol,
-                 "ticks": 0}}
-    json_data_D = client.commandExecute('getChartRangeRequest', arguments)
-    data_D = json.dumps(json_data_D)
-    dataDayDownload = json.loads(data_D)
-    listDataDB = db["D"].find_one({}, sort=[('ctm', -1)])
-    await insertData(db["D"], dataDayDownload, listDataDB["ctm"])
-
-    # MAJ H4 ------------------------------------------------------------------------
-    # 20 jours x 24 heures x 3600 secondes x 1000
-    # print("H4 :", startTime - (6 * 3600000))
-    json_data_H4 = client.commandExecute('getChartRangeRequest', {
-        "info": {"start": startTime - (6 * 3600000), "end": endTime, "period": 240,
-                 "symbol": symbol,
-                 "ticks": 0}})
-    data_H4 = json.dumps(json_data_H4)
-    dataH4Download = json.loads(data_H4)
-    listDataDB = db["H4"].find_one({}, sort=[('ctm', -1)])
-    await insertData(db["H4"], dataH4Download, listDataDB["ctm"])
-
-
-    # MAJ M05 ------------------------------------------------------------------------
-    json_data_M05 = client.commandExecute('getChartRangeRequest', {
-        "info": {"start": startTime - (6 * 60 * 1000), "end": endTime, "period": 5,
-                 "symbol": symbol,
-                 "ticks": 0}})
-    dataM05 = json.dumps(json_data_M05)
-    dataM05Download = json.loads(dataM05)
-    listDataDBM05 = db["M05"].find_one({}, sort=[('ctm', -1)])
-    newTime = await insertData(db["M05"], dataM05Download, listDataDBM05["ctm"])
-    print("newTime :", newTime)
-
-    return newTime
-
 
 async def majDatAall(client, symbol, db):
     '''
@@ -338,7 +276,7 @@ async def majDatAall(client, symbol, db):
         print(" MAJ 1 MIN ***********************************************************")
         startTime = int(round(time.time() * 1000)) - (60 * 60 * 24 * 5) * 1000
         if lastBougie is not None:
-            startTime = lastBougie["ctm"] - (60 * 2) * 1000
+            startTime = lastBougie["ctm"] - (60 * 3) * 1000
 
         json_data_M01 = client.commandExecute('getChartRangeRequest', {
             "info": {"start": startTime, "end": endTime, "period": 1,
