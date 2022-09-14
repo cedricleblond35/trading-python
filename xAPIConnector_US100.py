@@ -552,7 +552,7 @@ async def main():
 
 
                     ### strategie 1 ################################################################################
-                    if zone[0] < bougie3M05.get("EMA120") < bougie2M05.get("EMA120") < bougie1M05.get("EMA120") \
+                    elif zone[0] < bougie3M05.get("EMA120") < bougie2M05.get("EMA120") < bougie1M05.get("EMA120") \
                             and bougie1M05.get("AW") > bougie2M05.get("AW") > bougie3M05.get("AW"):
                         print("strategie 1***********************************************")
                         print("zone[0] ", zone[0], " EMA120:", bougie3M05.get("EMA120"), " < ",
@@ -569,7 +569,7 @@ async def main():
                         o.buyLimit(sl[0], tp, price, balance, VNL, comment)
 
                     ### strategie 2 ################################################################################
-                    if bougie0M01["close"] > superM01_1003T1 and bougie1M01.get("EMA26") > bougie1M01.get("EMA120"):
+                    elif bougie0M01["close"] > superM01_1003T1 and bougie1M01.get("EMA26") > bougie1M01.get("EMA120"):
                         print("strategie 2 Achat ***********************************************")
                         sl = superM01_1003T1
                         tp = zoneResistance(tick, zone)
@@ -579,7 +579,7 @@ async def main():
                             comment = "Achat : strategie 2"
                             o.buyNow(sl, tp, price, balance, VNL, comment)
 
-                    if bougie0M01["close"] < superM01_1003T1 and bougie1M01.get("EMA26") < bougie1M01.get("EMA120"):
+                    elif bougie0M01["close"] < superM01_1003T1 and bougie1M01.get("EMA26") < bougie1M01.get("EMA120"):
                         print("strategie 2 Vente***********************************************")
                         sl = superM01_1003T1
                         tp = zoneResistanceVente(tick, zone)

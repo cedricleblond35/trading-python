@@ -342,7 +342,7 @@ def NbrLot(balance, position, stp, vnl):
         ecartPip = abs((position - stp))
 
         print("ecart type :", ecartPip)
-        nbrelot = round(perteAcceptable / ecartPip / vnl )
+        nbrelot = round(perteAcceptable / ecartPip / vnl, 2 )
         print("nbrelot :", nbrelot)
         """
         qtMax = self.round_down((balance["equityFX"] / 20000), 2)
