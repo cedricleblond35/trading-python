@@ -721,9 +721,9 @@ async def main():
                             print("trade['customComment'] :", trade['customComment'])
 
                             if trade['customComment'] == "Vente direct":
-                                print(trade['sl'] ,">", superM05_1003T1)
-                                if trade['sl'] > superM05_1003T1:
-                                    o.moveStopSell(trade, superM05_1003T1, tick)
+                                print(trade['sl'] ,">", superM01_1003T1)
+                                if trade['sl'] > superM01_1003T1:
+                                    o.moveStopSell(trade, superM01_1003T1, tick)
                             else:
                                 # descendre le stop  a 5pip de benef :
                                 #   Si cours en dessous de l ouverture avec ecart 20pip
