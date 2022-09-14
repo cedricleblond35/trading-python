@@ -537,7 +537,9 @@ async def main():
                     print("-- Aucun ordre   ***************************************")
                     print("demarrage de selection d une strategie")
 
-                    if bougie1M01.get("AW") < bougie2M01.get("AW") < bougie3M01.get("AW") and bougie1M01.get("AW") and tick < bougie1M01.get("EMA26") < bougie1M01.get("EMA70") < bougie1M01.get("EMA120") and tick < superM01_1003T1:
+                    if bougie1M01.get("AW") < bougie2M01.get("AW") < bougie3M01.get("AW") and bougie1M01.get("AW") \
+                            and tick < bougie1M01.get("EMA26") < bougie1M01.get("EMA70") < bougie1M01.get("EMA120") \
+                            and tick < superM01_1003T1:
                         sl = superM01_1003T1
                         tp = zoneResistanceVente(tick, zone)
                         price = tick - 15
@@ -546,9 +548,6 @@ async def main():
                         if dif > 5:
                             comment = "Vente : strategie direct 1"
                             o.sellNow(sl, tp, price, balance, VNL, comment)
-
-
-
 
 
                     ### strategie 1 ################################################################################
@@ -720,7 +719,9 @@ async def main():
 
                         elif TransactionSide.SELL == trade['cmd']:
                             print("trade['customComment'] :", trade['customComment'])
+
                             if trade['customComment'] == "Vente direct":
+                                print(trade['sl'] ,">", superM05_1003T1)
                                 if trade['sl'] > superM05_1003T1:
                                     o.moveStopSell(trade, superM05_1003T1, tick)
                             else:
