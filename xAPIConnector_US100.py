@@ -275,17 +275,19 @@ async def majDatAall(client, symbol, db):
         # MAJ Minute : 1 mois max------------------------------------------------------------------------
         lastBougie = db["M01"].find_one({}, sort=[('ctm', -1)])
         print(" MAJ 1 MIN ***********************************************************")
-        startTime = int(round(time.time() * 1000)) - (60 * 60 * 24 * 5) * 1000
+        print(lastBougie)
+        startTime = int(round(time.time() * 1000)) - (60 * 60 * 24) * 1000
         if lastBougie is not None:
-            startTime = lastBougie["ctm"] - (60 * 3) * 1000
+            startTime = lastBougie["ctm"] - (60 * 2) * 1000
 
         json_data_M01 = client.commandExecute('getChartRangeRequest', {
             "info": {"start": startTime, "end": endTime, "period": 1,
                      "symbol": symbol,
                      "ticks": 0}})
         dataM01 = json.dumps(json_data_M01)
-        dataM01Download = json.loads(dataM01)
-        await insertData(db["M01"], dataM01Download, startTime)
+        dataDownload = json.loads(dataM01)
+
+        await insertData(db["M01"], dataDownload, lastBougie)
 
         # MAJ 5 min ------------------------------------------------------------------------
         lastBougie = db["M05"].find_one({}, sort=[('ctm', -1)])
