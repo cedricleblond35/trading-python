@@ -244,7 +244,6 @@ async def majDatAall(client, symbol, db):
 
         # MAJ DAY : 13 mois------------------------------------------------------------------------
         lastBougie = db["D"].find_one({}, sort=[('ctm', -1)])
-        print(" MAJ D MIN ***********************************************************")
         startTime = int(round(time.time() * 1000)) - (60 * 60 * 24 * 30 * 13) * 1000
         if lastBougie is not None:
             startTime = lastBougie["ctm"] - (60 * 60 * 24 ) * 1000
@@ -254,12 +253,10 @@ async def majDatAall(client, symbol, db):
             {"info": {"start": startTime, "end": endTime, "period": 1440, "symbol": symbol, "ticks": 0}})
         dataDAY = json.dumps(json_data_Day)
         dataDAYDownload = json.loads(dataDAY)
-        print(dataDAYDownload)
         await insertData(db["D"], dataDAYDownload, lastBougie)
 
         # MAJ H4 : 13 mois max------------------------------------------------------------------------
         lastBougie = db["H4"].find_one({}, sort=[('ctm', -1)])
-        print(" MAJ H4 MIN ***********************************************************")
         startTime = int(round(time.time() * 1000)) - (60 * 60 * 24 * 30 * 13) * 1000
         if lastBougie is not None:
             startTime = lastBougie["ctm"] - (60 * 60 * 8 ) * 1000
@@ -274,8 +271,6 @@ async def majDatAall(client, symbol, db):
 
         # MAJ Minute : 1 mois max------------------------------------------------------------------------
         lastBougie = db["M01"].find_one({}, sort=[('ctm', -1)])
-        print(" MAJ 1 MIN ***********************************************************")
-        print(lastBougie)
         startTime = int(round(time.time() * 1000)) - (60 * 60 * 24) * 1000
         if lastBougie is not None:
             startTime = lastBougie["ctm"] - (60 * 2) * 1000
@@ -291,8 +286,6 @@ async def majDatAall(client, symbol, db):
 
         # MAJ 5 min ------------------------------------------------------------------------
         lastBougie = db["M05"].find_one({}, sort=[('ctm', -1)])
-        print(" MAJ 5 MIN ***********************************************************")
-        print(lastBougie)
         startTime = int(round(time.time() * 1000)) - (60 * 60 * 24 * 45) * 1000
         if lastBougie is not None:
             startTime = lastBougie["ctm"] - (60 * 5) * 1000
@@ -432,21 +425,21 @@ async def main():
         zone = await pivot()
         #
         # # # moyen mobile ##################################################################################################
-        # moyMobil_01_120 = MM(SYMBOL, "M01", 0)
-        # moyMobil_05_120 = MM(SYMBOL, "M05", 0)
-        # await moyMobil_01_120.EMA(120)
-        # await moyMobil_01_120.EMA(70)
-        # await moyMobil_01_120.EMA(26)
+        moyMobil_01_120 = MM(SYMBOL, "M01", 0)
+        moyMobil_05_120 = MM(SYMBOL, "M05", 0)
+        await moyMobil_01_120.EMA(120)
+        await moyMobil_01_120.EMA(70)
+        await moyMobil_01_120.EMA(26)
         #
-        # await moyMobil_05_120.EMA(120)
-        # await moyMobil_05_120.EMA(70)
-        # await moyMobil_05_120.EMA(26)
+        await moyMobil_05_120.EMA(120)
+        await moyMobil_05_120.EMA(70)
+        await moyMobil_05_120.EMA(26)
         #
         # # Awesome ##################################################################################################
-        # ao05 = Awesome(SYMBOL, "M05")
-        # await ao05.calculAllCandles()
-        # ao01 = Awesome(SYMBOL, "M01")
-        # await ao01.calculAllCandles()
+        ao05 = Awesome(SYMBOL, "M05")
+        await ao05.calculAllCandles()
+        ao01 = Awesome(SYMBOL, "M01")
+        await ao01.calculAllCandles()
         #
         # o = Order(SYMBOL, dbStreaming, client, db["trade"])
         # logger.info("mise à jour du start fini ")
@@ -464,30 +457,30 @@ async def main():
             # ####################################################################################################
             await majDatAall(client, SYMBOL, db)
             # ####################################################################################################
-            # await moyMobil_01_120.EMA(120)
-            # await moyMobil_01_120.EMA(70)
-            # await moyMobil_01_120.EMA(26)
+            await moyMobil_01_120.EMA(120)
+            await moyMobil_01_120.EMA(70)
+            await moyMobil_01_120.EMA(26)
             #
-            # await moyMobil_05_120.EMA(120)
-            # await moyMobil_05_120.EMA(70)
-            # await moyMobil_05_120.EMA(26)
+            await moyMobil_05_120.EMA(120)
+            await moyMobil_05_120.EMA(70)
+            await moyMobil_05_120.EMA(26)
             #
             # # AO ###################################################################################
-            # await ao05.calculLastCandle(10)
-            # await ao01.calculLastCandle(10)
+            await ao05.calculLastCandle(10)
+            await ao01.calculLastCandle(10)
             #
             # # supertrend ###################################################################################
             # # spM013012 = Supertrend(SYMBOL, "M01", 30, 12)
             # # superM013012T0, superM013012T1, superM013012T2 = spM013012.getST()
-            # spM05_1003 = Supertrend(SYMBOL, "M05", 10, 3)
-            # superM05_1003T0, superM05_1003T1, superM05_1003T2 = spM05_1003.getST()
+            spM05_1003 = Supertrend(SYMBOL, "M05", 10, 3)
+            superM05_1003T0, superM05_1003T1, superM05_1003T2 = spM05_1003.getST()
             #
-            # spM01_1003 = Supertrend(SYMBOL, "M01", 10, 4)
-            # superM01_1003T0, superM01_1003T1, superM01_1003T2 = spM01_1003.getST()
+            spM01_1003 = Supertrend(SYMBOL, "M01", 10, 4)
+            superM01_1003T0, superM01_1003T1, superM01_1003T2 = spM01_1003.getST()
             #
-            # now = datetime.now()
-            # current_time = now.strftime("%H:%M:%S")
-            # print("fin de la mise à jour ", current_time)
+            now = datetime.now()
+            current_time = now.strftime("%H:%M:%S")
+            print("fin de la mise à jour ", current_time)
             #
             # if c.getTick() is not None:
             #     print("go stategie ***************************************")
