@@ -163,9 +163,9 @@ async def insertData(collection, dataDownload, lastBougieDB):
                 low = (value['open'] + value['low']) / 100.0
                 pointMedian = round((high + low) / 2, 2)
 
-                print("insertData lastbougie :", lastBougieDB)
+                print("insertData lastbougie :", lastBougieDB['ctm'])
 
-                if lastBougieDB is None or value['ctm'] > lastBougieDB:
+                if lastBougieDB is None or value['ctm'] > lastBougieDB['ctm']:
                     open = value['open'] / 100.0
                     newvalues = {
                         "ctm": ctm,
@@ -178,7 +178,7 @@ async def insertData(collection, dataDownload, lastBougieDB):
                         "pointMedian": pointMedian
                     }
                     collection.insert_one(newvalues)
-                elif value['ctm'] == lastBougieDB:
+                elif value['ctm'] == lastBougieDB['ctm']:
                     print("modif")
                     myquery = {"ctm": value['ctm']}
                     newvalues = {
