@@ -107,13 +107,9 @@ ObjectfDay = 5.00  # %
 BALANCE = 0
 TICK = False
 PROFIT = False
-
-# GE30 le cout d un pip = 25€ * 0.01 --------------------------
-# PRICE = 6.95
-# PIP = 0.01
 SYMBOL = "US100"
 VNL = 25
-# SPREAD = 0.04
+
 
 # logger properties
 logger = logging.getLogger("jsonSocket")
@@ -449,10 +445,10 @@ async def main():
                 "*****************************************************************************************************")
             print("Current Time =", current_time)
             print("mise à jour des indicateurs : ", current_time, " -----------------------------------------------")
-            # if updatePivot():
-            #     zone = await pivot()
+            if updatePivot():
+                 zone = await pivot()
             #
-            # print("pivot :", zone)
+            print("pivot :", zone)
             # ####################################################################################################
             await majDatAall(client, SYMBOL, db)
             # ####################################################################################################
