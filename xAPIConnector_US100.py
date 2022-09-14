@@ -541,7 +541,9 @@ async def main():
                         price = tick - 15
                         # l ecart doit avoir un minimum
                         dif = sl - price
-                        if dif > 5:
+                        r = zoneResistanceVente(bougie1M01.get("close"), zone)
+                        difR = price - r
+                        if dif > 5 and difR > 1:
                             comment = "Vente : strategie direct 1"
                             o.sellNow(sl, tp, price, balance, VNL, comment)
 
