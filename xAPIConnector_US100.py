@@ -353,6 +353,7 @@ async def majDatAall(client, symbol, db):
 
         # MAJ 5 min ------------------------------------------------------------------------
         lastBougie = db["M05"].find_one({}, sort=[('ctm', -1)])
+        print(" MAJ 5 MIN ***********************************************************")
         print(lastBougie)
         startTime = int(round(time.time() * 1000)) - (60 * 60 * 24 * 45) * 1000
         if lastBougie is not None:
