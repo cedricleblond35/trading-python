@@ -309,25 +309,25 @@ async def majDatAall(client, symbol, db):
         endTime = int(round(time.time() * 1000)) + (6 * 60 * 1000)
 
         # MAJ DAY : 13 mois------------------------------------------------------------------------
-        listDataDBDAY = db["D"].find_one({}, sort=[('ctm', -1)])
-
+        lastBougie = db["D"].find_one({}, sort=[('ctm', -1)])
+        print(" MAJ H4 MIN ***********************************************************")
         startTimeDay = int(round(time.time() * 1000)) - (60 * 60 * 24 * 30 * 13) * 1000
-        if listDataDBDAY is not None:
-            startTimeDay = listDataDBDAY["ctm"]
+        if lastBougie is not None:
+            startTime = lastBougie["ctm"] - (60 * 60 * 24 ) * 1000
 
         json_data_Day = client.commandExecute(
             'getChartRangeRequest',
-            {"info": {"start": startTimeDay, "end": endTime, "period": 1440, "symbol": symbol, "ticks": 0}})
+            {"info": {"start": startTime, "end": endTime, "period": 1440, "symbol": symbol, "ticks": 0}})
         dataDAY = json.dumps(json_data_Day)
         dataDAYDownload = json.loads(dataDAY)
-        await insertData(db["D"], dataDAYDownload, listDataDBDAY)
+        await insertData(db["D"], dataDAYDownload, lastBougie)
 
         # MAJ H4 : 13 mois max------------------------------------------------------------------------
         lastBougie = db["H4"].find_one({}, sort=[('ctm', -1)])
+        print(" MAJ H4 MIN ***********************************************************")
         startTime = int(round(time.time() * 1000)) - (60 * 60 * 24 * 30 * 13) * 1000
         if lastBougie is not None:
-            startTime = lastBougie["ctm"]
-
+            startTime = lastBougie["ctm"] - (60 * 60 * 8 ) * 1000
 
         json_data_H4 = client.commandExecute('getChartRangeRequest', {
             "info": {"start": startTime, "end": endTime, "period": 240,
@@ -335,14 +335,14 @@ async def majDatAall(client, symbol, db):
                      "ticks": 0}})
         data_H4 = json.dumps(json_data_H4)
         dataH4Download = json.loads(data_H4)
-        print("h4 :", lastBougie)
         await insertData(db["H4"], dataH4Download, lastBougie)
 
         # MAJ Minute : 1 mois max------------------------------------------------------------------------
         lastBougie = db["M01"].find_one({}, sort=[('ctm', -1)])
-        startTime = int(round(time.time() * 1000)) - (60 * 60 * 5) * 1000
+        print(" MAJ 1 MIN ***********************************************************")
+        startTime = int(round(time.time() * 1000)) - (60 * 60 * 24 * 5) * 1000
         if lastBougie is not None:
-            startTime = lastBougie["ctm"]
+            startTime = lastBougie["ctm"] - (60 * 2) * 1000
 
         json_data_M01 = client.commandExecute('getChartRangeRequest', {
             "info": {"start": startTime, "end": endTime, "period": 1,
@@ -350,7 +350,6 @@ async def majDatAall(client, symbol, db):
                      "ticks": 0}})
         dataM01 = json.dumps(json_data_M01)
         dataM01Download = json.loads(dataM01)
-        print("M01 :", lastBougie)
         await insertData(db["M01"], dataM01Download, startTime)
 
         # MAJ 5 min ------------------------------------------------------------------------
@@ -359,10 +358,7 @@ async def majDatAall(client, symbol, db):
         print(lastBougie)
         startTime = int(round(time.time() * 1000)) - (60 * 60 * 24 * 45) * 1000
         if lastBougie is not None:
-            startTime = lastBougie["ctm"]
-            print("une bougie de 5 min ds startTime:", startTime)
-            startTime = startTime - (60 * 5) * 1000
-            print("on recule le time:", startTime)
+            startTime = lastBougie["ctm"] - (60 * 5) * 1000
 
         json_data_M05 = client.commandExecute('getChartRangeRequest', {
             "info": {"start": startTime, "end": endTime, "period": 5,
@@ -370,13 +366,9 @@ async def majDatAall(client, symbol, db):
                      "ticks": 0}})
         dataM05 = json.dumps(json_data_M05)
         dataM05Download = json.loads(dataM05)
-        print("dataM05Download :", dataM05Download)
 
-        newTime = await insertData(db["M05"], dataM05Download, lastBougie)
-        print("newTime majDatAall:", newTime)
+        await insertData(db["M05"], dataM05Download, lastBougie)
 
-        # on retourne le dernier temps "ctm" enregistré
-        return newTime
     except Exception as exc:
         print("majDatAall a déclenché une erreur")
         print("exception de mtype ", exc.__class__)
@@ -497,8 +489,7 @@ async def main():
         dbStreaming = connection["STREAMING"]
         print("insert db")
 
-        startTime = await majDatAall(client, SYMBOL, db)
-        print("insert db fini ctm :", startTime)
+        await majDatAall(client, SYMBOL, db)
 
         # # # pivot##################################################################################################
         #zone = await pivot()
@@ -534,8 +525,7 @@ async def main():
             #
             # print("pivot :", zone)
             # ####################################################################################################
-            startTime = await majData(client, startTime, SYMBOL, db)
-            print("ctm majData: ", startTime)
+            await majDatAall(client, SYMBOL, db)
             # ####################################################################################################
             # await moyMobil_01_120.EMA(120)
             # await moyMobil_01_120.EMA(70)
