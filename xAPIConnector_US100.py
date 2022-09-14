@@ -537,7 +537,7 @@ async def main():
                     print("-- Aucun ordre   ***************************************")
                     print("demarrage de selection d une strategie")
 
-                    if bougie1M01.get("AW") > bougie2M01.get("AW") > bougie3M01.get("AW") and bougie1M01.get("AW") < -15 and tick < bougie1M01.get("EMA26") < bougie1M01.get("EMA70") < bougie1M01.get("EMA120") :
+                    if bougie1M01.get("AW") > bougie2M01.get("AW") > bougie3M01.get("AW") and bougie1M01.get("AW") and tick < bougie1M01.get("EMA26") < bougie1M01.get("EMA70") < bougie1M01.get("EMA120") :
                         sl = superM01_1003T1
                         tp = zoneResistanceVente(tick, zone)
                         price = tick - 15
