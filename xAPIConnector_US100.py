@@ -244,7 +244,7 @@ async def majDatAall(client, symbol, db):
 
         # MAJ DAY : 13 mois------------------------------------------------------------------------
         lastBougie = db["D"].find_one({}, sort=[('ctm', -1)])
-        print(" MAJ H4 MIN ***********************************************************")
+        print(" MAJ D MIN ***********************************************************")
         startTime = int(round(time.time() * 1000)) - (60 * 60 * 24 * 30 * 13) * 1000
         print("lastBougie D:", lastBougie)
         if lastBougie is not None:
@@ -255,6 +255,7 @@ async def majDatAall(client, symbol, db):
             {"info": {"start": startTime, "end": endTime, "period": 1440, "symbol": symbol, "ticks": 0}})
         dataDAY = json.dumps(json_data_Day)
         dataDAYDownload = json.loads(dataDAY)
+        print(dataDAYDownload)
         await insertData(db["D"], dataDAYDownload, lastBougie)
 
         # MAJ H4 : 13 mois max------------------------------------------------------------------------
