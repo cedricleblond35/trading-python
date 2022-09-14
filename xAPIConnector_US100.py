@@ -235,7 +235,7 @@ async def majDatAall(client, symbol, db):
     :param db: collection selectionné selon symbol
     :return:
     '''
-    print("**************************************** mise à jour majDatAall ****************************************")
+    #print("**************************************** mise à jour majDatAall ****************************************")
     try:
 
         # ctmRefStart = db["D"].find().sort("ctm", -1).skip(1).limit(1)
@@ -479,14 +479,10 @@ async def main():
             #
             now = datetime.now()
             current_time = now.strftime("%H:%M:%S")
-            print("fin de la mise à jour ", current_time)
+            print("Mise à jour ", current_time)
             #
             if c.getTick() is not None:
-                print("go stategie ***************************************")
-                #print("c.getTick() :", c.getTick())
                 tick = c.getTick()["ask"]
-                # print("tick :", tick)
-                # print("c.getTrade() :", c.getTrade())
 
                 ###############################################################################################################
                 # order
@@ -534,7 +530,6 @@ async def main():
                 ###############################################################################################################
                 # start order
                 ###############################################################################################################
-                print("recherche de type d ordre à executer : nouvel ordre ou move SL")
                 if len(tradeOpen['returnData']) == 0:
                     ###############################################################################################################
                     # Aucun ordre
@@ -542,10 +537,23 @@ async def main():
                     print("-- Aucun ordre   ***************************************")
                     print("demarrage de selection d une strategie")
 
+                    if bougie1M01.get("AW") > bougie2M01.get("AW") > bougie3M01.get("AW") and bougie1M01.get("AW") < -15 and tick < bougie1M01.get("EMA26") < bougie1M01.get("EMA70") < bougie1M01.get("EMA120") :
+                        sl = superM01_1003T1
+                        tp = zoneResistanceVente(tick, zone)
+                        price = tick - 15
+                        # l ecart doit avoir un minimum
+                        dif = sl - price
+                        if dif > 5:
+                            comment = "Vente : strategie direct 1"
+                            o.sellNow(sl, tp, price, balance, VNL, comment)
 
+
+
+
+
+                    ### strategie 1 ################################################################################
                     if zone[0] < bougie3M05.get("EMA120") < bougie2M05.get("EMA120") < bougie1M05.get("EMA120") \
                             and bougie1M05.get("AW") > bougie2M05.get("AW") > bougie3M05.get("AW"):
-                        ### strategie 1 ################################################################################
                         print("strategie 1***********************************************")
                         print("zone[0] ", zone[0], " EMA120:", bougie3M05.get("EMA120"), " < ",
                               bougie3M05.get("EMA120"),
@@ -560,8 +568,7 @@ async def main():
 
                         o.buyLimit(sl[0], tp, price, balance, VNL, comment)
 
-                    print("strategie 2")
-                    print(bougie0M01["close"] ,">", superM01_1003T1 ,"and", bougie1M01.get("EMA26") ,">", bougie1M01.get("EMA120"))
+                    ### strategie 2 ################################################################################
                     if bougie0M01["close"] > superM01_1003T1 and bougie1M01.get("EMA26") > bougie1M01.get("EMA120"):
                         print("strategie 2 Achat ***********************************************")
                         sl = superM01_1003T1
@@ -676,11 +683,7 @@ async def main():
                 else:
                     print("ordre en cours ...........................................")
                     for trade in tradeOpenDic['returnData']:
-                        print(trade)
-                        print("c.getProfit(): ", c.getProfit())
-                        print("trade['customComment'] :", trade['customComment'])
-                        print("bougie0M05['AW'] :", bougie0M05)
-                        #############" ordre en attente ##################"
+                        #############" ordre en attente #################################################################
                         if TransactionSide.BUY_LIMIT == trade['cmd']:
                             print("move price buy !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
                             sl = superM01_1003T1
@@ -694,7 +697,7 @@ async def main():
                             tp = 0
                             o.moveSellLimitWait(trade, sl, tp, bougie1M01["EMA120"], balance, VNL)
 
-                        #############" ordre execute ##################"
+                        #############" ordre execute ###################################################################
                         elif TransactionSide.BUY == trade['cmd']:
                             if trade['customComment'] == "Achat direct":
                                 if superM01_1003T1 > trade['sl']:
