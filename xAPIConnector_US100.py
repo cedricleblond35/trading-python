@@ -467,8 +467,8 @@ async def main():
             # # supertrend ###################################################################################
             # # spM013012 = Supertrend(SYMBOL, "M01", 30, 12)
             # # superM013012T0, superM013012T1, superM013012T2 = spM013012.getST()
-            spM05_1003 = Supertrend(SYMBOL, "M05", 10, 3)
-            superM05_1003T0, superM05_1003T1, superM05_1003T2 = spM05_1003.getST()
+            # spM05_1003 = Supertrend(SYMBOL, "M05", 10, 3)
+            # superM05_1003T0, superM05_1003T1, superM05_1003T2 = spM05_1003.getST()
             #
             spM01_1003 = Supertrend(SYMBOL, "M01", 10, 4)
             superM01_1003T0, superM01_1003T1, superM01_1003T2 = spM01_1003.getST()
@@ -544,9 +544,19 @@ async def main():
                         r = zoneResistanceVente(bougie1M01.get("close"), zone)
                         difR = price - r
                         if dif > 5 and difR > 15:
-                            comment = "Vente : strategie direct 1"
+                            comment = "Vente direct : strategie 1"
                             o.sellNow(sl, tp, price, balance, VNL, comment)
 
+                    elif bougie0M01["close"] < superM01_1003T1 and bougie1M01.get("EMA26") < bougie1M01.get("EMA120"):
+                        print("strategie 2 Vente***********************************************")
+                        sl = superM01_1003T1
+                        tp = zoneResistanceVente(tick, zone)
+                        price = bougie1M01.get("EMA120")
+                        # l ecart doit avoir un minimum
+                        dif = sl - price
+                        if dif > 5:
+                            comment = "Vente direct: strategie 2"
+                            o.sellNow(sl, tp, price, balance, VNL, comment)
 
                     ### strategie 1 ################################################################################
                     elif zone[0] < bougie3M05.get("EMA120") < bougie2M05.get("EMA120") < bougie1M05.get("EMA120") \
@@ -561,8 +571,7 @@ async def main():
                         print(sl[0])
                         tp = 0
                         price = bougie1M01.get("EMA120")
-                        comment = "Achat : strategie 1"
-
+                        comment = "Achat buyLimit: strategie 1"
                         o.buyLimit(sl[0], tp, price, balance, VNL, comment)
 
                     ### strategie 2 ################################################################################
@@ -573,19 +582,10 @@ async def main():
                         price = bougie1M01.get("EMA120")
                         dif = price - sl
                         if dif > 5:
-                            comment = "Achat : strategie 2"
+                            comment = "Achat direct : strategie 2"
                             o.buyNow(sl, tp, price, balance, VNL, comment)
 
-                    elif bougie0M01["close"] < superM01_1003T1 and bougie1M01.get("EMA26") < bougie1M01.get("EMA120"):
-                        print("strategie 2 Vente***********************************************")
-                        sl = superM01_1003T1
-                        tp = zoneResistanceVente(tick, zone)
-                        price = bougie1M01.get("EMA120")
-                        # l ecart doit avoir un minimum
-                        dif = sl - price
-                        if dif > 5:
-                            comment = "Achat : strategie 2"
-                            o.sellNow(sl, tp, price, balance, VNL, comment)
+
 
                     # elif bougie1M01.get("EMA26") and bougie1M01.get("EMA70") and bougie1M01.get(
                     #         "EMA120") and bougie1M05.get("EMA120"):
@@ -732,8 +732,8 @@ async def main():
                                     sl = trade['open_price'] - 5
                                     o.moveStopSell(trade, sl, tick)
                                 else:
-                                    print("vente direct ok : sl :", superM05_1003T1)
-                                    sl = round(superM05_1003T1 + ecart / 4, 2)
+                                    print("vente direct ok : sl :", superM01_1003T1)
+                                    sl = round(superM01_1003T1 + ecart / 4, 2)
                                     o.moveStopSell(trade, sl, tick)
 
                     print("ordre en cours   END...........................................")
