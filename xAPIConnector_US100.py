@@ -542,12 +542,6 @@ async def main():
 
 
 
-
-
-
-
-
-
                     elif bougie1M01.get("AW") < bougie2M01.get("AW") < bougie3M01.get("AW") and bougie1M01.get("AW") \
                             and tick < bougie1M01.get("EMA26") < bougie1M01.get("EMA70") < bougie1M01.get("EMA120") \
                             and tick < superM01_1003T1:
@@ -707,7 +701,7 @@ async def main():
                     for trade in tradeOpenDic['returnData']:
                         #############" ordre en attente #################################################################
                         if TransactionSide.BUY_LIMIT == trade['cmd']:
-                            print("move price buy !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+                            print("move price buy !! :", trade)
                             sl = superM01_1003T1
                             tp = 0
                             o.movebuyLimitWait(trade, sl, tp, bougie1M01["EMA120"], balance, VNL)
