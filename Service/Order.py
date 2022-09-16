@@ -31,6 +31,7 @@ class Order:
             timeExpiration = h['returnData']['time'] + 3600000
 
             nbrelot = NbrLot(balance, price, sl, vnl)
+            print("**************comment :", comment)
             detail = {
                 "cmd": TransactionSide.BUY_LIMIT,
                 "customComment": comment,
