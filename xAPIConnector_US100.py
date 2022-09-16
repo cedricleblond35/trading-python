@@ -540,6 +540,14 @@ async def main():
                         comment = "Achat support"
                         o.buyLimit(sl, tp, price, balance, VNL, comment)
 
+                    elif bougie1M01.get("AW") >15 :
+                        print("strategie 2 Vente ***********************************************")
+                        sl = zoneResistance(tick, zone) +15
+                        tp = zoneResistanceVente(tick, zone)
+                        price = zoneResistance(tick, zone)
+
+                        comment = "Achat limit : strategie 2"
+                        o.sellLimit(sl, tp, price, balance, VNL, comment)
 
 
                     elif bougie1M01.get("AW") < bougie2M01.get("AW") < bougie3M01.get("AW") and bougie1M01.get("AW") \
