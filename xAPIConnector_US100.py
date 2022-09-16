@@ -540,7 +540,7 @@ async def main():
                         comment = "Achat support"
                         o.buyLimit(sl, tp, price, balance, VNL, comment)
 
-                    elif bougie1M01.get("AW") > -15 and tick > bougie1M01.get("EMA26") :
+                    elif bougie1M01.get("AW") > -15  :
                         print("strategie 2 Vente ***********************************************")
                         sl = zoneResistance(tick, zone) + 15
                         tp = zoneResistanceVente(tick, zone)
