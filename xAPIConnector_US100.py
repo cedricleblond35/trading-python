@@ -531,6 +531,20 @@ async def main():
                     print("-- Aucun ordre   ***************************************")
                     print("demarrage de selection d une strategie")
 
+                    # strategie des achats et ventes des support
+
+
+
+
+
+
+
+
+
+
+
+
+
                     if bougie1M01.get("AW") < bougie2M01.get("AW") < bougie3M01.get("AW") and bougie1M01.get("AW") \
                             and tick < bougie1M01.get("EMA26") < bougie1M01.get("EMA70") < bougie1M01.get("EMA120") \
                             and tick < superM01_1003T1:
