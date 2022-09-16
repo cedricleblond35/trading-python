@@ -33,7 +33,7 @@ class Order:
             nbrelot = NbrLot(balance, price, sl, vnl)
             detail = {
                 "cmd": TransactionSide.BUY_LIMIT,
-                "customComment": "Achat limit",
+                "customComment": comment,
                 "expiration": timeExpiration,
                 "offset": 0,
                 "price": price,

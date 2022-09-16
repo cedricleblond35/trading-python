@@ -537,7 +537,7 @@ async def main():
                         sl = zoneResistanceVente(tick, zone)-15
                         tp = zoneResistance(tick, zone)
                         price = zoneResistanceVente(tick, zone)
-                        comment = "strategie des achats et ventes des support"
+                        comment = "Achat support"
                         o.buyLimit(sl, tp, price, balance, VNL, comment)
 
 
@@ -701,10 +701,16 @@ async def main():
                     for trade in tradeOpenDic['returnData']:
                         #############" ordre en attente #################################################################
                         if TransactionSide.BUY_LIMIT == trade['cmd']:
-                            print("move price buy !! :", trade)
-                            sl = superM01_1003T1
-                            tp = 0
-                            o.movebuyLimitWait(trade, sl, tp, bougie1M01["EMA120"], balance, VNL)
+                            if trade['customComment'] == "Achat support":
+                                sl = zoneResistanceVente(tick, zone)-15
+                                tp = zoneResistance(tick, zone)
+                                price = zoneResistanceVente(tick, zone)
+                                o.movebuyLimitWait(trade, sl, tp, price, balance, VNL)
+                            else:
+                                print("move price buy !! :", trade)
+                                sl = superM01_1003T1
+                                tp = 0
+                                o.movebuyLimitWait(trade, sl, tp, price, balance, VNL)
 
                         elif TransactionSide.SELL_LIMIT == trade['cmd']:
 
