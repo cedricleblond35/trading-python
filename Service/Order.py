@@ -44,7 +44,7 @@ class Order:
                 "type": 0,
                 "volume": nbrelot
             }
-            print("buy limit :", detail)
+            print("**************buy limit :", detail)
             resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
             detail['resp'] = resp
             detail['comment'] = comment
@@ -232,16 +232,17 @@ class Order:
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
             logger.info(exc_type, fname, exc_tb.tb_lineno)
 
-    def movebuyLimitWait(self,trade, sl , tp, price, balance, vnl):
+    def movebuyLimitWait(self,trade, sl, tp, price, balance, vnl, comment=""):
         try:
             logger.info("------------- movebuyLimitWait ************************-----------------")
             print("trade :", trade)
             tp = round(tp, 1)
             sl = round(sl, 1)
+
             nbrelot = NbrLot(balance, price, sl, vnl)
+            print(("vol recalculer ::", nbrelot))
 
             if trade['volume'] == nbrelot:
-                print("move order buy !!!!!!!!!!!!")
                 detail = {
                           "cmd": trade['cmd'],
                           "order": trade['order'],
@@ -252,7 +253,7 @@ class Order:
                           "tp": tp,
                           "type": 3
                       }
-                print("movebuyLimitWait :",detail)
+                print("***************movebuyLimitWait :",detail)
                 resp = self.client.commandExecute('tradeTransaction', { "tradeTransInfo": detail})
             else:
                 print("delete order buy !!!!!!!!!!!! because volume is differente")
