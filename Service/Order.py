@@ -286,7 +286,7 @@ class Order:
         sl = round(sl, 1)
         nbrelot = NbrLot(balance, price, sl, vnl)
 
-        if trade['volume'] == nbrelot:
+        if float(trade['volume']) == nbrelot:
             print("move order sell !!!!!!!!!!!!")
             resp = self.client.commandExecute('tradeTransaction',
                                          {
