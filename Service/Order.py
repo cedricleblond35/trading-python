@@ -353,6 +353,7 @@ def NbrLot(balance, position, stp, vnl):
         if nbrelot > qtMax:
             nbrelot = qtMax
         """
+        print("nombre de lot:", nbrelot)
         print(
             "calcul du nombre de lot #############################################################################")
 
