@@ -709,24 +709,23 @@ async def main():
                         #############" ordre en attente #################################################################
                         if TransactionSide.BUY_LIMIT == trade['cmd']:
                             if trade['customComment'] == "Achat support":
-                                tp = zoneResistance(tick, zone)
                                 if bougie1M01.get("AW") < -15 and tick < bougie1M01.get("EMA26"):
                                     sl = zoneResistanceVente(tick, zone)-15
                                     price = zoneResistanceVente(tick, zone)
+                                    tp = zoneResistance(tick, zone)
                                     o.movebuyLimitWait(trade, sl, tp, price, balance, VNL)
-                                elif tick > bougie1M01.get("EMA26") or tick > tp:
+                                elif tick > bougie1M01.get("EMA26") or tick > trade["tp"]:
                                     o.delete(trade)
 
 
                         elif TransactionSide.SELL_LIMIT == trade['cmd']:
                             if trade['customComment'] == "Vente support":
-                                tp = zoneResistanceVente(tick, zone)
                                 if bougie1M01.get("AW") > 15 and tick > bougie1M01.get("EMA26") :
                                     sl = zoneResistance(tick, zone) + 15
-
+                                    tp = zoneResistanceVente(tick, zone)
                                     price = zoneResistance(tick, zone)
                                     o.moveSellLimitWait(trade, sl, tp,price, balance, VNL)
-                                elif tick < bougie1M01.get("EMA26") or tick < tp:
+                                elif tick < bougie1M01.get("EMA26") or tick < trade["tp"]:
                                     o.delete(trade)
 
 
