@@ -240,9 +240,10 @@ class Order:
             sl = round(sl, 1)
 
             nbrelot = NbrLot(balance, price, sl, vnl)
-            print(("vol recalculer ::", nbrelot))
+            print("vol recalculer :", nbrelot)
+            print("trade vol", trade['volume'])
 
-            if trade['volume'] == nbrelot:
+            if int(trade['volume']) == nbrelot:
                 detail = {
                           "cmd": trade['cmd'],
                           "order": trade['order'],
