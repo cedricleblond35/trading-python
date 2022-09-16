@@ -241,7 +241,7 @@ class Order:
 
             nbrelot = NbrLot(balance, price, sl, vnl)
             print("vol recalculer :", nbrelot)
-            print("trade vol", trade['volume'])
+            print("trade vol", int(trade['volume']))
 
             if int(trade['volume']) == nbrelot:
                 detail = {
