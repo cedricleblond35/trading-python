@@ -708,6 +708,7 @@ async def main():
                     for trade in tradeOpenDic['returnData']:
                         #############" ordre en attente #################################################################
                         if TransactionSide.BUY_LIMIT == trade['cmd']:
+                            print(trade)
                             if trade['customComment'] == "Achat support":
                                 if bougie1M01.get("AW") < -15 and tick < bougie1M01.get("EMA26"):
                                     sl = zoneResistanceVente(tick, zone)-15
