@@ -344,6 +344,11 @@ def NbrLot(balance, position, stp, vnl):
         print("ecart type :", ecartPip)
         nbrelot = round(perteAcceptable / ecartPip / vnl, 2 )
         print("nbrelot :", nbrelot)
+
+        positionMax = round_down(balance*0.80/100/100, 2)
+        if nbrelot > positionMax:
+            nbrelot = positionMax
+
         """
         qtMax = self.round_down((balance["equityFX"] / 20000), 2)
         if nbrelot > qtMax:

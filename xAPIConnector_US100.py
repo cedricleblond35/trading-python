@@ -566,7 +566,8 @@ async def main():
                               bougie3M05.get("EMA120"),
                               " < ", bougie3M05.get("EMA120"))
                         print("AW ", bougie1M05.get("AW"), " > ", bougie2M05.get("AW"), " > ", bougie3M05.get("AW"))
-                        sl = zoneSoutien(tick, zone)
+                        #sl = zoneSoutien(tick, zone)
+                        sl = superM01_1003T1
                         print(sl)
                         print(sl[0])
                         tp = 0
@@ -575,15 +576,24 @@ async def main():
                         o.buyLimit(sl[0], tp, price, balance, VNL, comment)
 
                     ### strategie 2 ################################################################################
-                    elif bougie0M01["close"] > superM01_1003T1 and bougie1M01.get("EMA26") > bougie1M01.get("EMA120"):
+                    elif bougie0M01["close"] > superM01_1003T1 and bougie1M01.get("EMA26") > bougie1M01.get("EMA120") and bougie1M05.get("AW") > 5:
                         print("strategie 2 Achat ***********************************************")
                         sl = superM01_1003T1
                         tp = zoneResistance(tick, zone)
                         price = bougie1M01.get("EMA120")
                         dif = price - sl
                         if dif > 5:
-                            comment = "Achat direct : strategie 2"
-                            o.buyNow(sl, tp, price, balance, VNL, comment)
+                            comment = "Achat limit : strategie 2"
+                            o.buyLimit(sl, tp, price, balance, VNL, comment)
+                    elif bougie0M01["close"] < superM01_1003T1 and bougie1M01.get("EMA26") < bougie1M01.get("EMA120") and bougie1M05.get("AW") < -5:
+                        print("strategie 2 Vente ***********************************************")
+                        sl = superM01_1003T1
+                        tp = zoneResistance(tick, zone)
+                        price = bougie1M01.get("EMA120")
+                        dif = abs(price - sl)
+                        if dif > 5:
+                            comment = "Achat limit : strategie 2"
+                            o.sellLimit(sl, tp, price, balance, VNL, comment)
 
 
 
