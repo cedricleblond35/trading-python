@@ -240,11 +240,6 @@ class Order:
             sl = round(sl, 1)
 
             nbrelot = NbrLot(balance, price, sl, vnl)
-            print("vol recalculer :", nbrelot)
-            print("trade vol", int(trade['volume']))
-
-            print("The variable, name is of type:", type(nbrelot))
-            print("The variable, name is of type:", type(float(trade['volume'])))
             if float(trade['volume']) == nbrelot:
                 detail = {
                           "cmd": trade['cmd'],

@@ -532,7 +532,7 @@ async def main():
                     print("demarrage de selection d une strategie")
 
                     # strategie des achats et ventes des support
-                    if bougie1M01.get("AW") < 15 and tick < bougie1M01.get("EMA26"):
+                    if bougie1M01.get("AW") < -15 and tick < bougie1M01.get("EMA26"):
                         print("strategie 1 support***********************************************")
                         sl = zoneResistanceVente(tick, zone)-15
                         tp = zoneResistance(tick, zone)
