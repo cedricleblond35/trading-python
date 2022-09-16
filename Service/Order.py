@@ -243,6 +243,8 @@ class Order:
             print("vol recalculer :", nbrelot)
             print("trade vol", int(trade['volume']))
 
+            print("The variable, name is of type:", type(nbrelot))
+            print("The variable, name is of type:", type(int(trade['volume'])))
             if int(trade['volume']) == nbrelot:
                 detail = {
                           "cmd": trade['cmd'],
