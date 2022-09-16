@@ -713,11 +713,13 @@ async def main():
                                 tp = zoneResistance(tick, zone)
                                 price = zoneResistanceVente(tick, zone)
                                 o.movebuyLimitWait(trade, sl, tp, price, balance, VNL)
-                            else:
-                                print("move price buy !! :", trade)
-                                sl = superM01_1003T1
-                                tp = 0
-                                o.movebuyLimitWait(trade, sl, tp, price, balance, VNL)
+                            # else:
+                            #     print("move price buy !! :", trade)
+                            #     sl = superM01_1003T1
+                            #     tp = 0
+                            #
+                            #     price = zoneResistanceVente(tick, zone)
+                            #     o.movebuyLimitWait(trade, sl, tp, price, balance, VNL)
 
                         elif TransactionSide.SELL_LIMIT == trade['cmd']:
 
