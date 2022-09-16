@@ -722,10 +722,9 @@ async def main():
                             #     o.movebuyLimitWait(trade, sl, tp, price, balance, VNL)
 
                         elif TransactionSide.SELL_LIMIT == trade['cmd']:
-
+                            sl = zoneResistance(tick, zone) + 15
                             tp = zoneResistanceVente(tick, zone)
-                            sl = zoneResistance(tick, zone)+15
-                            price = zoneResistanceVente(tick, zone)
+                            price = zoneResistance(tick, zone)
                             o.moveSellLimitWait(trade, sl, tp,price, balance, VNL)
 
                         #############" ordre execute ###################################################################
