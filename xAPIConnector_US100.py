@@ -712,7 +712,6 @@ async def main():
                                 sl = zoneResistanceVente(tick, zone)-15
                                 tp = zoneResistance(tick, zone)
                                 price = zoneResistanceVente(tick, zone)
-                                sl, tp, price, balance, vnl, comment = ""
                                 o.movebuyLimitWait(trade, sl, tp, price, balance, VNL)
                             else:
                                 print("move price buy !! :", trade)
