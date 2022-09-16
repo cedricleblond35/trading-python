@@ -59,7 +59,7 @@ class Order:
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
             print(exc_type, fname, exc_tb.tb_lineno)
 
-    def sellLimit(self,  sl, tp, price, balance, vnl, , comment="sellLimit"):
+    def sellLimit(self,  sl, tp, price, balance, vnl, comment="sellLimit"):
         try:
             h = self.client.commandExecute('getServerTime')
             timeExpiration = h['returnData']['time'] + 3600000
