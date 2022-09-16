@@ -22,7 +22,7 @@ class Order:
         self.client = client
 
     ################## ordre avec limit #################################################
-    def buyLimit(self,  sl, tp, price, balance, vnl, comment=""):
+    def buyLimit(self,  sl, tp, price, balance, vnl, comment="buyLimit"):
         try:
             tp = round(tp, 1)
             sl = round(sl, 1)
@@ -59,7 +59,7 @@ class Order:
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
             print(exc_type, fname, exc_tb.tb_lineno)
 
-    def sellLimit(self,  sl, tp, price, balance, vnl):
+    def sellLimit(self,  sl, tp, price, balance, vnl, , comment="sellLimit"):
         try:
             h = self.client.commandExecute('getServerTime')
             timeExpiration = h['returnData']['time'] + 3600000
@@ -67,7 +67,7 @@ class Order:
             nbrelot = NbrLot(balance, price, sl, vnl)
             detail = {
                 "cmd": TransactionSide.SELL_LIMIT,
-                "customComment": "Vente limit",
+                "customComment": comment,
                 "expiration": timeExpiration,
                 "offset": 0,
                 "price": price,
