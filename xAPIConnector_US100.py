@@ -532,6 +532,13 @@ async def main():
                     print("demarrage de selection d une strategie")
 
                     # strategie des achats et ventes des support
+                    if bougie1M01.get("AW") < 15:
+                        print("strategie 1 support***********************************************")
+                        sl = zoneResistanceVente(tick, zone)-15
+                        tp = zoneResistance(tick, zone)
+                        price = zoneResistanceVente(tick, zone)
+                        comment = "strategie des achats et ventes des support"
+                        o.buyLimit(sl, tp, price, balance, VNL, comment)
 
 
 
@@ -541,11 +548,7 @@ async def main():
 
 
 
-
-
-
-
-                    if bougie1M01.get("AW") < bougie2M01.get("AW") < bougie3M01.get("AW") and bougie1M01.get("AW") \
+                    elif bougie1M01.get("AW") < bougie2M01.get("AW") < bougie3M01.get("AW") and bougie1M01.get("AW") \
                             and tick < bougie1M01.get("EMA26") < bougie1M01.get("EMA70") < bougie1M01.get("EMA120") \
                             and tick < superM01_1003T1:
                         sl = superM01_1003T1
