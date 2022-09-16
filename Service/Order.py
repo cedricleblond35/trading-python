@@ -285,6 +285,7 @@ class Order:
         tp = round(tp, 1)
         sl = round(sl, 1)
         nbrelot = NbrLot(balance, price, sl, vnl)
+        print(float(trade['volume']) ,"==", nbrelot)
 
         if float(trade['volume']) == nbrelot:
             print("move order sell !!!!!!!!!!!!")
