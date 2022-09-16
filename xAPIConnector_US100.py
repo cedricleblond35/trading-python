@@ -719,7 +719,7 @@ async def main():
 
 
                         elif TransactionSide.SELL_LIMIT == trade['cmd']:
-                            if trade['customComment'] == "Achat support":
+                            if trade['customComment'] == "Vente support":
                                 tp = zoneResistanceVente(tick, zone)
                                 if bougie1M01.get("AW") > 15 and tick > bougie1M01.get("EMA26") :
                                     sl = zoneResistance(tick, zone) + 15
