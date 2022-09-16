@@ -244,8 +244,8 @@ class Order:
             print("trade vol", int(trade['volume']))
 
             print("The variable, name is of type:", type(nbrelot))
-            print("The variable, name is of type:", type(int(trade['volume'])))
-            if int(trade['volume']) == nbrelot:
+            print("The variable, name is of type:", type(float(trade['volume'])))
+            if float(trade['volume']) == nbrelot:
                 detail = {
                           "cmd": trade['cmd'],
                           "order": trade['order'],
