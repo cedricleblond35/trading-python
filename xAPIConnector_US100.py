@@ -540,7 +540,7 @@ async def main():
                         comment = "Achat support"
                         o.buyLimit(sl, tp, price, balance, VNL, comment)
 
-                    elif bougie1M01.get("AW") > -15  :
+                    elif bougie1M01.get("AW") > 15 and tick < bougie1M01.get("EMA26") :
                         print("strategie 2 Vente ***********************************************")
                         sl = zoneResistance(tick, zone) + 15
                         tp = zoneResistanceVente(tick, zone)
@@ -709,17 +709,15 @@ async def main():
                         #############" ordre en attente #################################################################
                         if TransactionSide.BUY_LIMIT == trade['cmd']:
                             if trade['customComment'] == "Achat support":
-                                sl = zoneResistanceVente(tick, zone)-15
-                                tp = zoneResistance(tick, zone)
-                                price = zoneResistanceVente(tick, zone)
-                                o.movebuyLimitWait(trade, sl, tp, price, balance, VNL)
-                            # else:
-                            #     print("move price buy !! :", trade)
-                            #     sl = superM01_1003T1
-                            #     tp = 0
-                            #
-                            #     price = zoneResistanceVente(tick, zone)
-                            #     o.movebuyLimitWait(trade, sl, tp, price, balance, VNL)
+                                if bougie1M01.get("AW") < -15 and tick < bougie1M01.get("EMA26"):
+                                    sl = zoneResistanceVente(tick, zone)-15
+                                    tp = zoneResistance(tick, zone)
+                                    price = zoneResistanceVente(tick, zone)
+                                    o.movebuyLimitWait(trade, sl, tp, price, balance, VNL)
+                                elif tick > bougie1M01.get("EMA26"):
+                                    o.delete(trade)
+
+
 
                         elif TransactionSide.SELL_LIMIT == trade['cmd']:
                             sl = zoneResistance(tick, zone) + 15

@@ -321,6 +321,15 @@ class Order:
                                                       }
                                               })
 
+    def delete(self, trade):
+        detail = {
+            "cmd": trade['cmd'],
+            "order": trade['order'],
+            "type": 4
+        }
+        print("detail :", detail)
+        resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
+
 def NbrLot(balance, position, stp, vnl):
     '''
     Calcul le nombre de posible à prendre
