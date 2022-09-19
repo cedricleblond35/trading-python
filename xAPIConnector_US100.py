@@ -437,8 +437,6 @@ async def main():
         o = Order(SYMBOL, dbStreaming, client, db["trade"])
         # logger.info("mise à jour du start fini ")
 
-        import datetime
-
         j = datetime.today().weekday()
         print(j)
         h = datetime.datetime.utcnow()
