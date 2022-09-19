@@ -1,15 +1,14 @@
-#!/usr/bin/python3
-from pymongo import MongoClient
+import datetime
 
-Client = MongoClient()
-myclient = MongoClient('localhost', 27017)
+j = datetime.datetime.today().weekday()
+print(j)
+h = datetime.datetime.utcnow()
+print(h)
+today = datetime.datetime.now()
+todayPlus2Hours = today + datetime.timedelta(hours=2)
 
-my_database = myclient["US100"]
-my_collection = my_database["D"]
+print(todayPlus2Hours)
 
-
-essai = my_collection.find().count()
-print(essai)
-# number of documents in the collection
-total_count = my_collection.count_documents({})
-print("Total number of documents : ", total_count)
+print(todayPlus2Hours.hour)
+print(todayPlus2Hours.minute)
+print(todayPlus2Hours.second)
