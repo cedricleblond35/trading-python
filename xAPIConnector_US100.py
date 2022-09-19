@@ -439,7 +439,7 @@ async def main():
 
         import datetime
 
-        j = datetime.datetime.today().weekday()
+        j = datetime.today().weekday()
         print(j)
         h = datetime.datetime.utcnow()
         print(h)
@@ -449,15 +449,14 @@ async def main():
         print(todayPlus2Hours)
 
         print(todayPlus2Hours.hour)
-        print(todayPlus2Hours.minute)
-        print(todayPlus2Hours.second)
 
         while True:
-            j = datetime.datetime.today().weekday() #0:lundi ; 4 vendredi
-            if 0 <= j < 5:
+            j = datetime.today().weekday() #0:lundi ; 4 vendredi
+            today = datetime.now()
+            todayPlus2Hours = today + datetime.timedelta(hours=2)
+            if 0 <= j < 5 and 2 < todayPlus2Hours < 22:
 
-                now = datetime.now()
-                current_time = now.strftime("%H:%M:%S")
+                current_time = today.strftime("%H:%M:%S")
                 print(
                     "*****************************************************************************************************")
                 print("Current Time =", current_time)
