@@ -438,11 +438,12 @@ async def main():
         # logger.info("mise à jour du start fini ")
 
         while True:
+            ############### gestion des jours et heures de trading ##########################""
             j = datetime.today().weekday() #0:lundi ; 4 vendredi
             today = datetime.now()
             todayPlus2Hours = today + timedelta(hours=2)
             if 0 <= j < 5 and 2 < todayPlus2Hours.hour < 22:
-
+                ############### calcul des indicateurs ##########################""
                 current_time = today.strftime("%H:%M:%S")
                 print(
                     "*****************************************************************************************************")
@@ -711,6 +712,7 @@ async def main():
                     else:
                         print("ordre en cours ...........................................")
                         for trade in tradeOpenDic['returnData']:
+                            print(trade['cmd'])
                             #############" ordre en attente #################################################################
                             if TransactionSide.BUY_LIMIT == trade['cmd']:
                                 print(trade)
@@ -726,6 +728,8 @@ async def main():
 
                             elif TransactionSide.SELL_LIMIT == trade['cmd']:
                                 if trade['customComment'] == "Vente support":
+                                    print("tick:", tick)
+                                    print("EMA26 :",bougie1M01.get("EMA26"))
                                     if bougie1M01.get("AW") > 15 and tick > bougie1M01.get("EMA26") :
                                         sl = zoneResistance(tick, zone) + 15
                                         tp = zoneResistanceVente(tick, zone)
