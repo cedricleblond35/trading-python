@@ -441,7 +441,7 @@ async def main():
             j = datetime.today().weekday() #0:lundi ; 4 vendredi
             today = datetime.now()
             todayPlus2Hours = today + timedelta(hours=2)
-            if 0 <= j < 5 and 2 < todayPlus2Hours < 22:
+            if 0 <= j < 5 and 2 < todayPlus2Hours.hour < 22:
 
                 current_time = today.strftime("%H:%M:%S")
                 print(
