@@ -299,6 +299,7 @@ class Order:
                                              "tradeTransInfo":
                                                  {
                                                      "cmd": trade['cmd'],
+                                                     "customComment": trade["customComment"],
                                                      "order": trade['order'],
                                                      "sl": sl,
                                                      "price": price , # TICK["bid"],
