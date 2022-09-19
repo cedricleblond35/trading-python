@@ -713,6 +713,7 @@ async def main():
                         print("ordre en cours ...........................................")
                         for trade in tradeOpenDic['returnData']:
                             print(trade)
+                            print(tick)
                             #############" ordre en attente #################################################################
                             if TransactionSide.BUY_LIMIT == trade['cmd']:
                                 print(trade)
