@@ -63,6 +63,7 @@ class Order:
         try:
             h = self.client.commandExecute('getServerTime')
             timeExpiration = h['returnData']['time'] + 3600000
+            print("**************comment :", comment)
 
             nbrelot = NbrLot(balance, price, sl, vnl)
             detail = {
@@ -152,6 +153,7 @@ class Order:
 
                 detail = {
                      "order": trade['order'],
+                    "customComment": trade["customComment"],
                      "sl": sl,
                      "price":  tick,
                      "symbol": trade["symbol"],
@@ -176,6 +178,7 @@ class Order:
             if sl < trade["sl"]:
                 detail = {
                      "order": trade['order'],
+                    "customComment": trade["customComment"],
                      "sl": sl,
                      "price": tick,  # TICK["bid"],
                      "symbol": trade["symbol"],
@@ -211,6 +214,7 @@ class Order:
             nbrelot = NbrLot(balance, price, sl)
             detail = {
                   "cmd": trade['order'],
+                "customComment": trade["customComment"],
                   "order": trade['order'],
                   "sl": sl,
                   "price": price,  # TICK["bid"],
@@ -243,6 +247,7 @@ class Order:
             if float(trade['volume']) == nbrelot:
                 detail = {
                           "cmd": trade['cmd'],
+                    "customComment": trade["customComment"],
                           "order": trade['order'],
                           "sl": sl,
                           "price": price,  # TICK["bid"],
