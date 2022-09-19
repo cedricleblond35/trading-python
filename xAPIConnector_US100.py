@@ -8,7 +8,7 @@ import asyncio
 import math as math
 import numpy as np
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
 from pymongo import MongoClient
 from Indicators.Awesome import Awesome
 from Service.Order import Order
@@ -440,7 +440,7 @@ async def main():
         while True:
             j = datetime.today().weekday() #0:lundi ; 4 vendredi
             today = datetime.now()
-            todayPlus2Hours = today + datetime.timedelta(hours=2)
+            todayPlus2Hours = today + timedelta(hours=2)
             if 0 <= j < 5 and 2 < todayPlus2Hours < 22:
 
                 current_time = today.strftime("%H:%M:%S")
