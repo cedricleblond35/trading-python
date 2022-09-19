@@ -540,22 +540,27 @@ async def main():
                         print("demarrage de selection d une strategie")
 
                         # strategie des achats et ventes des support
-                        if bougie1M01.get("AW") < -15 and tick < bougie1M01.get("EMA26"):
-                            print("strategie 1 support***********************************************")
-                            sl = zoneResistanceVente(tick, zone)-15
-                            tp = zoneResistance(tick, zone)
-                            price = zoneResistanceVente(tick, zone)
-                            comment = "Achat support"
-                            o.buyLimit(sl, tp, price, balance, VNL, comment)
+                        if bougie1M01.get("AW") is not None and bougie1M01.get("EMA26") is not None:
+                            if bougie3M01.get("AW") > bougie2M01.get("AW") \
+                                    and bougie2M01.get("AW") < bougie1M01.get("AW") < -15 \
+                                    and tick < bougie1M01.get("EMA26"):
+                                print("strategie 1 support***********************************************")
+                                sl = zoneResistanceVente(tick, zone)-15
+                                tp = zoneResistance(tick, zone)
+                                price = zoneResistanceVente(tick, zone)
+                                comment = "Achat support"
+                                o.buyLimit(sl, tp, price, balance, VNL, comment)
 
-                        elif bougie1M01.get("AW") > 15 and tick > bougie1M01.get("EMA26") :
-                            print("strategie 2 Vente ***********************************************")
-                            sl = zoneResistance(tick, zone) + 15
-                            tp = zoneResistanceVente(tick, zone)
-                            price = zoneResistance(tick, zone)
-                            comment = "Vente support"
-                            print("tick :", tick)
-                            o.sellLimit(sl, tp, price, balance, VNL, comment)
+                            elif bougie3M01.get("AW") < bougie2M01.get("AW") \
+                                    and bougie2M01.get("AW") > bougie1M01.get("AW") > 15 \
+                                    and tick > bougie1M01.get("EMA26") :
+                                print("strategie 2 Vente ***********************************************")
+                                sl = zoneResistance(tick, zone) + 15
+                                tp = zoneResistanceVente(tick, zone)
+                                price = zoneResistance(tick, zone)
+                                comment = "Vente support"
+                                print("tick :", tick)
+                                o.sellLimit(sl, tp, price, balance, VNL, comment)
 
 
                         # elif bougie1M01.get("AW") < bougie2M01.get("AW") < bougie3M01.get("AW") and bougie1M01.get("AW") \
