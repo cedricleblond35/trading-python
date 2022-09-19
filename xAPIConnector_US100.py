@@ -348,7 +348,8 @@ def zoneResistance(close, zone):
     for v in arrayT:
         if v > close and resistance == 0:
             resistance = v
-    return resistance
+            return resistance
+    return None
 
 
 def zoneResistanceVente(close, zone):
@@ -357,7 +358,8 @@ def zoneResistanceVente(close, zone):
     for v in arrayT:
         if v < close and resistance == 0:
             resistance = v
-    return resistance
+            return resistance
+    return None
 
 
 def subscribe(loginResponse):
@@ -552,6 +554,7 @@ async def main():
                             tp = zoneResistanceVente(tick, zone)
                             price = zoneResistance(tick, zone)
                             comment = "Vente support"
+                            print("tick :", tick)
                             o.sellLimit(sl, tp, price, balance, VNL, comment)
 
 
