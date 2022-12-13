@@ -78,7 +78,8 @@ class MM(Price):
             α = round(2 / (duration + 1), 5)
             self._prepareListData()                         #toutes les bougies
             self._prepareListEMA(0, duration, name)         #toutes les bougies ne possédant pas EMA (HORS LES X PREMIÈRES)
-
+            print("----- calcul ", name)
+            print("----- _listDataLast :", len(self._listDataLast))
             if len(self._listDataLast) > 1:
                 #1 ou plusieurs bougies sont à traiter
                 # configurer le start et EMAPrecedent
