@@ -525,7 +525,7 @@ async def main():
                         print("superM05t1 :", superM05t1)
 
                         # strategie des achats et ventes des support
-                        if bougie0M05.get("EMA40") is not None and bougie0M05.get("EMA70") is not None and superM05t1 is not None:
+                        if bougie1M05.get("EMA40") is not None and bougie1M05.get("EMA70") is not None and superM05t1 is not None:
                             print("************ Analyse strategie 1 ***********************************************")
                             if superM05t1 < bougie0M05["close"] and bougie0M05.get("EMA70") < bougie0M05["close"]:
                                 print("strategie 1 achat ***********************************************")
