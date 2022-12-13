@@ -707,15 +707,15 @@ async def main():
                                 print(trade)
                                 sl = superM05t1
                                 tp = 0
-                                price = bougie0M05.get("EMA70")
+                                price = bougie1M05.get("EMA70")
                                 comment = "Achat buyLimit: strategie 1"
                                 o.movebuyLimitWait(trade, sl, tp, price, balance, VNL)
 
 
                             elif TransactionSide.SELL_LIMIT == trade['cmd']:
-                                sl = zoneResistance(tick, zone) + 15
-                                tp = zoneResistanceVente(tick, zone)
-                                price = zoneResistance(tick, zone)
+                                sl = superM05t1
+                                tp = 0
+                                price = bougie1M05.get("EMA70")
                                 o.moveSellLimitWait(trade, sl, tp, price, balance, VNL)
 
                             #o.delete(trade)
