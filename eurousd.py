@@ -531,14 +531,14 @@ async def main():
                                 print("strategie 1 achat ***********************************************")
                                 sl = superM05t1
                                 tp = 0
-                                price = bougie0M05.get("EMA70")
+                                price = bougie1M05.get("EMA70")
                                 comment = "Achat buyLimit: strategie 1"
                                 o.buyLimit(sl, tp, price, balance, VNL, comment)
                             elif superM05t1 > bougie0M05["close"] and bougie1M05.get("EMA70") > bougie0M05["close"]:
                                 print("strategie 1 vente ***********************************************")
                                 sl = superM05t1
                                 tp = 0
-                                price = bougie0M05.get("EMA70")
+                                price = bougie1M05.get("EMA70")
                                 comment = "Achat sellLimit: strategie 1"
                                 o.sellLimit(sl, tp, price, balance, VNL, comment)
 
