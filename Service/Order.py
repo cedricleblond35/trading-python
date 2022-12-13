@@ -24,8 +24,8 @@ class Order:
     ################## ordre avec limit #################################################
     def buyLimit(self,  sl, tp, price, balance, vnl, comment="buyLimit"):
         try:
-            tp = round(tp, 1)
-            sl = round(sl, 1)
+            # tp = round(tp, 1)
+            # sl = round(sl, 1)
 
             h = self.client.commandExecute('getServerTime')
             timeExpiration = h['returnData']['time'] + 3600000
@@ -94,8 +94,8 @@ class Order:
 
     ################### ordre direct ##################################################
     def sellNow(self, sl, tp, price, balance, vnl, comment=""):
-        tp = round(tp, 1)
-        sl = round(sl, 1)
+        # tp = round(tp, 1)
+        # sl = round(sl, 1)
 
         h = self.client.commandExecute('getServerTime')
         timeExpiration = h['returnData']['time'] + 3600000
@@ -123,8 +123,8 @@ class Order:
         '''
 
     def buyNow(self, sl, tp, price, balance, vnl, comment=""):
-        tp = round(tp, 1)
-        sl = round(sl, 1)
+        # tp = round(tp, 1)
+        # sl = round(sl, 1)
         h = self.client.commandExecute('getServerTime')
         timeExpiration = h['returnData']['time'] + 3600000
         nbrelot = NbrLot(balance, price, sl, vnl)
@@ -205,8 +205,8 @@ class Order:
         try:
 
             # print("------------- movebuyLimit -----------------")
-            tp = round(tp, 1)
-            sl = round(sl, 1)
+            # tp = round(tp, 1)
+            # sl = round(sl, 1)
 
             h = self.client.commandExecute('getServerTime')
             timeExpiration = h['returnData']['time'] + 3600000
@@ -240,8 +240,8 @@ class Order:
         try:
             logger.info("------------- movebuyLimitWait ************************-----------------")
             print("trade :", trade)
-            tp = round(tp, 1)
-            sl = round(sl, 1)
+            # tp = round(tp, 1)
+            # sl = round(sl, 1)
 
             nbrelot = NbrLot(balance, price, sl, vnl)
             if float(trade['volume']) == nbrelot:
@@ -287,8 +287,8 @@ class Order:
     def moveSellLimitWait(self,trade, sl , tp, price, balance, vnl):
         logger.info("------------- moveSellLimit ************************-----------------")
         print("trade :", trade)
-        tp = round(tp, 1)
-        sl = round(sl, 1)
+        # tp = round(tp, 1)
+        # sl = round(sl, 1)
         nbrelot = NbrLot(balance, price, sl, vnl)
         print(float(trade['volume']) ,"==", nbrelot)
 
