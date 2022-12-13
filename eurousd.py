@@ -520,6 +520,9 @@ async def main():
                         ###############################################################################################################
                         print("-- Aucun ordre   ***************************************")
                         print("demarrage de selection d une strategie")
+                        print("mea 40 :", bougie0M05.get("EMA40"))
+                        print("mea 70: ", bougie0M05.get("EMA70"))
+                        print("superM05t1 :", superM05t1)
 
                         # strategie des achats et ventes des support
                         if bougie0M05.get("EMA40") is not None and bougie0M05.get("EMA70") is not None and superM05t1 is not None:
