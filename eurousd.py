@@ -543,15 +543,16 @@ async def main():
                                 comment = "Achat sellLimit: strategie 1"
                                 o.sellLimit(sl, tp, price, balance, VNL, comment)
 
-
                     else:
                         print("ordre en cours ...........................................")
+                        print("bougie1M05 :", bougie1M05)
                         for trade in tradeOpenDic['returnData']:
                             print(trade)
                             print(tick)
                             #############" ordre en attente #################################################################
                             if TransactionSide.BUY_LIMIT == trade['cmd']:
-                                print(trade)
+                                print("move BUY_LIMIT")
+                                print("trade :", trade)
                                 sl = superM05t1
                                 tp = 0
                                 price = bougie1M05.get("EMA70")+SPREAD
@@ -560,6 +561,9 @@ async def main():
 
 
                             elif TransactionSide.SELL_LIMIT == trade['cmd']:
+                                print("move SELL_LIMIT")
+
+                                print("trade :" ,trade)
                                 sl = superM05t1
                                 tp = 0
                                 price = bougie1M05.get("EMA70")-SPREAD
