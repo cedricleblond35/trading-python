@@ -424,9 +424,9 @@ async def main():
         # # # moyen mobile ##################################################################################################
         moyMobil_05_120 = MM(SYMBOL, "M05", 0)
 
-        await moyMobil_05_120.EMA(120)
-        await moyMobil_05_120.EMA(70)
-        await moyMobil_05_120.EMA(40)
+        await moyMobil_05_120.EMA(120, 5)
+        await moyMobil_05_120.EMA(70, 5)
+        await moyMobil_05_120.EMA(40, 5)
         #
         # # Awesome ##################################################################################################
         ao05 = Awesome(SYMBOL, "M05")
@@ -455,15 +455,15 @@ async def main():
                 await majDatAall(client, SYMBOL, db)
                 # ####################################################################################################
                 #
-                await moyMobil_05_120.EMA(120)
-                await moyMobil_05_120.EMA(70)
-                await moyMobil_05_120.EMA(40)
+                await moyMobil_05_120.EMA(120, 5)
+                await moyMobil_05_120.EMA(70, 5)
+                await moyMobil_05_120.EMA(40, 5)
                 #
                 # # AO ###################################################################################
                 await ao05.calculLastCandle(10)
                 #
                 # # supertrend ###################################################################################
-                spM05 = Supertrend(SYMBOL, "M05", 15, 6)
+                spM05 = Supertrend(SYMBOL, "M05", 15, 6, 5)
                 superM05T0, superM05t1, superM05T2 = spM05.getST()
                 #
                 now = datetime.now()

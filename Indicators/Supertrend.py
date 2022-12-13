@@ -5,7 +5,7 @@ pd.options.mode.chained_assignment = None  # default='warn'
 
 
 class Supertrend(Price):
-    def __init__(self, symbol, timeframe,  periode= 10, multplicateur = 3, duration=100,shift=0):
+    def __init__(self, symbol, timeframe,  periode= 10, multplicateur = 3, arrondi = 2, duration=100,shift=0):
         '''
 
         :param symbol: Symbole à calculer (DE30, SILVER ...)
@@ -21,6 +21,7 @@ class Supertrend(Price):
         self.__duration = duration
         self.__periode = periode
         self.__multplicateur = multplicateur
+        self.__arrondi = arrondi
 
         self.__st = self.__ST()
 
@@ -93,7 +94,7 @@ class Supertrend(Price):
         #print("SuperTrend 1:", df['SuperTrend'][len(df)-1])
         #print("SuperTrend 2:", df['SuperTrend'][len(df) - 2])
         #print("SuperTrend arrondi:", round(df['SuperTrend'][len(df)-1], 2))
-        return round(df['SuperTrend'][len(df)-1], 2), round(df['SuperTrend'][len(df)-2], 2), round(df['SuperTrend'][len(df)-3], 2)
+        return round(df['SuperTrend'][len(df)-1], self.__arrondi), round(df['SuperTrend'][len(df)-2], self.__arrondi), round(df['SuperTrend'][len(df)-3], self.__arrondi)
 
     def getST(self):
         return self.__st

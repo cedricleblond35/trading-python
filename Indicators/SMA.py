@@ -61,7 +61,7 @@ class MM(Price):
 
         # return sma
 
-    async def EMA(self, duration):
+    async def EMA(self, duration, arrondi):
         """
         EMA = (CLOSE (i) * P) + (EMA (i - 1) * (1 - P))
         (prix de clôture – EMA du jour précédent) × constante pondérant la moyenne mobile exponentielle en décimale + EMA du jour précédent
@@ -114,11 +114,11 @@ class MM(Price):
                 for i in range(0, len(list)):
                     if EMAPrecedent > 0:
                         close = list[i]["close"]
-                        ema = round((close * α) + (EMAPrecedent * (1 - α)), 2)
+                        ema = round((close * α) + (EMAPrecedent * (1 - α)), arrondi)
 
                         newvalues = {
                             "$set": {
-                                name: round(ema, 2)
+                                name: round(ema, arrondi)
                             }}
                         myquery = {"ctm": list[i]["ctm"]}
                         self._db[self.__timeframe].update_one(myquery, newvalues)
@@ -133,7 +133,7 @@ class MM(Price):
                         self._db[self.__timeframe].update_one(myquery, newvalues)
                         EMAPrecedent = list[i][nameSMA]
                     else:
-                        mm = round(self._avgClose(duration), 2)
+                        mm = round(self._avgClose(duration), arrondi)
                         newvalues = {
                             "$set": {
                                 name: mm
