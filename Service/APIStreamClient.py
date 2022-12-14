@@ -82,6 +82,7 @@ class APIStreamClient(JsonSocket):
         self.execute(dict(command='getProfits', streamSessionId=self._ssId))
 
     def subscribeNews(self):
+        print("subscribe News")
         self.execute(dict(command='getNews', streamSessionId=self._ssId))
 
     def unsubscribePrice(self, symbol):

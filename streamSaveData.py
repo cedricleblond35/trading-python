@@ -29,25 +29,6 @@ API_MAX_CONN_TRIES = 3
 WRAPPER_NAME = 'python'
 WRAPPER_VERSION = '2.5.0'
 
-# Variables perso--------------------------------------------------------------------------------------------------------
-# horaire---------------
-TradeStartTime = 4
-TradeStopTime = 23
-# gestion managment-----
-Risk = 1.00  # risk %
-TakeProfit = 50
-StopLoss = 10
-ObjectfDay = 1.00
-# communication---------
-SignalMail = False
-
-BALANCE = 0
-
-# DE30 --------------------------
-# le cout d un pip = 25€ * 0.01
-PRICE = 25
-PIP = 0.01
-
 # logger properties
 logger = logging.getLogger("jsonSocket")
 FORMAT = '[%(asctime)-15s][%(funcName)s:%(lineno)d] %(message)s'

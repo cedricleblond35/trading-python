@@ -46,8 +46,9 @@ class Command:
         self.profit = dataDownload['data']
 
     def procNewsExample(self, msg):
-        # print("NEWS: ", msg)
-        pass
+        print("************* NEWS: ", msg)
+        dataDownload = json.loads(json.dumps(msg))
+        self.news = dataDownload['data']
 
     def getTick(self):
         return self.tick

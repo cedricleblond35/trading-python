@@ -374,11 +374,12 @@ def subscribe(loginResponse):
         tradeStatusFun=c.procTradeStatusExample,
         profitFun=c.procProfitExample
     )
-    sclient.subscribePrice("US100")
+    sclient.subscribePrice("EURUSD")
     sclient.subscribeProfits()
     sclient.subscribeTradeStatus()
     sclient.subscribeTrades()
     sclient.subscribeBalance()
+    sclient.subscribeNews()
 
     return sclient, c
 
@@ -441,6 +442,8 @@ async def main():
             j = datetime.today().weekday() #0:lundi ; 4 vendredi
             today = datetime.now()
             todayPlus2Hours = today + timedelta(hours=2)
+            print("jours :", j)
+            print("heure :", todayPlus2Hours.hour)
             if 0 <= j < 5 and 2 < todayPlus2Hours.hour < 22:
                 ############### calcul des indicateurs ##########################""
                 current_time = today.strftime("%H:%M:%S")
@@ -562,7 +565,6 @@ async def main():
 
                             elif TransactionSide.SELL_LIMIT == trade['cmd']:
                                 print("move SELL_LIMIT")
-
                                 print("trade :" ,trade)
                                 sl = superM05t1
                                 tp = 0
