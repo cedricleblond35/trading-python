@@ -469,6 +469,7 @@ async def main():
                 # # supertrend ###################################################################################
                 spM05 = Supertrend(SYMBOL, "M05", 15, 6, 5)
                 superM05T0, superM05t1, superM05T2 = spM05.getST()
+                print("superM05t1 :", superM05t1)
                 #
                 now = datetime.now()
                 current_time = now.strftime("%H:%M:%S")
