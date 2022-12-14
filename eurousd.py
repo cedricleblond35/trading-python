@@ -441,7 +441,7 @@ async def main():
             ############### gestion des jours et heures de trading ##########################""
             j = datetime.today().weekday() #0:lundi ; 4 vendredi
             today = datetime.now()
-            todayPlus2Hours = today + timedelta(hours=2)
+            todayPlus2Hours = today + timedelta(hours=1)
             print("jours :", j)
             print("heure :", todayPlus2Hours.hour)
             if 0 <= j < 5 and 2 < todayPlus2Hours.hour < 22:
@@ -594,7 +594,7 @@ async def main():
                                         sl = trade['open_price'] + 3
                                         o.moveStopBuy(trade, sl, tick)
                                     else:
-                                        sl = round(superM05t1 - ecart / 4, 2)
+                                        sl = round(superM05t1 - ecart / 4, 5)
                                         print("sl superM01_1003T1:", sl)
                                         o.moveStopBuy(trade, sl, tick)
 
@@ -616,7 +616,7 @@ async def main():
                                         o.moveStopSell(trade, sl, tick)
                                     else:
                                         print("vente direct ok : sl :", superM05t1)
-                                        sl = round(superM05t1 + ecart / 4, 2)
+                                        sl = round(superM05t1 + ecart / 4, 5)
                                         o.moveStopSell(trade, sl, tick)
 
                         print("ordre en cours   END...........................................")
