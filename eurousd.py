@@ -435,7 +435,7 @@ async def main():
         await ao05.calculAllCandles()
         #
         o = Order(SYMBOL, dbStreaming, client, db["trade"])
-        # logger.info("mise à jour du start fini ")
+        logger.info("mise à jour du start fini ")
 
         while True:
             ############### gestion des jours et heures de trading ##########################""
@@ -527,6 +527,7 @@ async def main():
                         print("mea 40 :", bougie1M05.get("EMA40"))
                         print("mea 70: ", bougie1M05.get("EMA70"))
                         print("superM05t1 :", superM05t1)
+                        print("bougie5 :", bougie0M05["close"])
 
                         # strategie des achats et ventes des support
                         if bougie1M05.get("EMA40") is not None and bougie1M05.get("EMA70") is not None and superM05t1 is not None:

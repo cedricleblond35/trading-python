@@ -94,7 +94,7 @@ class Supertrend(Price):
         #print("SuperTrend 1:", df['SuperTrend'][len(df)-1])
         #print("SuperTrend 2:", df['SuperTrend'][len(df) - 2])
         #print("SuperTrend arrondi:", round(df['SuperTrend'][len(df)-1], 2))
-        return round(df['SuperTrend'][len(df)-1], self.__arrondi), round(df['SuperTrend'][len(df)-2], self.__arrondi), round(df['SuperTrend'][len(df)-3], self.__arrondi)
+        return round(df['SuperTrend'][len(df)-1], 2), round(df['SuperTrend'][len(df)-2], 2), round(df['SuperTrend'][len(df)-3], 2)
 
     def getST(self):
         return self.__st
