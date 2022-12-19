@@ -112,10 +112,21 @@ VNL = 25
 SPREAD = 0.0001
 
 
-# logger properties
-logger = logging.getLogger("jsonSocket")
-FORMAT = '[%(asctime)-15s][%(funcName)s:%(lineno)d] %(message)s'
-logging.basicConfig(format=FORMAT)
+# logger properties-------------------------------------------------------------------------------------------------------
+logger = logging.getLogger('mylogger')
+#set logger level
+logger.setLevel(logging.WARNING)
+#or you can set one of the following level
+#logger.setLevel(logging.INFO)
+#logger.setLevel(logging.DEBUG)
+
+handler = logging.FileHandler('mylog.log')
+
+# create a logging format
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+handler.setFormatter(formatter)
+
+logger.addHandler(handler)
 
 # set to true on debug environment only
 DEBUG = True
@@ -125,6 +136,7 @@ if DEBUG:
 else:
     logger.setLevel(logging.CRITICAL)
 
+#----------------------------------------------------------------------------------------------------------
 
 def startEA_Horaire():
     time = datetime.now().time()
@@ -625,17 +637,20 @@ async def main():
                 time.sleep(30)
 
     except Exception as exc:
-        logger.info("le programe a déclenché une erreur le",j , " à ", todayPlus2Hours.hour)
-        logger.info("exception :", exc.__class__)
-        logger.info("message", exc)
+        logger.warning("le programe a déclenché une erreur le",j , " à ", todayPlus2Hours.hour)
+        logger.warning("exception :", exc.__class__)
+        logger.warning("message", exc)
         exc_type, exc_obj, exc_tb = sys.exc_info()
         fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-        logger.info(exc_type, fname, exc_tb.tb_lineno)
+        logger.warning(exc_type, fname, exc_tb.tb_lineno)
+        template = "An exception of type {0} occurred. Arguments:\n{1!r}"
+        message = template.format(type(ex).__name__, ex.args)
+        logger.warning("message detail", message)
         client.disconnect()
         exit(0)
 
     except OSError as err:
-        logger.info("OS error: {0}".format(err))
+        logger.warning("OS error: {0}".format(err))
         client.disconnect()
         exit(0)
 

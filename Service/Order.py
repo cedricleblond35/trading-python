@@ -10,7 +10,31 @@ import logging
 from Service.TransactionSide import TransactionSide
 
 
-logger = logging.getLogger("jsonSocket")
+# logger properties-------------------------------------------------------------------------------------------------------
+logger = logging.getLogger('mylogger')
+#set logger level
+logger.setLevel(logging.WARNING)
+#or you can set one of the following level
+#logger.setLevel(logging.INFO)
+#logger.setLevel(logging.DEBUG)
+
+handler = logging.FileHandler('mylog.log')
+
+# create a logging format
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+handler.setFormatter(formatter)
+
+logger.addHandler(handler)
+
+# set to true on debug environment only
+DEBUG = True
+
+if DEBUG:
+    logger.setLevel(logging.DEBUG)
+else:
+    logger.setLevel(logging.CRITICAL)
+
+#----------------------------------------------------------------------------------------------------------
 
 class Order:
     def __init__(self, symbol, dbStreaming, client, dbTrade):
@@ -50,12 +74,12 @@ class Order:
             self.dbTrade.insert_one(detail)
 
         except Exception as exc:
-            logger.info("le programe a déclenché une erreur dans l ordre")
-            logger.info("exception :", exc.__class__)
-            logger.info("message", exc)
+            logger.warning("le programe a déclenché une erreur dans l ordre")
+            logger.warning("exception :", exc.__class__)
+            logger.warning("message", exc)
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            logger.info(exc_type, fname, exc_tb.tb_lineno)
+            logger.warning(exc_type, fname, exc_tb.tb_lineno)
 
     def sellLimit(self,  sl, tp, price, balance, vnl, comment="sellLimit"):
         try:
@@ -77,17 +101,17 @@ class Order:
                 "volume": nbrelot
             }
             print("sell limit :", detail)
-            #logger.info("detail :", detail)
+            #logger.info"detail :", detail)
             resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
             detail['resp'] = resp
             self.dbTrade.insert_one(detail)
         except Exception as exc:
-            logger.info("le programe a déclenché une erreur dans l ordre")
-            logger.info("exception :", exc.__class__)
-            logger.info("message", exc)
+            logger.warning("le programe a déclenché une erreur dans l ordre")
+            logger.warning("exception :", exc.__class__)
+            logger.warning("message", exc)
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            logger.info(exc_type, fname, exc_tb.tb_lineno)
+            logger.warning(exc_type, fname, exc_tb.tb_lineno)
 
     ################### ordre direct ##################################################
     def sellNow(self, sl, tp, price, balance, vnl, comment=""):
@@ -162,12 +186,12 @@ class Order:
                 resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
 
         except Exception as exc:
-            logger.info("le programe a déclenché une erreur dans l ordre")
-            logger.info("exception :", exc.__class__)
-            logger.info("message", exc)
+            logger.warning("le programe a déclenché une erreur dans l ordre")
+            logger.warning("exception :", exc.__class__)
+            logger.warning("message", exc)
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            logger.info(exc_type, fname, exc_tb.tb_lineno)
+            logger.warning(exc_type, fname, exc_tb.tb_lineno)
 
     def moveStopSell(self, trade, sl, tick):
         try:
@@ -187,12 +211,12 @@ class Order:
 
                 logger.info("resp moveStopSell:", resp)
         except Exception as exc:
-            logger.info("le programe a déclenché une erreur dans l ordre")
-            logger.info("exception :", exc.__class__)
-            logger.info("message", exc)
+            logger.warning("le programe a déclenché une erreur dans l ordre")
+            logger.warning("exception :", exc.__class__)
+            logger.warning("message", exc)
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            logger.info(exc_type, fname, exc_tb.tb_lineno)
+            logger.warning(exc_type, fname, exc_tb.tb_lineno)
 
     ###############################################################
 
@@ -223,12 +247,12 @@ class Order:
             resp = self.client.commandExecute('tradeTransaction',  {"tradeTransInfo": detail })
             #logger.info("resp :", resp)
         except Exception as exc:
-            logger.info("le programe a déclenché une erreur dans l ordre")
-            logger.info("exception :", exc.__class__)
-            logger.info("message", exc)
+            logger.warning("le programe a déclenché une erreur dans l ordre")
+            logger.warning("exception :", exc.__class__)
+            logger.warning("message", exc)
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            logger.info(exc_type, fname, exc_tb.tb_lineno)
+            logger.warning(exc_type, fname, exc_tb.tb_lineno)
 
     def movebuyLimitWait(self,trade, sl, tp, price, balance, vnl, comment=""):
         try:
@@ -270,12 +294,12 @@ class Order:
 
             #logger.info("resp :", resp)
         except Exception as exc:
-            logger.info("le programe a déclenché une erreur dans l ordre")
-            logger.info("exception :", exc.__class__)
-            logger.info("message", exc)
+            logger.warning("le programe a déclenché une erreur dans l ordre")
+            logger.warning("exception :", exc.__class__)
+            logger.warning("message", exc)
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            logger.info(exc_type, fname, exc_tb.tb_lineno)
+            logger.warning(exc_type, fname, exc_tb.tb_lineno)
 
     def moveSellLimitWait(self,trade, sl , tp, price, balance, vnl):
         logger.info("------------- moveSellLimit ************************-----------------")
