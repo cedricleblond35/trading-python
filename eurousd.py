@@ -636,14 +636,14 @@ async def main():
                 time.sleep(30)
 
     except Exception as exc:
-        logger.warning("le programe a déclenché une erreur le",j , " à ", todayPlus2Hours.hour)
+        logger.warning("le programe a déclenché une erreur ")
         logger.warning("exception :", exc.__class__)
         logger.warning("message", exc)
         exc_type, exc_obj, exc_tb = sys.exc_info()
         fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
         logger.warning(exc_type, fname, exc_tb.tb_lineno)
         template = "An exception of type {0} occurred. Arguments:\n{1!r}"
-        message = template.format(type(ex).__name__, ex.args)
+        message = template.format(type(exc).__name__, exc.args)
         logger.warning("message detail", message)
         client.disconnect()
         exit(0)

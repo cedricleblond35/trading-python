@@ -80,6 +80,9 @@ class Order:
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
             logger.warning(exc_type, fname, exc_tb.tb_lineno)
+            template = "An exception of type {0} occurred. Arguments:\n{1!r}"
+            message = template.format(type(exc).__name__, exc.args)
+            logger.warning("message detail", message)
 
     def sellLimit(self,  sl, tp, price, balance, vnl, comment="sellLimit"):
         try:
@@ -112,6 +115,9 @@ class Order:
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
             logger.warning(exc_type, fname, exc_tb.tb_lineno)
+            template = "An exception of type {0} occurred. Arguments:\n{1!r}"
+            message = template.format(type(exc).__name__, exc.args)
+            logger.warning("message detail", message)
 
     ################### ordre direct ##################################################
     def sellNow(self, sl, tp, price, balance, vnl, comment=""):
@@ -192,6 +198,9 @@ class Order:
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
             logger.warning(exc_type, fname, exc_tb.tb_lineno)
+            template = "An exception of type {0} occurred. Arguments:\n{1!r}"
+            message = template.format(type(exc).__name__, exc.args)
+            logger.warning("message detail", message)
 
     def moveStopSell(self, trade, sl, tick):
         try:
@@ -217,6 +226,9 @@ class Order:
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
             logger.warning(exc_type, fname, exc_tb.tb_lineno)
+            template = "An exception of type {0} occurred. Arguments:\n{1!r}"
+            message = template.format(type(exc).__name__, exc.args)
+            logger.warning("message detail", message)
 
     ###############################################################
 
@@ -253,6 +265,9 @@ class Order:
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
             logger.warning(exc_type, fname, exc_tb.tb_lineno)
+            template = "An exception of type {0} occurred. Arguments:\n{1!r}"
+            message = template.format(type(exc).__name__, exc.args)
+            logger.warning("message detail", message)
 
     def movebuyLimitWait(self,trade, sl, tp, price, balance, vnl, comment=""):
         try:
@@ -300,6 +315,9 @@ class Order:
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
             logger.warning(exc_type, fname, exc_tb.tb_lineno)
+            template = "An exception of type {0} occurred. Arguments:\n{1!r}"
+            message = template.format(type(exc).__name__, exc.args)
+            logger.warning("message detail", message)
 
     def moveSellLimitWait(self,trade, sl , tp, price, balance, vnl):
         logger.info("------------- moveSellLimit ************************-----------------")
