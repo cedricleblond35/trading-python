@@ -1,5 +1,4 @@
 from Configuration.Config import Config
-import json
 import math as math
 import smtplib
 from email.mime.multipart import MIMEMultipart
@@ -51,13 +50,12 @@ class Order:
             self.dbTrade.insert_one(detail)
 
         except Exception as exc:
-            logger.info("le programe a déclenché une erreur")
-            logger.info("exception de mtype ", exc.__class__)
+            logger.info("le programe a déclenché une erreur dans l ordre")
+            logger.info("exception :", exc.__class__)
             logger.info("message", exc)
-            sendMail("Erreur ordre", exc)
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            print(exc_type, fname, exc_tb.tb_lineno)
+            logger.info(exc_type, fname, exc_tb.tb_lineno)
 
     def sellLimit(self,  sl, tp, price, balance, vnl, comment="sellLimit"):
         try:
@@ -84,10 +82,9 @@ class Order:
             detail['resp'] = resp
             self.dbTrade.insert_one(detail)
         except Exception as exc:
-            logger.info("le programe a déclenché une erreur")
-            logger.info("exception de mtype ", exc.__class__)
+            logger.info("le programe a déclenché une erreur dans l ordre")
+            logger.info("exception :", exc.__class__)
             logger.info("message", exc)
-            sendMail("Erreur ordre", exc)
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
             logger.info(exc_type, fname, exc_tb.tb_lineno)
@@ -165,10 +162,9 @@ class Order:
                 resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
 
         except Exception as exc:
-            logger.info("le programe a déclenché une erreur")
-            logger.info("exception de mtype ", exc.__class__)
+            logger.info("le programe a déclenché une erreur dans l ordre")
+            logger.info("exception :", exc.__class__)
             logger.info("message", exc)
-            sendMail("Erreur ordre", exc)
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
             logger.info(exc_type, fname, exc_tb.tb_lineno)
@@ -191,10 +187,9 @@ class Order:
 
                 logger.info("resp moveStopSell:", resp)
         except Exception as exc:
-            logger.info("le programe a déclenché une erreur")
-            logger.info("exception de mtype ", exc.__class__)
+            logger.info("le programe a déclenché une erreur dans l ordre")
+            logger.info("exception :", exc.__class__)
             logger.info("message", exc)
-            sendMail("Erreur ordre", exc)
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
             logger.info(exc_type, fname, exc_tb.tb_lineno)
@@ -228,10 +223,9 @@ class Order:
             resp = self.client.commandExecute('tradeTransaction',  {"tradeTransInfo": detail })
             #logger.info("resp :", resp)
         except Exception as exc:
-            logger.info("le programe a déclenché une erreur")
-            logger.info("exception de mtype ", exc.__class__)
+            logger.info("le programe a déclenché une erreur dans l ordre")
+            logger.info("exception :", exc.__class__)
             logger.info("message", exc)
-            sendMail("Erreur ordre", exc)
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
             logger.info(exc_type, fname, exc_tb.tb_lineno)
@@ -276,10 +270,9 @@ class Order:
 
             #logger.info("resp :", resp)
         except Exception as exc:
-            logger.info("le programe a déclenché une erreur")
-            logger.info("exception de mtype ", exc.__class__)
+            logger.info("le programe a déclenché une erreur dans l ordre")
+            logger.info("exception :", exc.__class__)
             logger.info("message", exc)
-            sendMail("Erreur ordre", exc)
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
             logger.info(exc_type, fname, exc_tb.tb_lineno)
