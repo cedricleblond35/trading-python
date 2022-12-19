@@ -393,7 +393,6 @@ def subscribe(loginResponse):
     sclient.subscribeTradeStatus()
     sclient.subscribeTrades()
     sclient.subscribeBalance()
-    sclient.subscribeNews()
 
     return sclient, c
 
