@@ -188,10 +188,12 @@ async def insertData(collection, dataDownload, lastBougieDB):
     except Exception as exc:
         print("insertData a déclenché une erreur")
         print("exception de mtype ", exc.__class__)
-        print("message", exc)
+        template = "An exception of type {0} occurred. Arguments:\n{1!r}"
+        message = template.format(type(exc).__name__, exc.args)
+        print(exc)
         exc_type, exc_obj, exc_tb = sys.exc_info()
         fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-        print(exc_type, fname, exc_tb.tb_lineno)
+        print("Details : ", exc_type, fname, exc_tb.tb_lineno)
 
 
 
