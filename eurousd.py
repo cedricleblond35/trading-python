@@ -7,7 +7,7 @@ import sys
 import asyncio
 import math as math
 import numpy as np
-import logging
+
 
 from datetime import datetime, timedelta
 from pymongo import MongoClient
