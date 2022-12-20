@@ -4,8 +4,6 @@ import logging
 
 class Log:
     def __init__(self):
-
-        # logger properties-------------------------------------------------------------------------------------------------------
         self.logger = logging.getLogger('mylogger')
         self.__formatLogger()
         self.__level()
