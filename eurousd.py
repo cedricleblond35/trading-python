@@ -8,6 +8,7 @@ import asyncio
 import math as math
 import numpy as np
 import logging
+
 from datetime import datetime, timedelta
 from pymongo import MongoClient
 from Indicators.Awesome import Awesome
@@ -19,6 +20,7 @@ from Service.APIStreamClient import APIStreamClient
 from Service.Command import Command
 from Indicators.Supertrend import Supertrend
 from Service.TransactionSide import TransactionSide
+from Configuration.Log import Log
 
 '''
 Grace à lza liste des trade enregistrés ds la table trade
@@ -111,31 +113,6 @@ SYMBOL = "EURUSD"
 VNL = 25
 SPREAD = 0.0001
 
-
-# logger properties-------------------------------------------------------------------------------------------------------
-logger = logging.getLogger('mylogger')
-#set logger level
-logger.setLevel(logging.WARNING)
-#or you can set one of the following level
-#logger.setLevel(logging.INFO)
-#logger.setLevel(logging.DEBUG)
-
-handler = logging.FileHandler('mylog.log')
-
-# create a logging format
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-handler.setFormatter(formatter)
-
-logger.addHandler(handler)
-
-# set to true on debug environment only
-DEBUG = True
-
-if DEBUG:
-    logger.setLevel(logging.DEBUG)
-else:
-    logger.setLevel(logging.CRITICAL)
-
 #----------------------------------------------------------------------------------------------------------
 
 def startEA_Horaire():
@@ -208,7 +185,6 @@ async def insertData(collection, dataDownload, lastBougieDB):
         print("Details : ", exc_type, fname, exc_tb.tb_lineno)
 
 
-
 def findTradesHistory(client, start):
     '''
     Selectionner les ordres ouverts
@@ -229,7 +205,6 @@ def findopenOrder(client):
     tradeOpenString = client.commandExecute('getTrades', {"openedOnly": True})
     tradeOpenJson = json.dumps(tradeOpenString)
     return json.loads(tradeOpenJson)
-
 
 
 async def majDatAall(client, symbol, db):
@@ -411,6 +386,7 @@ async def pivot():
 
 
 async def main():
+    logger = Log()
     client = APIClient()  # create & connect to RR socket
     print(client)
     loginResponse = client.identification()  # connect to RR socket, login

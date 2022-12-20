@@ -1,4 +1,3 @@
-from Configuration.Config import Config
 import math as math
 import smtplib
 from email.mime.multipart import MIMEMultipart

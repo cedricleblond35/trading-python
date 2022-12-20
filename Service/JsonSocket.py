@@ -3,7 +3,6 @@ import json
 import socket
 import time
 import ssl
-
 import logging
 
 from Configuration.Config import Config
