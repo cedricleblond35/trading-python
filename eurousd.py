@@ -20,6 +20,7 @@ from Indicators.Supertrend import Supertrend
 from Service.TransactionSide import TransactionSide
 from Configuration.Log import Log
 
+
 '''
 Grace à lza liste des trade enregistrés ds la table trade
 ex : 
