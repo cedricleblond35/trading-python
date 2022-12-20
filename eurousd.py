@@ -386,7 +386,8 @@ async def pivot():
 
 
 async def main():
-    logger = Log()
+    l = Log()
+    logger = l.getLogger()
     client = APIClient()  # create & connect to RR socket
     print(client)
     loginResponse = client.identification()  # connect to RR socket, login
