@@ -271,7 +271,7 @@ class Order:
 
     def movebuyLimitWait(self,trade, sl, tp, price, balance, vnl, comment=""):
         try:
-            logger.info("------------- movebuyLimitWait ************************-----------------")
+            print("------------- movebuyLimitWait ************************-----------------")
             print("trade :", trade)
             # tp = round(tp, 1)
             # sl = round(sl, 1)
