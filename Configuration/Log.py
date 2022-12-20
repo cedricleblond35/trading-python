@@ -7,17 +7,17 @@ class Log:
 
         # logger properties-------------------------------------------------------------------------------------------------------
         self.logger = logging.getLogger('mylogger')
-        self.formatLogger()
-        self.level()
+        self.__formatLogger()
+        self.__level()
 
-    def formatLogger(self):
+    def __formatLogger(self):
         # create a logging format
         handler = logging.FileHandler('mylog.log')
         formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
         handler.setFormatter(formatter)
         self.logger.addHandler(handler)
 
-    def level(self):
+    def __level(self):
         # set logger level
         self.logger.setLevel(logging.WARNING)
         # or you can set one of the following level
