@@ -7,8 +7,6 @@ import sys
 import asyncio
 import math as math
 import numpy as np
-
-
 from datetime import datetime, timedelta
 from pymongo import MongoClient
 from Indicators.Awesome import Awesome
@@ -374,7 +372,7 @@ def subscribe(loginResponse):
 
 async def pivot():
     print('calcul pivot ')
-    P = Pivot(SYMBOL, "D")
+    P = Pivot(SYMBOL, "D", 5)
     PPF, R1F, R2F, R3F, S1F, S2F, S3F = await P.fibonacci()  # valeurs ok
     R1D, S1D = await P.demark()  # valeurs ok
     PPW,R1W, R2W, S1W, S2W = await P.woodie()  # valeurs ok

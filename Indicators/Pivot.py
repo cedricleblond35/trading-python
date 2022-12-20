@@ -15,12 +15,13 @@ class Pivot(Price):
     Third support (S3) = Low – 2(High – PP)
     '''
 
-    def __init__(self, symbol, timeframe, period=1, shift=0):
+    def __init__(self, symbol, timeframe, arrondi=1, period=1, shift=0):
         Price.__init__(self, symbol, timeframe)
         self.__symbol = symbol
         self.__timeframe = timeframe
         self.__shift = shift
         self.__period = period
+        self.__arrondi = arrondi
 
         self._prepareListData(1, 1)
 
@@ -42,13 +43,13 @@ class Pivot(Price):
                 R3 = PP + (H - L) * 2
                 newvalues = {
                     "$set": {
-                        "PClass_PP": round(PP, 1),
-                        "PClass_r1": round(R1, 1),
-                        "PClass_r2": round(R2, 1),
-                        "PClass_r3": round(R3, 1),
-                        "PClass_s1": round(S1, 1),
-                        "PClass_s2": round(S2, 1),
-                        "PClass_s3": round(S3, 1)
+                        "PClass_PP": round(PP, self.__arrondi),
+                        "PClass_r1": round(R1, self.__arrondi),
+                        "PClass_r2": round(R2, self.__arrondi),
+                        "PClass_r3": round(R3, self.__arrondi),
+                        "PClass_s1": round(S1, self.__arrondi),
+                        "PClass_s2": round(S2, self.__arrondi),
+                        "PClass_s3": round(S3, self.__arrondi)
                     }}
                 myquery = {"ctm": v["ctm"]}
 
@@ -62,7 +63,7 @@ class Pivot(Price):
                 C = v['close']
             i = i + 1
 
-        return round(PP, 1), round(R1, 1), round(R2, 1), round(R3, 1), round(S1, 1), round(S2, 1), round(S3, 1)
+        return round(PP, self.__arrondi), round(R1, self.__arrondi), round(R2, self.__arrondi), round(R3, self.__arrondi), round(S1, self.__arrondi), round(S2, self.__arrondi), round(S3, self.__arrondi)
 
     async def fibonacci(self):
         try:
@@ -82,13 +83,13 @@ class Pivot(Price):
 
                     newvalues = {
                         "$set": {
-                            "PFibo_PP": round(PP, 1),
-                            "PFibo_r1": round(R1, 1),
-                            "PFibo_r2": round(R2, 1),
-                            "PFibo_r3": round(R3, 1),
-                            "PFibo_s1": round(S1, 1),
-                            "PFibo_s2": round(S2, 1),
-                            "PFibo_s3": round(S3, 1)
+                            "PFibo_PP": round(PP, self.__arrondi),
+                            "PFibo_r1": round(R1,self.__arrondi),
+                            "PFibo_r2": round(R2, self.__arrondi),
+                            "PFibo_r3": round(R3, self.__arrondi),
+                            "PFibo_s1": round(S1, self.__arrondi),
+                            "PFibo_s2": round(S2, self.__arrondi),
+                            "PFibo_s3": round(S3, self.__arrondi)
                         }}
                     myquery = {"ctm": v["ctm"]}
 
@@ -108,7 +109,7 @@ class Pivot(Price):
             pass
 
         # print("calcul pivot Fibo  fini ")
-        return round(PP, 1), round(R1, 1), round(R2, 1), round(R3, 1), round(S1, 1), round(S2, 1), round(S3, 1)
+        return round(PP, self.__arrondi), round(R1, self.__arrondi), round(R2, self.__arrondi), round(R3, self.__arrondi), round(S1, self.__arrondi), round(S2, self.__arrondi), round(S3, self.__arrondi)
 
     async def woodie(self):
         try:
@@ -126,11 +127,11 @@ class Pivot(Price):
 
                     newvalues = {
                         "$set": {
-                            "PWoodie_PP": round(PP, 1),
-                            "PWoodie_r1": round(R1, 1),
-                            "PWoodie_r2": round(R2, 1),
-                            "PWoodie_s1": round(S1, 1),
-                            "PWoodie_s2": round(S2, 1)
+                            "PWoodie_PP": round(PP, self.__arrondi),
+                            "PWoodie_r1": round(R1, self.__arrondi),
+                            "PWoodie_r2": round(R2, self.__arrondi),
+                            "PWoodie_s1": round(S1, self.__arrondi),
+                            "PWoodie_s2": round(S2, self.__arrondi)
                         }}
                     myquery = {"ctm": v["ctm"]}
                     self._db[self.__timeframe].update_one(myquery, newvalues)
@@ -150,7 +151,7 @@ class Pivot(Price):
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
             logger.info(exc_type, fname, exc_tb.tb_lineno)
 
-        return round(PP, 1), round(R1, 1), round(R2, 1), round(S1, 1), round(S2, 1)
+        return round(PP, self.__arrondi), round(R1, self.__arrondi), round(R2, self.__arrondi), round(S1, self.__arrondi), round(S2, self.__arrondi)
 
     async def camarilla(self):
         # Resistance 4 or R4 = (H - L)X1.1 / 2 + C
@@ -184,15 +185,15 @@ class Pivot(Price):
 
                 newvalues = {
                     "$set": {
-                        "PCamarilla_PP": round(PP, 1),
-                        "PCamarilla_r1": round(R1, 1),
-                        "PCamarilla_r2": round(R2, 1),
-                        "PCamarilla_r3": round(R3, 1),
-                        "PCamarilla_r4": round(R4, 1),
-                        "PCamarilla_s1": round(S1, 1),
-                        "PCamarilla_s2": round(S2, 1),
-                        "PCamarilla_s3": round(S3, 1),
-                        "PCamarilla_s4": round(S4, 1)
+                        "PCamarilla_PP": round(PP, self.__arrondi),
+                        "PCamarilla_r1": round(R1, self.__arrondi),
+                        "PCamarilla_r2": round(R2, self.__arrondi),
+                        "PCamarilla_r3": round(R3, self.__arrondi),
+                        "PCamarilla_r4": round(R4, self.__arrondi),
+                        "PCamarilla_s1": round(S1, self.__arrondi),
+                        "PCamarilla_s2": round(S2, self.__arrondi),
+                        "PCamarilla_s3": round(S3, self.__arrondi),
+                        "PCamarilla_s4": round(S4, self.__arrondi)
                     }}
                 myquery = {"ctm": v["ctm"]}
 
@@ -206,8 +207,8 @@ class Pivot(Price):
                 C = v['close']
             i = i + 1
 
-        return round(PP, 1), round(R1, 1), round(R2, 1), round(R3, 1), round(R4, 1), round(S1, 1), round(S2, 1), round(
-            S3, 1), round(S4, 1)
+        return round(PP, self.__arrondi), round(R1, self.__arrondi), round(R2, self.__arrondi), round(R3, self.__arrondi), round(R4, self.__arrondi), round(S1, self.__arrondi), round(S2, self.__arrondi), round(
+            S3, self.__arrondi), round(S4, self.__arrondi)
 
     async def demark(self):
         '''
@@ -235,8 +236,8 @@ class Pivot(Price):
                 else:
                     x = H + L + 2 * C
 
-                S = round((x / 2) - H, 1)
-                R = round((x / 2) - L, 1)
+                S = round((x / 2) - H, self.__arrondi)
+                R = round((x / 2) - L, self.__arrondi)
 
                 newvalues = {
                     "$set": {
