@@ -47,6 +47,23 @@ class Price:
         for v in self._db[self.__timeframe].find({link_id: {'$exists': False}}).skip(skipValue).limit(limitValue):
             self._listDataLast.append(v)
 
+    def _prepareListCC(self, limitValue=0, skipValue=0):
+        #qelect le nombre de bougie à traiter
+        self.__connectionDB()
+        self._listDataLast.clear()
+
+        v = self._db[self.__timeframe].find({'CC': {'$exists': False}})
+        nb = len(list(v))
+        #decalage =
+        if nb < 35:
+            skipValue = nb + 34
+
+        for v in self._db[self.__timeframe].find().sort("ctm", -1).skip(skipValue).limit(limitValue):
+            self._listData.append(v)
+
+        self._listData.reverse()
+
+
     def _prepareListAW(self, limitValue=0, skipValue=0):
         #qelect le nombre de bougie à traiter
         self.__connectionDB()
