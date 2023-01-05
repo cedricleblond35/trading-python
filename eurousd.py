@@ -371,17 +371,16 @@ def subscribe(loginResponse):
     return sclient, c
 
 
-def pivot():
+async def pivot():
     print('calcul pivot ')
     P = Pivot(SYMBOL, "D", 5)
-    PPF, R1F, R2F, R3F, S1F, S2F, S3F = P.fibonacci()  # valeurs ok
-    R1D, S1D = P.demark()  # valeurs ok
-    PPW, R1W, R2W, S1W, S2W = P.woodie()  # valeurs ok
+    PPF, R1F, R2F, R3F, S1F, S2F, S3F = await P.fibonacci()  # valeurs ok
+    R1D, S1D = await P.demark()  # valeurs ok
+    PPW, R1W, R2W, S1W, S2W = await P.woodie()  # valeurs ok
     # PPC, R1C, R2C, R3C, R4C, S1C, S2C, S3C, S4C = await P.camarilla()  # valeurs ok
     # zone = np.array([R1W, R2W, S1W, S2W, R1D, S1D, PPF, R1F, R2F, R3F, S1F, S2F, S3F, PPC, R1C, R2C, R3C, R4C, S1C, S2C, S3C, S4C])
     zone = np.array(
         [R1W, R2W, S1W, S2W, R1D, S1D, PPF, R1F, R2F, R3F, S1F, S2F, S3F])
-    PPF = zone[6]
     return np.sort(zone), PPF
 
 
@@ -411,7 +410,7 @@ async def main():
         await majDatAall(client, SYMBOL, db)
 
         # # # pivot##################################################################################################
-        zone = await pivot()
+        zone, PFF = await pivot()
         #
         # # # moyen mobile ##################################################################################################
         moyMobil_05_120 = MM(SYMBOL, "M05", 0)
