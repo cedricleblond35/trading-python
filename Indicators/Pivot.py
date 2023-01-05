@@ -25,7 +25,7 @@ class Pivot(Price):
 
         self._prepareListData(1, 1)
 
-    async def calculPivotClassic(self):
+    def calculPivotClassic(self):
         i = 0
         H = 0
         L = 0
@@ -65,7 +65,7 @@ class Pivot(Price):
 
         return round(PP, self.__arrondi), round(R1, self.__arrondi), round(R2, self.__arrondi), round(R3, self.__arrondi), round(S1, self.__arrondi), round(S2, self.__arrondi), round(S3, self.__arrondi)
 
-    async def fibonacci(self):
+    def fibonacci(self):
         try:
             i = 0
             H = 0
@@ -111,7 +111,7 @@ class Pivot(Price):
         # print("calcul pivot Fibo  fini ")
         return round(PP, self.__arrondi), round(R1, self.__arrondi), round(R2, self.__arrondi), round(R3, self.__arrondi), round(S1, self.__arrondi), round(S2, self.__arrondi), round(S3, self.__arrondi)
 
-    async def woodie(self):
+    def woodie(self):
         try:
             i = 0
             H = 0
@@ -153,7 +153,7 @@ class Pivot(Price):
 
         return round(PP, self.__arrondi), round(R1, self.__arrondi), round(R2, self.__arrondi), round(S1, self.__arrondi), round(S2, self.__arrondi)
 
-    async def camarilla(self):
+    def camarilla(self):
         # Resistance 4 or R4 = (H - L)X1.1 / 2 + C
         # Resistance 3 or R3 = (H - L)X1.1 / 4 + C
         # Resistance 2 or R2 = (H - L)X1.1 / 6 + C
@@ -210,7 +210,7 @@ class Pivot(Price):
         return round(PP, self.__arrondi), round(R1, self.__arrondi), round(R2, self.__arrondi), round(R3, self.__arrondi), round(R4, self.__arrondi), round(S1, self.__arrondi), round(S2, self.__arrondi), round(
             S3, self.__arrondi), round(S4, self.__arrondi)
 
-    async def demark(self):
+    def demark(self):
         '''
         The DeMark method begins with a different base and differs from the other pivot point calculation styles. Here the pivot points depend on the relation between the close and the open.
         If Close < Open, then X = High(previous day) + [2 x Low(previous day)] + Close(previous day)
