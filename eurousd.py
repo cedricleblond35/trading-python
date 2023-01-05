@@ -381,7 +381,7 @@ async def pivot():
     #zone = np.array([R1W, R2W, S1W, S2W, R1D, S1D, PPF, R1F, R2F, R3F, S1F, S2F, S3F, PPC, R1C, R2C, R3C, R4C, S1C, S2C, S3C, S4C])
     zone = np.array(
         [R1W, R2W, S1W, S2W, R1D, S1D, PPF, R1F, R2F, R3F, S1F, S2F, S3F])
-    return np.sort(zone)
+    return np.sort(zone), PPF
 
 
 async def main():
@@ -439,7 +439,7 @@ async def main():
                 print("Current Time =", current_time)
                 print("mise à jour des indicateurs : ", current_time, " -----------------------------------------------")
                 if updatePivot():
-                     zone = await pivot()
+                     PPF, zone = await pivot()
                 #
                 print("pivot :", zone)
                 # ####################################################################################################
@@ -520,14 +520,16 @@ async def main():
                         # strategie des achats et ventes des support
                         if bougie1M05.get("EMA40") is not None and bougie1M05.get("EMA70") is not None and superM05t1 is not None:
                             print("************ Analyse strategie 1 ***********************************************")
-                            if superM05t1 < bougie0M05["close"] and bougie1M05.get("EMA70") < bougie0M05["close"]:
+                            if superM05t1 < bougie0M05["close"] and bougie1M05.get("EMA70") < bougie0M05["close"] \
+                                    and bougie1M05.get("EMA40") > PPF:
                                 print("strategie 1 achat ***********************************************")
                                 sl = superM05t1
                                 tp = 0
                                 price = bougie1M05.get("EMA70")+SPREAD
                                 comment = "Achat buyLimit: strategie 1"
                                 o.buyLimit(sl, tp, price, balance, VNL, comment)
-                            elif superM05t1 > bougie0M05["close"] and bougie1M05.get("EMA70") > bougie0M05["close"]:
+                            elif superM05t1 > bougie0M05["close"] and bougie1M05.get("EMA70") > bougie0M05["close"] \
+                                    and bougie1M05.get("EMA40") < PPF:
                                 print("strategie 1 vente ***********************************************")
                                 sl = superM05t1
                                 tp = 0
