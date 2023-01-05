@@ -20,7 +20,6 @@ from Indicators.Supertrend import Supertrend
 from Service.TransactionSide import TransactionSide
 from Configuration.Log import Log
 
-
 '''
 Grace à lza liste des trade enregistrés ds la table trade
 ex : 
@@ -112,7 +111,8 @@ SYMBOL = "EURUSD"
 VNL = 25
 SPREAD = 0.0001
 
-#----------------------------------------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------------------------------------
 
 def startEA_Horaire():
     time = datetime.now().time()
@@ -147,7 +147,7 @@ async def insertData(collection, dataDownload, lastBougieDB):
                 high = (value['open'] + value['high']) / 100000.0
                 low = (value['open'] + value['low']) / 100000.0
                 pointMedian = round((high + low) / 2, 2)
-                #print(value['ctm'] ,">", lastBougieDB['ctm'])
+                # print(value['ctm'] ,">", lastBougieDB['ctm'])
                 if lastBougieDB is None or value['ctm'] > lastBougieDB['ctm']:
                     open = value['open'] / 100000.0
                     newvalues = {
@@ -220,7 +220,7 @@ async def majDatAall(client, symbol, db):
     :param db: collection selectionné selon symbol
     :return:
     '''
-    #print("**************************************** mise à jour majDatAall ****************************************")
+    # print("**************************************** mise à jour majDatAall ****************************************")
     try:
 
         # ctmRefStart = db["D"].find().sort("ctm", -1).skip(1).limit(1)
@@ -230,7 +230,7 @@ async def majDatAall(client, symbol, db):
         lastBougie = db["D"].find_one({}, sort=[('ctm', -1)])
         startTime = int(round(time.time() * 1000)) - (60 * 60 * 24 * 30 * 13) * 1000
         if lastBougie is not None:
-            startTime = lastBougie["ctm"] - (60 * 60 * 24 ) * 1000
+            startTime = lastBougie["ctm"] - (60 * 60 * 24) * 1000
 
         json_data_Day = client.commandExecute(
             'getChartRangeRequest',
@@ -243,7 +243,7 @@ async def majDatAall(client, symbol, db):
         lastBougie = db["H4"].find_one({}, sort=[('ctm', -1)])
         startTime = int(round(time.time() * 1000)) - (60 * 60 * 24 * 30 * 13) * 1000
         if lastBougie is not None:
-            startTime = lastBougie["ctm"] - (60 * 60 * 8 ) * 1000
+            startTime = lastBougie["ctm"] - (60 * 60 * 8) * 1000
 
         json_data_H4 = client.commandExecute('getChartRangeRequest', {
             "info": {"start": startTime, "end": endTime, "period": 240,
@@ -376,9 +376,9 @@ async def pivot():
     P = Pivot(SYMBOL, "D", 5)
     PPF, R1F, R2F, R3F, S1F, S2F, S3F = await P.fibonacci()  # valeurs ok
     R1D, S1D = await P.demark()  # valeurs ok
-    PPW,R1W, R2W, S1W, S2W = await P.woodie()  # valeurs ok
-    #PPC, R1C, R2C, R3C, R4C, S1C, S2C, S3C, S4C = await P.camarilla()  # valeurs ok
-    #zone = np.array([R1W, R2W, S1W, S2W, R1D, S1D, PPF, R1F, R2F, R3F, S1F, S2F, S3F, PPC, R1C, R2C, R3C, R4C, S1C, S2C, S3C, S4C])
+    PPW, R1W, R2W, S1W, S2W = await P.woodie()  # valeurs ok
+    # PPC, R1C, R2C, R3C, R4C, S1C, S2C, S3C, S4C = await P.camarilla()  # valeurs ok
+    # zone = np.array([R1W, R2W, S1W, S2W, R1D, S1D, PPF, R1F, R2F, R3F, S1F, S2F, S3F, PPC, R1C, R2C, R3C, R4C, S1C, S2C, S3C, S4C])
     zone = np.array(
         [R1W, R2W, S1W, S2W, R1D, S1D, PPF, R1F, R2F, R3F, S1F, S2F, S3F])
     return np.sort(zone), PPF
@@ -428,7 +428,7 @@ async def main():
 
         while True:
             ############### gestion des jours et heures de trading ##########################""
-            j = datetime.today().weekday() #0:lundi ; 4 vendredi
+            j = datetime.today().weekday()  # 0:lundi ; 4 vendredi
             today = datetime.now()
             todayPlus2Hours = today + timedelta(hours=1)
             if 0 <= j < 5 and 2 < todayPlus2Hours.hour < 22:
@@ -437,9 +437,10 @@ async def main():
                 print(
                     "*****************************************************************************************************")
                 print("Current Time =", current_time)
-                print("mise à jour des indicateurs : ", current_time, " -----------------------------------------------")
+                print("mise à jour des indicateurs : ", current_time,
+                      " -----------------------------------------------")
                 if updatePivot():
-                     PPF, zone = await pivot()
+                    zone, PPF = await pivot()
                 #
                 print("pivot :", zone)
                 print("pivot PPF:", PPF)
@@ -483,7 +484,6 @@ async def main():
                     bougie4M05 = db["M05"].find({}, sort=[('ctm', -1)]).limit(1).skip(3)[0]
                     bougie5M05 = db["M05"].find({}, sort=[('ctm', -1)]).limit(1).skip(3)[0]
 
-
                     ###############################################################################################################
                     # balance
                     ###############################################################################################################
@@ -519,14 +519,15 @@ async def main():
                         print("bougie5 :", bougie0M05["close"])
 
                         # strategie des achats et ventes des support
-                        if bougie1M05.get("EMA40") is not None and bougie1M05.get("EMA70") is not None and superM05t1 is not None:
+                        if bougie1M05.get("EMA40") is not None and bougie1M05.get(
+                                "EMA70") is not None and superM05t1 is not None:
                             print("************ Analyse strategie 1 ***********************************************")
                             if superM05t1 < bougie0M05["close"] and bougie1M05.get("EMA70") < bougie0M05["close"] \
                                     and bougie1M05.get("EMA40") > PPF:
                                 print("strategie 1 achat ***********************************************")
                                 sl = superM05t1
                                 tp = 0
-                                price = bougie1M05.get("EMA70")+SPREAD
+                                price = bougie1M05.get("EMA70") + SPREAD
                                 comment = "Achat buyLimit: strategie 1"
                                 o.buyLimit(sl, tp, price, balance, VNL, comment)
                             elif superM05t1 > bougie0M05["close"] and bougie1M05.get("EMA70") > bougie0M05["close"] \
@@ -534,7 +535,7 @@ async def main():
                                 print("strategie 1 vente ***********************************************")
                                 sl = superM05t1
                                 tp = 0
-                                price = bougie1M05.get("EMA70")-SPREAD
+                                price = bougie1M05.get("EMA70") - SPREAD
                                 comment = "Achat sellLimit: strategie 1"
                                 o.sellLimit(sl, tp, price, balance, VNL, comment)
 
@@ -550,24 +551,20 @@ async def main():
                                 print("trade :", trade)
                                 sl = superM05t1
                                 tp = 0
-                                price = bougie1M05.get("EMA70")+SPREAD
+                                price = bougie1M05.get("EMA70") + SPREAD
                                 comment = "Achat buyLimit: strategie 1"
                                 o.movebuyLimitWait(trade, sl, tp, price, balance, VNL)
 
 
                             elif TransactionSide.SELL_LIMIT == trade['cmd']:
                                 print("move SELL_LIMIT")
-                                print("trade :" ,trade)
+                                print("trade :", trade)
                                 sl = superM05t1
                                 tp = 0
-                                price = bougie1M05.get("EMA70")-SPREAD
+                                price = bougie1M05.get("EMA70") - SPREAD
                                 o.moveSellLimitWait(trade, sl, tp, price, balance, VNL)
 
-                            #o.delete(trade)
-
-
-
-
+                            # o.delete(trade)
 
                             #############" ordre execute ###################################################################
                             elif TransactionSide.BUY == trade['cmd']:
@@ -581,8 +578,9 @@ async def main():
                                     #   Et si AW change de tendance
 
                                     # Si il touche une resistance et AW change de tendance, monter le stop  au ST01 ?? A FAIRE ???????
-                                    if trade['sl'] < trade['open_price'] and tick > trade['open_price'] + 15 and bougie0M05[
-                                        'AW'] < bougie1M05['AW']:
+                                    if trade['sl'] < trade['open_price'] and tick > trade['open_price'] + 15 and \
+                                            bougie0M05[
+                                                'AW'] < bougie1M05['AW']:
                                         sl = trade['open_price'] + 3
                                         o.moveStopBuy(trade, sl, tick)
                                     else:
@@ -594,15 +592,16 @@ async def main():
                                 print("trade['customComment'] :", trade['customComment'])
 
                                 if trade['customComment'] == "Vente direct":
-                                    print(trade['sl'] ,">", superM05t1)
+                                    print(trade['sl'], ">", superM05t1)
                                     if trade['sl'] > superM05t1:
                                         o.moveStopSell(trade, superM05t1, tick)
                                 else:
                                     # descendre le stop  a 5pip de benef :
                                     #   Si cours en dessous de l ouverture avec ecart 20pip
                                     #   Et si AW change de tendance
-                                    if trade['sl'] > trade['open_price'] and tick < trade['open_price'] - 15 and bougie0M05[
-                                        'AW'] > \
+                                    if trade['sl'] > trade['open_price'] and tick < trade['open_price'] - 15 and \
+                                            bougie0M05[
+                                                'AW'] > \
                                             bougie1M05['AW']:
                                         sl = trade['open_price'] - 3
                                         o.moveStopSell(trade, sl, tick)
