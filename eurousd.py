@@ -371,7 +371,7 @@ def subscribe(loginResponse):
     return sclient, c
 
 
-async def pivot():
+def pivot():
     print('calcul pivot ')
     P = Pivot(SYMBOL, "D", 5)
     PPF, R1F, R2F, R3F, S1F, S2F, S3F = await P.fibonacci()  # valeurs ok
@@ -441,7 +441,7 @@ async def main():
                 print("mise à jour des indicateurs : ", current_time,
                       " -----------------------------------------------")
                 if updatePivot():
-                    zone, PPF = await pivot()
+                    zone, PPF = pivot()
                 #
                 print("pivot :", zone)
                 print("pivot PPF:", PPF)
