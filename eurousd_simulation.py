@@ -388,8 +388,7 @@ async def main():
                     print("journée : ", bougies_d)
                     print("periode :", b_m05["close"] )
                     print("woodie : ", bougies_d["PWoodie_PP"])
-                    print("woodie : ", b_m05["AW"])
-                    if b_m05["close"] > bougies_d["PWoodie_PP"] and b_m05["AW"] > bougies0_m05["AW"] and b_m05["AW"] > 0.50:  # condition strategique
+                    if b_m05["close"] > bougies_d["PWoodie_PP"] and b_m05["EMA70"] > bougies0_m05["EMA70"]:  # condition strategique
                         type_order = TransactionSide.BUY_LIMIT
                         ####################################"
                         zone = np.array(
@@ -422,7 +421,7 @@ async def main():
                             "stop": support,
                             "objectif": objectif,
                             "type": "achat",
-                            "Awesome": b_m05["AW"]
+                            "EMA70": b_m05["EMA70"]
                         }
                         print("----------achat------------------")
                         print(zone)
@@ -432,7 +431,7 @@ async def main():
 
                         db["simulation"].insert_one(newvalues)
                         order_number = order_number+1
-                    elif b_m05["close"] < bougies_d["PWoodie_PP"] and b_m05["AW"] < bougies0_m05["AW"] and b_m05["AW"] < -0.50:  # check if touch
+                    elif b_m05["close"] < bougies_d["PWoodie_PP"] and b_m05["EMA70"] < bougies0_m05["EMA70"]:  # check if touch
                         type_order = TransactionSide.SELL_LIMIT
 
                         ####################################"
@@ -465,7 +464,7 @@ async def main():
                             "stop": support,
                             "objectif": objectif,
                             "type": "vente",
-                            "Awesome": b_m05["AW"]
+                            "EMA70": b_m05["EMA70"]
                         }
 
                         print("----------vente------------------")
