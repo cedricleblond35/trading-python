@@ -146,8 +146,6 @@ async def insertData(collection, dataDownload, lastBougieDB):
                 close = (value['open'] + value['close']) / 100000.0
                 high = (value['open'] + value['high']) / 100000.0
                 low = (value['open'] + value['low']) / 100000.0
-                pointMedian = round((high + low) / 2, 2)
-                # print(value['ctm'] ,">", lastBougieDB['ctm'])
                 if lastBougieDB is None or value['ctm'] > lastBougieDB['ctm']:
                     open = value['open'] / 100000.0
                     newvalues = {
@@ -157,8 +155,7 @@ async def insertData(collection, dataDownload, lastBougieDB):
                         "close": close,
                         "high": high,
                         "low": low,
-                        "vol": value['vol'],
-                        "pointMedian": pointMedian
+                        "vol": value['vol']
                     }
                     collection.insert_one(newvalues)
                 elif value['ctm'] == lastBougieDB['ctm']:
@@ -168,8 +165,7 @@ async def insertData(collection, dataDownload, lastBougieDB):
                             "close": close,
                             "high": high,
                             "low": low,
-                            "vol": value['vol'],
-                            "pointMedian": pointMedian
+                            "vol": value['vol']
                         }}
                     collection.update_many(myquery, newvalues)
 
