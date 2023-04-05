@@ -294,7 +294,7 @@ def subscribe(loginResponse):
         tradeStatusFun=c.procTradeStatusExample,
         profitFun=c.procProfitExample
     )
-    sclient.subscribePrice("US100")
+    sclient.subscribePrice(SYMBOL)
     sclient.subscribeProfits()
     sclient.subscribeTradeStatus()
     sclient.subscribeTrades()
