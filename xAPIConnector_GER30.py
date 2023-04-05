@@ -274,6 +274,7 @@ def zoneResistance(close, zone):
 
 def zoneResistanceVente(close, zone):
     arrayT = sorted(zone, reverse=True)
+    print("zoneResistanceVente:", arrayT)
     resistance = 0
     for v in arrayT:
         if v < close and resistance == 0:
@@ -464,6 +465,7 @@ async def main():
                                 tp = zoneResistanceVente(tick, zone)
                                 price = bougie1M01.get("EMA200")
                                 comment = "Vente EMA200_M1"
+                                print("tp:", tp)
                                 o.sellLimit(sl, tp, price, balance, VNL, comment)
                     else:
                         print("ordre en cours ...........................................")
