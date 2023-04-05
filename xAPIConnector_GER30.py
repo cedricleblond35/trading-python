@@ -453,7 +453,7 @@ async def main():
                         if bougie1M01.get("EMA200") is not None:
                             if tick > bougie1M01.get("EMA200"):
                                 print("strategie 1 de achat ***********************************************")
-                                sl = zoneSoutien(tick, zone)-15
+                                sl = zoneResistanceVente(tick, zone)-15
                                 tp = zoneResistance(tick, zone)
                                 price = bougie1M01.get("EMA200")
                                 comment = "Achat EMA200_M1"
@@ -461,7 +461,7 @@ async def main():
                             else:
                                 print("strategie 1 de achat ***********************************************")
                                 sl = zoneResistance(tick, zone) - 15
-                                tp = zoneSoutien(tick, zone)
+                                tp = zoneResistanceVente(tick, zone)
                                 price = bougie1M01.get("EMA200")
                                 comment = "Vente EMA200_M1"
                                 o.sellLimit(sl, tp, price, balance, VNL, comment)
@@ -475,7 +475,7 @@ async def main():
                                 print(trade)
                                 if trade['customComment'] == "Achat EMA200_M1":
                                     if tick > bougie1M01.get("EMA200"):
-                                        sl = zoneSoutien(tick, zone) - 15
+                                        sl = zoneResistanceVente(tick, zone) - 15
                                         tp = zoneResistance(tick, zone)
                                         price = bougie1M01.get("EMA200")
                                         comment = "Achat EMA200"
@@ -529,7 +529,7 @@ async def main():
                                     if trade['sl'] > trade['open_price'] and tick < trade['open_price'] - 15 and bougie0M05[
                                         'AW'] > \
                                             bougie1M05['AW']:
-                                        sl = trade['open_price'] - 3
+                                        sl = trade['open_pr.ice'] - 3
                                         o.moveStopSell(trade, sl, tick)
                                     else:
                                         print("vente direct ok : sl :", superM01_1003T1)
