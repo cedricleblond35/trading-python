@@ -20,7 +20,7 @@ class MM(Price):
         self.__timeframe = timeframe
         self.__duration = duration
 
-    def calculSMA(self, duration):
+    async def calculSMA(self, duration):
         try:
             self._prepareListData(self.__duration)
             nb = 0
