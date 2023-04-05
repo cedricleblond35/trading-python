@@ -460,7 +460,7 @@ async def main():
                                 o.buyLimit(sl, tp, price, balance, VNL, comment)
                             else:
                                 print("strategie 1 de achat ***********************************************")
-                                sl = zoneResistance(tick, zone) - 15
+                                sl = zoneResistance(bougie1M01.get("EMA200"), zone) - 15
                                 tp = zoneResistanceVente(tick, zone)
                                 price = bougie1M01.get("EMA200")
                                 comment = "Vente EMA200_M1"
