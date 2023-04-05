@@ -42,7 +42,7 @@ class Order:
                 "sl": sl,
                 "symbol": self.symbol,
                 "tp": tp,
-                "type": TransactionSide.PENDING,
+                "type": TransactionSide.OPEN,
                 "volume": nbrelot
             }
             print("**************buy limit :", detail)
@@ -78,7 +78,7 @@ class Order:
                 "sl": sl,
                 "symbol": self.symbol,
                 "tp": tp,
-                "type": TransactionSide.PENDING,
+                "type": TransactionSide.OPEN,
                 "volume": nbrelot
             }
             print("sell limit :", detail)
