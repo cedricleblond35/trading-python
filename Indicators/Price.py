@@ -15,6 +15,19 @@ class Price:
         self._high = []
         self._down = []
 
+    def _valueHigh(self, limitValue=0, skipValue=0):
+        self.__connectionDB()
+        self._listData.clear()
+        for v in self._db[self.__timeframe].find({},{"high":1}).sort("high", -1).skip(skipValue).limit(limitValue):
+            return v
+
+
+    def _valueLow(self, limitValue=0, skipValue=0):
+        self.__connectionDB()
+        self._listData.clear()
+        for v in self._db[self.__timeframe].find({},{"low":1}).sort("low", -1).skip(skipValue).limit(limitValue):
+            return v
+
     def _prepareListData(self, limitValue=0, skipValue=0):
         self.__connectionDB()
         self._listData.clear()
@@ -46,6 +59,7 @@ class Price:
         self._listDataLast.clear()
         for v in self._db[self.__timeframe].find({link_id: {'$exists': False}}).skip(skipValue).limit(limitValue):
             self._listDataLast.append(v)
+
 
     def _prepareListCC(self, limitValue=0, skipValue=0):
         #qelect le nombre de bougie à traiter

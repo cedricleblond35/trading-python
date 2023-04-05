@@ -20,82 +20,6 @@ from Service.Command import Command
 from Indicators.Supertrend import Supertrend
 from Service.TransactionSide import TransactionSide
 
-'''
-Grace à lza liste des trade enregistrés ds la table trade
-ex : 
-{ 
-    "_id" : ObjectId("62cec201e4feeb03898d9fec"), "cmd" : 3, "customComment" : "Vente limit", "expiration" : NumberLong("1657720849600"), 
-    "offset" : 0, "price" : 11711.52, "sl" : 11682.49, "symbol" : "US100", "tp" : 0, "type" : 0, "volume" : 0.07, 
-    "resp" : { "status" : true, "returnData" : { "order" : 404426012 } } 
-}
-
-Prendre l ensemble des trades pour stocker le details des trades ds la table : details
-{
-	"command": "getTradeRecords",
-	"arguments": {
-		"orders": [404426012, 7489841, ...]
-	}
-}
-repnse
-{
-	"close_price": 1.3256,
-	"close_time": null,
-	"close_timeString": null,
-	"closed": false,
-	"cmd": 0,
-	"comment": "Web Trader",
-	"commission": 0.0,
-	"customComment": "Some text",
-	"digits": 4,
-	"expiration": null,
-	"expirationString": null,
-	"margin_rate": 0.0,
-	"offset": 0,
-	"open_price": 1.4,
-	"open_time": 1272380927000,
-	"open_timeString": "Fri Jan 11 10:03:36 CET 2013",
-	"order": 7497776,
-	"order2": 1234567,
-	"position": 1234567,
-	"profit": -2196.44,
-	"sl": 0.0,
-	"storage": -4.46,
-	"symbol": "EURUSD",
-	"timestamp": 1272540251000,
-	"tp": 0.0,
-	"volume": 0.10
-}
-
-
-
-
-
-
-
-
-
-Strategie
-
-Periode 5 min :
-A) Acheter pivot Woodie si la EMA7 repasse au dessus de la ligne de soutien
-B) Acheter 
-    si EMa7 > EAM25 et Awesome > 20 (3 bars verte au dessus de 20)
-    et  Prix a touché S2 de Woodie
-: Position achat: EAM25  stop au plus bas des 10 derniers periodes si supertrend est ko sinon faire  avec super tr
-
-
-
-
-
-
-
-
-
-
-
-
-'''
-
 # Variables perso--------------------------------------------------------------------------------------------------------
 # horaire---------------
 TradeStartTime = 4
@@ -107,7 +31,7 @@ ObjectfDay = 5.00  # %
 BALANCE = 0
 TICK = False
 PROFIT = False
-SYMBOL = "US100"
+SYMBOL = "DE30"
 VNL = 25
 
 
@@ -384,8 +308,8 @@ async def pivot():
     PPF, R1F, R2F, R3F, S1F, S2F, S3F = await P.fibonacci()  # valeurs ok
     R1D, S1D = await P.demark()  # valeurs ok
     PPW,R1W, R2W, S1W, S2W = await P.woodie()  # valeurs ok
-    PPC, R1C, R2C, R3C, R4C, S1C, S2C, S3C, S4C = await P.camarilla()  # valeurs ok
-    zone = np.array([R1W, R2W, S1W, S2W, R1D, S1D, PPF, R1F, R2F, R3F, S1F, S2F, S3F, PPC, R1C, R2C, R3C, R4C, S1C, S2C, S3C, S4C])
+    #PPC, R1C, R2C, R3C, R4C, S1C, S2C, S3C, S4C = await P.camarilla()  # valeurs ok
+    zone = np.array([R1W, R2W, S1W, S2W, R1D, S1D, PPF, R1F, R2F, R3F, S1F, S2F, S3F])
     return np.sort(zone)
 
 
@@ -416,21 +340,16 @@ async def main():
         zone = await pivot()
         #
         # # # moyen mobile ##################################################################################################
-        moyMobil_01_120 = MM(SYMBOL, "M01", 0)
-        moyMobil_05_120 = MM(SYMBOL, "M05", 0)
+        moyMobil_05 = MM(SYMBOL, "M05", 0)
+        moyMobil_01 = MM(SYMBOL, "M01", 0)
         # await moyMobil_01_120.EMA(120)
-        # await moyMobil_01_120.EMA(70)
-        await moyMobil_01_120.EMA(26)
-        # #
-        # await moyMobil_05_120.EMA(120)
-        # await moyMobil_05_120.EMA(70)
-        await moyMobil_05_120.EMA(26)
+        await moyMobil_05.EMA(70)
+        await moyMobil_05.EMA(200)
+        await moyMobil_05.calculSMA(200)
         #
         # # Awesome ##################################################################################################
         ao05 = Awesome(SYMBOL, "M05")
         await ao05.calculAllCandles()
-        ao01 = Awesome(SYMBOL, "M01")
-        await ao01.calculAllCandles()
         #
         o = Order(SYMBOL, dbStreaming, client, db["trade"])
         # logger.info("mise à jour du start fini ")
@@ -454,26 +373,20 @@ async def main():
                 # ####################################################################################################
                 await majDatAall(client, SYMBOL, db)
                 # ####################################################################################################
-                # await moyMobil_01_120.EMA(120)
-                # await moyMobil_01_120.EMA(70)
-                await moyMobil_01_120.EMA(26)
-                #
-                # await moyMobil_05_120.EMA(120)
-                # await moyMobil_05_120.EMA(70)
-                await moyMobil_05_120.EMA(26)
+                await moyMobil_05.calculSMA(200)
+                await moyMobil_01.calculSMA(200)
+                await moyMobil_05.EMA(70)
+                await moyMobil_05.EMA(200)
+                await moyMobil_01.EMA(200)
                 #
                 # # AO ###################################################################################
                 await ao05.calculLastCandle(10)
-                await ao01.calculLastCandle(10)
                 #
                 # # supertrend ###################################################################################
-                # # spM013012 = Supertrend(SYMBOL, "M01", 30, 12)
-                # # superM013012T0, superM013012T1, superM013012T2 = spM013012.getST()
-                # spM05_1003 = Supertrend(SYMBOL, "M05", 10, 3)
-                # superM05_1003T0, superM05_1003T1, superM05_1003T2 = spM05_1003.getST()
-                #
-                #spM01_1003 = Supertrend(SYMBOL, "M01", 10, 4)
-                spM01_1003 = Supertrend(SYMBOL, "M01", 22, 6)
+                spM05_307 = Supertrend(SYMBOL, "M05", 30, 7)
+                superM013012T0, superM013012T1, superM013012T2 = spM05_307.getST()
+
+                spM01_1003 = Supertrend(SYMBOL, "M01", 33, 9)
                 superM01_1003T0, superM01_1003T1, superM01_1003T2 = spM01_1003.getST()
                 #
                 now = datetime.now()
@@ -502,8 +415,7 @@ async def main():
 
                     bougie0M05 = db["M05"].find({}, sort=[('ctm', -1)]).limit(1).skip(0)[0]
                     bougie1M05 = db["M05"].find({}, sort=[('ctm', -1)]).limit(1).skip(1)[0]
-                    bougie2M05 = db["M05"].find({}, sort=[('ctm', -1)]).limit(1).skip(2)[0]
-                    bougie3M05 = db["M05"].find({}, sort=[('ctm', -1)]).limit(1).skip(3)[0]
+
 
 
                     ###############################################################################################################
@@ -537,183 +449,21 @@ async def main():
                         print("demarrage de selection d une strategie")
 
                         # strategie des achats et ventes des support
-                        if bougie1M01.get("AW") is not None and bougie1M01.get("EMA26") is not None:
-                            if bougie3M01.get("AW") > bougie2M01.get("AW") \
-                                    and bougie2M01.get("AW") < bougie1M01.get("AW") < -15 \
-                                    and tick < bougie1M01.get("EMA26"):
-                                print("strategie 1 support***********************************************")
-                                sl = zoneResistanceVente(tick, zone)-15
+                        if bougie1M01.get("EMA200") is not None:
+                            if tick > bougie1M01.get("EMA200"):
+                                print("strategie 1 de achat ***********************************************")
+                                sl = zoneSoutien(tick, zone)-15
                                 tp = zoneResistance(tick, zone)
-                                price = zoneResistanceVente(tick, zone)
-                                comment = "Achat support"
+                                price = bougie1M01.get("EMA200")
+                                comment = "Achat EMA200_M1"
                                 o.buyLimit(sl, tp, price, balance, VNL, comment)
-
-                            elif bougie3M01.get("AW") < bougie2M01.get("AW") \
-                                    and bougie2M01.get("AW") > bougie1M01.get("AW") > 15 \
-                                    and tick > bougie1M01.get("EMA26") :
-                                print("strategie 2 Vente ***********************************************")
-                                sl = zoneResistance(tick, zone) + 15
-                                tp = zoneResistanceVente(tick, zone)
-                                price = zoneResistance(tick, zone)
-                                comment = "Vente support"
-                                print("tick :", tick)
+                            else:
+                                print("strategie 1 de achat ***********************************************")
+                                sl = zoneResistance(tick, zone) - 15
+                                tp = zoneSoutien(tick, zone)
+                                price = bougie1M01.get("EMA200")
+                                comment = "Vente EMA200_M1"
                                 o.sellLimit(sl, tp, price, balance, VNL, comment)
-
-
-                        # elif bougie1M01.get("AW") < bougie2M01.get("AW") < bougie3M01.get("AW") and bougie1M01.get("AW") \
-                        #         and tick < bougie1M01.get("EMA26") < bougie1M01.get("EMA70") < bougie1M01.get("EMA120") \
-                        #         and tick < superM01_1003T1:
-                        #     sl = superM01_1003T1
-                        #     tp = zoneResistanceVente(tick, zone)
-                        #     price = tick - 15
-                        #     # l ecart doit avoir un minimum
-                        #     dif = sl - price
-                        #     r = zoneResistanceVente(bougie1M01.get("close"), zone)
-                        #     difR = price - r
-                        #     if dif > 5 and difR > 15:
-                        #         comment = "Vente direct : strategie 1"
-                        #         o.sellNow(sl, tp, price, balance, VNL, comment)
-                        #
-                        # elif bougie0M01["close"] < superM01_1003T1 and bougie1M01.get("EMA26") < bougie1M01.get("EMA120"):
-                        #     print("strategie 2 Vente***********************************************")
-                        #     sl = superM01_1003T1
-                        #     tp = zoneResistanceVente(tick, zone)
-                        #     price = bougie1M01.get("EMA120")
-                        #     # l ecart doit avoir un minimum
-                        #     dif = sl - price
-                        #     if dif > 5:
-                        #         comment = "Vente direct: strategie 2"
-                        #         o.sellNow(sl, tp, price, balance, VNL, comment)
-                        #
-                        # ### strategie 1 ################################################################################
-                        # elif zone[0] < bougie3M05.get("EMA120") < bougie2M05.get("EMA120") < bougie1M05.get("EMA120") \
-                        #         and bougie1M05.get("AW") > bougie2M05.get("AW") > bougie3M05.get("AW"):
-                        #     print("strategie 1***********************************************")
-                        #     print("zone[0] ", zone[0], " EMA120:", bougie3M05.get("EMA120"), " < ",
-                        #           bougie3M05.get("EMA120"),
-                        #           " < ", bougie3M05.get("EMA120"))
-                        #     print("AW ", bougie1M05.get("AW"), " > ", bougie2M05.get("AW"), " > ", bougie3M05.get("AW"))
-                        #     #sl = zoneSoutien(tick, zone)
-                        #     sl = superM01_1003T1
-                        #     print(sl)
-                        #     print(sl[0])
-                        #     tp = 0
-                        #     price = bougie1M01.get("EMA120")
-                        #     comment = "Achat buyLimit: strategie 1"
-                        #     o.buyLimit(sl[0], tp, price, balance, VNL, comment)
-                        #
-                        # ### strategie 2 ################################################################################
-                        # elif bougie0M01["close"] > superM01_1003T1 and bougie1M01.get("EMA26") > bougie1M01.get("EMA120") and bougie1M05.get("AW") > 5:
-                        #     print("strategie 2 Achat ***********************************************")
-                        #     sl = superM01_1003T1
-                        #     tp = zoneResistance(tick, zone)
-                        #     price = bougie1M01.get("EMA120")
-                        #     dif = price - sl
-                        #     if dif > 5:
-                        #         comment = "Achat limit : strategie 2"
-                        #         o.buyLimit(sl, tp, price, balance, VNL, comment)
-                        # elif bougie0M01["close"] < superM01_1003T1 and bougie1M01.get("EMA26") < bougie1M01.get("EMA120") and bougie1M05.get("AW") < -5:
-                        #     print("strategie 2 Vente ***********************************************")
-                        #     sl = superM01_1003T1
-                        #     tp = zoneResistance(tick, zone)
-                        #     price = bougie1M01.get("EMA120")
-                        #     dif = abs(price - sl)
-                        #     if dif > 5:
-                        #         comment = "Achat limit : strategie 2"
-                        #         o.sellLimit(sl, tp, price, balance, VNL, comment)
-
-
-
-                        # elif bougie1M01.get("EMA26") and bougie1M01.get("EMA70") and bougie1M01.get(
-                        #         "EMA120") and bougie1M05.get("EMA120"):
-                        #     ######################## achat ###################################
-                        #     if bougie1M01["EMA26"] > bougie1M01["EMA70"] > bougie1M01["EMA120"] > bougie2M01["EMA120"] \
-                        #             and bougie1M01["EMA70"] > bougie2M01["EMA70"] \
-                        #             and bougie1M01["EMA26"] > supportDown > bougie1M01["EMA120"] \
-                        #             and bougie1M01["EMA26"] > superM05_1003T1 > superM05_1003T2:
-                        #         support = supportDown - 15
-                        #         objectif = supportHight - 5
-                        #         # o.buyNow(support, objectif, round(price, 2), balance, VNL)
-                        #         o.buyLimit(support, objectif, round(supportDown, 2), balance, VNL)
-                        #
-                        #
-                        #     ######################## vente ###################################
-                        #     if bougie1M01["EMA120"] > bougie1M01["EMA70"] > bougie1M01["EMA26"] \
-                        #             and bougie1M01["EMA70"] < bougie2M01["EMA70"] \
-                        #             and bougie2M01["EMA120"] > bougie1M01["EMA120"] > supportHight > bougie1M01["EMA26"] \
-                        #             and bougie1M01["EMA26"] < superM05_1003T1 \
-                        #             and superM05_1003T1 > superM05_1003T2:
-                        #         support = supportHight + 15
-                        #         objectif = supportDown + 5
-                        #         # o.sellNow(support, objectif, round(price, 2), balance, VNL)
-                        #         o.sellLimit(support, objectif, round(supportHight, 2), balance, VNL)
-                        #
-                        # print("tick :", tick, " ema120", bougie1M01["EMA120"], "superM05_1003T0:", superM05_1003T0)
-                        # print("zone 0 :", zone[0])
-                        # '''
-                        # Strategie EMA:
-                        #     Ouverture d ordre au niveau : suivre la EMA120 de 5 min
-                        #     SL : superM05_1003T1
-                        #     tack profit : infini
-                        # '''
-                        # print("stragegie EMA :")
-                        # print("sell ???? :",tick ,"<", superM01_1003T1 ,"<=", superM01_1003T2 ,"and", tick ,"<", superM01_1003T0 ,"and", tick ,"<", bougie1M01["EMA120"] ,"<", superM05_1003T1 ,"and", bougie1M05["EMA250"] ,"<", zone[0])
-                        #
-                        # if tick > superM05_1003T1 >= superM05_1003T2:
-                        #     print("Achat level 1")
-                        #     if tick > superM05_1003T0:
-                        #         print("Achat level 2")
-                        #         if tick > bougie1M01["EMA120"] > superM05_1003T1:
-                        #             print("Achat level 3")
-                        #             if bougie1M01["EMA120"] > zone[0]:
-                        #                 print("Achat level 4")
-                        #                 if bougie1M01["EMA120"] > bougie2M01["EMA120"]:
-                        #                     print("Achat level 5")
-                        #                     if bougie1M01["EMA70"] > bougie1M01["EMA120"]:
-                        #                         print("Achat level 6")
-                        #
-                        # print("buy ???? :", tick, ">", superM05_1003T1, ">=", superM05_1003T2, "and", tick, ">",
-                        #       superM05_1003T0, "and", tick, ">", bougie1M01["EMA120"], ">", superM05_1003T1, "and",
-                        #       bougie1M05["EMA250"], "<", zone[0])
-                        # if tick < superM01_1003T1 <= superM01_1003T2 and tick < superM01_1003T0 \
-                        #         and tick < bougie1M01["EMA120"] < superM05_1003T1 and bougie1M05["EMA250"] < zone[0]:
-                        #     # vente limit *************************************************************************************
-                        #     sl = superM05_1003T1
-                        #     tp = 0
-                        #     o.sellLimit(sl, tp, bougie1M01["EMA120"], balance, VNL)
-                        #
-                        # elif tick > superM05_1003T1 >= superM05_1003T2 and tick > superM05_1003T0 \
-                        #         and tick > bougie1M01["EMA120"] > superM05_1003T1 and bougie1M01["EMA120"] > zone[0] and bougie1M01["EMA120"] > bougie2M01["EMA120"] and bougie1M01["EMA70"] > bougie0M01["EMA120"]:
-                        #
-                        #     # Achat limit *************************************************************************************
-                        #     if superM05_1003T1 < bougie0M05["EMA120"]:
-                        #         sl = superM05_1003T1
-                        #     else:
-                        #         sl = bougie0M05["EMA120"]
-                        #
-                        #     tp = 0
-                        #     price = bougie1M01["EMA120"]
-                        #     resistance = zoneResistance(price, zone)
-                        #
-                        #     ecartStop = price - sl
-                        #     ecartResistance = resistance - price
-                        #     if ecartResistance > ecartStop*2.5 :
-                        #         o.buyLimit(sl, tp, price, balance, VNL)
-
-                        # elif bougie1M01.get("EMA70") and bougie1M01.get("AW") and bougie1M01.get(
-                        #         "EMA70") and bougie1M05.get("EMA120") :
-                        #     ######################## achat ###################################
-                        #     if tick > superM01_1003T1 >= superM01_1003T2 and bougie1M01["EMA70"] > bougie1M01["EMA120"] \
-                        #             and tick > superM05_1003T0:
-                        #         sl = superM01_1003T1-4
-                        #         tp = 0
-                        #         o.buyNow(sl, tp, tick, balance, VNL)
-                        #     ######################## vente ###################################
-                        #     elif tick < superM01_1003T1 <= superM01_1003T2 and bougie1M01["EMA70"] < bougie1M01["EMA120"] \
-                        #             and tick < superM05_1003T0:
-                        #         sl = superM01_1003T1 + 4
-                        #         tp = 0
-                        #         o.sellNow(sl, tp, tick, balance, VNL)
                     else:
                         print("ordre en cours ...........................................")
                         for trade in tradeOpenDic['returnData']:
@@ -722,36 +472,31 @@ async def main():
                             #############" ordre en attente #################################################################
                             if TransactionSide.BUY_LIMIT == trade['cmd']:
                                 print(trade)
-                                if trade['customComment'] == "Achat support":
-                                    if bougie1M01.get("AW") < -15 and tick < bougie1M01.get("EMA26"):
-                                        sl = zoneResistanceVente(tick, zone)-15
-                                        price = zoneResistanceVente(tick, zone)
+                                if trade['customComment'] == "Achat EMA200_M1":
+                                    if tick > bougie1M01.get("EMA200"):
+                                        sl = zoneSoutien(tick, zone) - 15
                                         tp = zoneResistance(tick, zone)
+                                        price = bougie1M01.get("EMA200")
+                                        comment = "Achat EMA200"
                                         o.movebuyLimitWait(trade, sl, tp, price, balance, VNL)
-                                    elif tick > bougie1M01.get("EMA26") or tick > trade["tp"]:
+                                    elif tick > trade["tp"]:
                                         o.delete(trade)
-
-
                             elif TransactionSide.SELL_LIMIT == trade['cmd']:
-                                if trade['customComment'] == "Vente support":
+                                if trade['customComment'] == "Vente EMA200_M1":
                                     print("tick SELL_LIMIT:", tick)
-                                    print("EMA26 SELL_LIMIT:",bougie1M01.get("EMA26"))
-                                    if bougie1M01.get("AW") > 15 and tick > bougie1M01.get("EMA26") :
+                                    print("EMA26 SELL_LIMIT:",bougie1M01.get("EMA200"))
+                                    if tick < bougie1M01.get("EMA200"):
                                         sl = zoneResistance(tick, zone) + 15
                                         tp = zoneResistanceVente(tick, zone)
                                         price = zoneResistance(tick, zone)
                                         o.moveSellLimitWait(trade, sl, tp,price, balance, VNL)
-                                    elif tick < bougie1M01.get("EMA26") or tick < trade["tp"]:
+                                    elif tick < trade["tp"]:
                                         o.delete(trade)
-
-
-
-
 
                             #############" ordre execute ###################################################################
                             elif TransactionSide.BUY == trade['cmd']:
-                                if trade['customComment'] == "Achat direct":
-                                    if superM01_1003T1 > trade['sl']:
+                                if trade['customComment'] == "Achat EMA200_M1":
+                                    if superM01_1003T1 < trade['sl']:
                                         o.moveStopBuy(trade, superM01_1003T1, tick)
 
                                 else:
@@ -772,7 +517,7 @@ async def main():
                             elif TransactionSide.SELL == trade['cmd']:
                                 print("trade['customComment'] :", trade['customComment'])
 
-                                if trade['customComment'] == "Vente direct":
+                                if trade['customComment'] == "Vente EMA200_M1":
                                     print(trade['sl'] ,">", superM01_1003T1)
                                     if trade['sl'] > superM01_1003T1:
                                         o.moveStopSell(trade, superM01_1003T1, tick)

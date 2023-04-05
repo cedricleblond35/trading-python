@@ -389,6 +389,7 @@ async def main():
                     print("periode :", b_m05["close"] )
                     print("woodie : ", bougies_d["PWoodie_PP"])
                     if b_m05["close"] > bougies_d["PWoodie_PP"] and b_m05["EMA70"] > bougies0_m05["EMA70"]:  # condition strategique
+                        print("passage d ordree d achat ********************")
                         type_order = TransactionSide.BUY_LIMIT
                         ####################################"
                         zone = np.array(
@@ -432,6 +433,7 @@ async def main():
                         db["simulation"].insert_one(newvalues)
                         order_number = order_number+1
                     elif b_m05["close"] < bougies_d["PWoodie_PP"] and b_m05["EMA70"] < bougies0_m05["EMA70"]:  # check if touch
+                        print("passage d ordree de vente ********************")
                         type_order = TransactionSide.SELL_LIMIT
 
                         ####################################"
