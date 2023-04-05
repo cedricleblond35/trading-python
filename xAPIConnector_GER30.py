@@ -32,7 +32,7 @@ BALANCE = 0
 TICK = False
 PROFIT = False
 SYMBOL = "DE30"
-VNL = 25
+VNL = 15
 
 
 # logger properties
