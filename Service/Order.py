@@ -25,9 +25,6 @@ class Order:
     ################## ordre avec limit #################################################
     def buyLimit(self,  sl, tp, price, balance, vnl, comment="buyLimit"):
         try:
-            # tp = round(tp, 1)
-            # sl = round(sl, 1)
-
             h = self.client.commandExecute('getServerTime')
             timeExpiration = h['returnData']['time'] + 3600000
 
@@ -285,6 +282,31 @@ class Order:
                 resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
                 print("resp :", resp)
 
+
+                #new order
+                h = self.client.commandExecute('getServerTime')
+                timeExpiration = h['returnData']['time'] + 3600000
+
+                nbrelot = NbrLot(balance, price, sl, vnl)
+                print("**************comment :", comment)
+                detail = {
+                    "cmd": TransactionSide.BUY_LIMIT,
+                    "customComment": trade["customComment"],
+                    "expiration": timeExpiration,
+                    "offset": 0,
+                    "price": price,
+                    "sl": sl,
+                    "symbol": self.symbol,
+                    "tp": tp,
+                    "type": TransactionSide.OPEN,
+                    "volume": nbrelot
+                }
+                print("**************buy limit :", detail)
+                resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
+                detail['resp'] = resp
+                detail['comment'] = comment
+                self.dbTrade.insert_one(detail)
+
             #self.logger.info("resp :", resp)
         except Exception as exc:
             self.logger.warning("le programe a déclenché une erreur dans l ordre")
@@ -339,6 +361,28 @@ class Order:
                                                           "type": 4
                                                       }
                                               })
+            h = self.client.commandExecute('getServerTime')
+            timeExpiration = h['returnData']['time'] + 3600000
+            print("**************comment :", trade["customComment"])
+
+            nbrelot = NbrLot(balance, price, sl, vnl)
+            detail = {
+                "cmd": TransactionSide.SELL_LIMIT,
+                "customComment": trade["customComment"],
+                "expiration": timeExpiration,
+                "offset": 0,
+                "price": price,
+                "sl": sl,
+                "symbol": self.symbol,
+                "tp": tp,
+                "type": TransactionSide.OPEN,
+                "volume": nbrelot
+            }
+            print("sell limit :", detail)
+            # self.logger.info"detail :", detail)
+            resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
+            detail['resp'] = resp
+            self.dbTrade.insert_one(detail)
 
     def delete(self, trade):
         detail = {
