@@ -343,7 +343,7 @@ async def main():
         # # # moyen mobile ##################################################################################################
         moyMobil_05 = MM(SYMBOL, "M05", 0)
         moyMobil_01 = MM(SYMBOL, "M01", 0)
-        await moyMobil_05.calculSMA(200)
+        await moyMobil_05.calculSMA(200, 1)
         await moyMobil_05.EMA(70, 1)
         await moyMobil_05.EMA(200, 1)
         await moyMobil_01.calculSMA(200, 1)
@@ -376,7 +376,7 @@ async def main():
                 await majDatAall(client, SYMBOL, db)
                 # ####################################################################################################
 
-                await moyMobil_05.calculSMA(200)
+                await moyMobil_05.calculSMA(200, 1)
                 await moyMobil_05.EMA(70, 1)
                 await moyMobil_05.EMA(200, 1)
                 await moyMobil_01.calculSMA(200, 1)
