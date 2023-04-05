@@ -455,7 +455,7 @@ async def main():
                         if bougie1M01.get("EMA200") is not None:
                             if tick > bougie1M01.get("EMA200"):
                                 print("strategie 1 de achat ***********************************************")
-                                sl = zoneResistanceVente(bougie1M01.get("EMA200"), zone) - 5
+                                sl = zoneResistanceVente(bougie1M01.get("EMA200"), zone)
                                 tp = round(zoneResistance(tick, zone), 1)
                                 price = round(bougie1M01.get("EMA200"), 1)
                                 comment = "Achat EMA200_M1"
@@ -465,7 +465,7 @@ async def main():
                                 print("strategie 1 de vente ***********************************************")
 
                                 print("*********tick:", tick)
-                                sl = zoneResistance(bougie1M01.get("EMA200"), zone) + 5
+                                sl = zoneResistance(bougie1M01.get("EMA200"), zone)
                                 tp = zoneResistanceVente(tick, zone)
                                 price = round(bougie1M01.get("EMA200"), 1)
                                 comment = "Vente EMA200_M1"
@@ -481,7 +481,7 @@ async def main():
                                 print(trade)
                                 if trade['customComment'] == "Achat EMA200_M1":
                                     if tick > bougie1M01.get("EMA200"):
-                                        sl = zoneResistanceVente(bougie1M01.get("EMA200"), zone) - 5
+                                        sl = zoneResistanceVente(bougie1M01.get("EMA200"), zone)
                                         tp = zoneResistance(tick, zone)
                                         price = bougie1M01.get("EMA200")
                                         comment = "Achat EMA200"
@@ -493,7 +493,7 @@ async def main():
                                     print("tick SELL_LIMIT:", tick)
                                     print("EMA26 SELL_LIMIT:",bougie1M01.get("EMA200"))
                                     if tick < bougie1M01.get("EMA200"):
-                                        sl = zoneResistance(bougie1M01.get("EMA200"), zone) + 5
+                                        sl = zoneResistance(bougie1M01.get("EMA200"), zone)
                                         tp = zoneResistanceVente(tick, zone)
                                         price = zoneResistance(tick, zone)
                                         o.moveSellLimitWait(trade, sl, tp,price, balance, VNL)
