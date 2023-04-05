@@ -342,10 +342,11 @@ async def main():
         # # # moyen mobile ##################################################################################################
         moyMobil_05 = MM(SYMBOL, "M05", 0)
         moyMobil_01 = MM(SYMBOL, "M01", 0)
-        # await moyMobil_01_120.EMA(120)
-        await moyMobil_05.EMA(70)
-        await moyMobil_05.EMA(200)
         await moyMobil_05.calculSMA(200)
+        await moyMobil_05.EMA(70, 2)
+        await moyMobil_05.EMA(200, 2)
+        await moyMobil_01.calculSMA(200)
+        await moyMobil_01.EMA(200, 2)
         #
         # # Awesome ##################################################################################################
         ao05 = Awesome(SYMBOL, "M05")
@@ -375,9 +376,9 @@ async def main():
                 # ####################################################################################################
                 await moyMobil_05.calculSMA(200)
                 await moyMobil_01.calculSMA(200)
-                await moyMobil_05.EMA(70)
-                await moyMobil_05.EMA(200)
-                await moyMobil_01.EMA(200)
+                await moyMobil_05.EMA(70, 2)
+                await moyMobil_05.EMA(200, 2)
+                await moyMobil_01.EMA(200, 2)
                 #
                 # # AO ###################################################################################
                 await ao05.calculLastCandle(10)
