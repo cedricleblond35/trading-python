@@ -78,13 +78,13 @@ async def insertData(collection, dataDownload, lastBougieDB):
         if dataDownload['status'] and len(dataDownload["returnData"]['rateInfos']) > 0:
             for value in dataDownload["returnData"]['rateInfos']:
                 ctm = value['ctm']
-                close = (value['open'] + value['close']) / 100.0
-                high = (value['open'] + value['high']) / 100.0
-                low = (value['open'] + value['low']) / 100.0
+                close = (value['open'] + value['close']) / 10.0
+                high = (value['open'] + value['high']) / 10.0
+                low = (value['open'] + value['low']) / 10.0
                 pointMedian = round((high + low) / 2, 2)
                 #print(value['ctm'] ,">", lastBougieDB['ctm'])
                 if lastBougieDB is None or value['ctm'] > lastBougieDB['ctm']:
-                    open = value['open'] / 100.0
+                    open = value['open'] / 10.0
                     newvalues = {
                         "ctm": ctm,
                         "ctmString": value['ctmString'],
