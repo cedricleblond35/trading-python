@@ -38,11 +38,11 @@ class Order:
                 "customComment": comment,
                 "expiration": timeExpiration,
                 "offset": 0,
-                "open_price": price,
+                "price": price,
                 "sl": sl,
                 "symbol": self.symbol,
                 "tp": tp,
-                "type": 0,
+                "type": TransactionSide.PENDING,
                 "volume": nbrelot
             }
             print("**************buy limit :", detail)
@@ -74,11 +74,11 @@ class Order:
                 "customComment": comment,
                 "expiration": timeExpiration,
                 "offset": 0,
-                "open_price": price,
+                "price": price,
                 "sl": sl,
                 "symbol": self.symbol,
                 "tp": tp,
-                "type": TransactionSide.OPEN,
+                "type": TransactionSide.PENDING,
                 "volume": nbrelot
             }
             print("sell limit :", detail)
