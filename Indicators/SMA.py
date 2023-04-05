@@ -20,7 +20,7 @@ class MM(Price):
         self.__timeframe = timeframe
         self.__duration = duration
 
-    async def calculSMA(self, duration):
+    async def calculSMA(self, duration, arrondi):
         try:
             self._prepareListData(self.__duration)
             nb = 0
@@ -42,7 +42,7 @@ class MM(Price):
                         b = b + 1
                         somme = round(somme + v1["close"], 2)
 
-                    sma = round((somme / duration), 2)
+                    sma = round((somme / duration), arrondi)
                     # if "sma" not in list(list1)[-1]:
                     newvalues = {
                         "$set": {

@@ -344,10 +344,10 @@ async def main():
         moyMobil_05 = MM(SYMBOL, "M05", 0)
         moyMobil_01 = MM(SYMBOL, "M01", 0)
         await moyMobil_05.calculSMA(200)
-        await moyMobil_05.EMA(70, 2)
-        await moyMobil_05.EMA(200, 2)
-        await moyMobil_01.calculSMA(200)
-        await moyMobil_01.EMA(200, 2)
+        await moyMobil_05.EMA(70, 1)
+        await moyMobil_05.EMA(200, 1)
+        await moyMobil_01.calculSMA(200, 1)
+        await moyMobil_01.EMA(200, 1)
         #
         # # Awesome ##################################################################################################
         ao05 = Awesome(SYMBOL, "M05")
@@ -375,11 +375,12 @@ async def main():
                 # ####################################################################################################
                 await majDatAall(client, SYMBOL, db)
                 # ####################################################################################################
+
                 await moyMobil_05.calculSMA(200)
-                await moyMobil_01.calculSMA(200)
-                await moyMobil_05.EMA(70, 2)
-                await moyMobil_05.EMA(200, 2)
-                await moyMobil_01.EMA(200, 2)
+                await moyMobil_05.EMA(70, 1)
+                await moyMobil_05.EMA(200, 1)
+                await moyMobil_01.calculSMA(200, 1)
+                await moyMobil_01.EMA(200, 1)
                 #
                 # # AO ###################################################################################
                 await ao05.calculLastCandle(10)
@@ -455,9 +456,10 @@ async def main():
                             if tick > bougie1M01.get("EMA200"):
                                 print("strategie 1 de achat ***********************************************")
                                 sl = zoneResistanceVente(bougie1M01.get("EMA200"), zone) - 5
-                                tp = zoneResistance(tick, zone)
-                                price = bougie1M01.get("EMA200")
+                                tp = round(zoneResistance(tick, zone), 1)
+                                price = round(bougie1M01.get("EMA200"), 1)
                                 comment = "Achat EMA200_M1"
+                                #round(tp, 1)
                                 o.buyLimit(sl, tp, price, balance, VNL, comment)
                             else:
                                 print("strategie 1 de vente ***********************************************")
@@ -465,7 +467,7 @@ async def main():
                                 print("*********tick:", tick)
                                 sl = zoneResistance(bougie1M01.get("EMA200"), zone) + 5
                                 tp = zoneResistanceVente(tick, zone)
-                                price = bougie1M01.get("EMA200")
+                                price = round(bougie1M01.get("EMA200"), 1)
                                 comment = "Vente EMA200_M1"
                                 print("*********tp:", tp)
                                 o.sellLimit(sl, tp, price, balance, VNL, comment)
