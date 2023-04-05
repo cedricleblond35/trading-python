@@ -483,7 +483,7 @@ async def main():
                                     if tick > bougie1M01.get("SMA200"):
                                         sl = zoneResistanceVente(bougie1M01.get("SMA200"), zone)
                                         tp = zoneResistance(tick, zone)
-                                        price = bougie1M01.get("SMA200")
+                                        price = round(bougie1M01.get("SMA200"), 1)
                                         comment = "Achat SMA200"
                                         o.movebuyLimitWait(trade, sl, tp, price, balance, VNL)
                                     elif tick > trade["tp"]:
@@ -495,7 +495,7 @@ async def main():
                                     if tick < bougie1M01.get("SMA200"):
                                         sl = zoneResistance(bougie1M01.get("SMA200"), zone)
                                         tp = zoneResistanceVente(tick, zone)
-                                        price = zoneResistance(tick, zone)
+                                        price = round(bougie1M01.get("SMA200"), 1)
                                         o.moveSellLimitWait(trade, sl, tp,price, balance, VNL)
                                     elif tick < trade["tp"]:
                                         o.delete(trade)
