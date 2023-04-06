@@ -186,7 +186,7 @@ async def majDatAall(client, symbol, db):
 
         # MAJ Minute : 1 mois max------------------------------------------------------------------------
         lastBougie = db["M01"].find_one({}, sort=[('ctm', -1)])
-        startTime = int(round(time.time() * 1000)) - (60 * 60 * 24) * 1000
+        startTime = int(round(time.time() * 1000)) - (60 * 60 * 24 * 5) * 1000
         if lastBougie is not None:
             startTime = lastBougie["ctm"] - (60 * 2) * 1000
 
