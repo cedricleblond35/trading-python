@@ -482,7 +482,7 @@ async def main():
                                         tp = round(zoneResistance(tick+15, zone), 1)
                                         price = round(bougie1M01.get("SMMA200"), 1)
                                         comment = "Achat SMMA200"
-                                        o.movebuyLimitWait(trade, sl, tp, price+15, balance, VNL)
+                                        o.movebuyLimitWait(trade, sl, tp, price, balance, VNL)
                                     elif tick > trade["tp"]:
                                         o.delete(trade)
                             elif TransactionSide.SELL_LIMIT == trade['cmd']:
@@ -491,7 +491,7 @@ async def main():
                                         sl = superM01_1003T1
                                         tp = zoneResistanceVente(bougie1M01.get("SMMA200")-15, zone)
                                         price = round(bougie1M01.get("SMMA200"), 1)
-                                        o.moveSellLimitWait(trade, sl, tp,price-15, balance, VNL)
+                                        o.moveSellLimitWait(trade, sl, tp,price, balance, VNL)
                                     elif tick < trade["tp"]:
                                         o.delete(trade)
 
