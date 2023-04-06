@@ -5,7 +5,7 @@ pd.options.mode.chained_assignment = None  # default='warn'
 
 
 class Supertrend(Price):
-    def __init__(self, symbol, timeframe,  periode= 10, multplicateur = 3, arrondi = 2, duration=100,shift=0):
+    def __init__(self, symbol, timeframe,  periode= 10, multplicateur = 3, arrondi = 1, duration=200,shift=0):
         '''
 
         :param symbol: Symbole à calculer (DE30, SILVER ...)
