@@ -450,19 +450,19 @@ async def main():
 
                         # strategie des achats et ventes des support
                         if bougie1M01.get("SMMA200") is not None:
-                            if tick > bougie1M01.get("SMMA200"):
+                            if tick > bougie1M01.get("SMMA200") > spM01_1003:
                                 print("strategie 1 de achat ***********************************************")
-                                sl = zoneResistanceVente(bougie1M01.get("SMMA200"), zone)
+                                sl = spM01_1003
                                 tp = round(zoneResistance(bougie1M01.get("SMMA200"), zone), 1)
                                 price = round(bougie1M01.get("SMMA200"), 1)
                                 comment = "Achat SMMA200_M1"
                                 #round(tp, 1)
                                 o.buyLimit(sl, tp, price, balance, VNL, comment)
-                            else:
+                            elif tick < bougie1M01.get("SMMA200") < spM01_1003:
                                 print("strategie 1 de vente ***********************************************")
 
                                 print("*********tick:", tick)
-                                sl = zoneResistance(bougie1M01.get("SMMA200"), zone)
+                                sl = spM01_1003
                                 tp = zoneResistanceVente(bougie1M01.get("SMMA200"), zone)
                                 price = round(bougie1M01.get("SMMA200"), 1)
                                 comment = "Vente SMMA200_M1"
@@ -478,7 +478,7 @@ async def main():
                                 print(trade)
                                 if trade['customComment'] == "Achat SMMA200_M1":
                                     if tick > bougie1M01.get("SMMA200"):
-                                        sl = zoneResistanceVente(bougie1M01.get("SMMA200"), zone)
+                                        sl = spM01_1003
                                         tp = zoneResistance(bougie1M01.get("SMMA200"), zone)
                                         price = round(bougie1M01.get("SMMA200"), 1)
                                         comment = "Achat SMMA200"
@@ -487,10 +487,8 @@ async def main():
                                         o.delete(trade)
                             elif TransactionSide.SELL_LIMIT == trade['cmd']:
                                 if trade['customComment'] == "Vente SMMA200_M1":
-                                    print("tick SELL_LIMIT:", tick)
-                                    print("EMA26 SELL_LIMIT:",bougie1M01.get("SMMA200"))
                                     if tick < bougie1M01.get("SMMA200"):
-                                        sl = zoneResistance(bougie1M01.get("SMMA200"), zone)
+                                        sl = spM01_1003
                                         tp = zoneResistanceVente(bougie1M01.get("SMMA200"), zone)
                                         price = round(bougie1M01.get("SMMA200"), 1)
                                         o.moveSellLimitWait(trade, sl, tp,price, balance, VNL)
@@ -500,7 +498,7 @@ async def main():
                             #############" ordre execute ###################################################################
                             elif TransactionSide.BUY == trade['cmd']:
                                 if trade['customComment'] == "Achat SMMA200_M1":
-                                    if superM01_1003T1 < trade['sl']:
+                                    if superM01_1003T1 > trade['sl']:
                                         o.moveStopBuy(trade, superM01_1003T1, tick)
 
                                 else:
@@ -523,7 +521,7 @@ async def main():
 
                                 if trade['customComment'] == "Vente SMMA200_M1":
                                     print(trade['sl'] ,">", superM01_1003T1)
-                                    if trade['sl'] > superM01_1003T1:
+                                    if superM01_1003T1 < trade['sl']:
                                         o.moveStopSell(trade, superM01_1003T1, tick)
                                 else:
                                     # descendre le stop  a 5pip de benef :
