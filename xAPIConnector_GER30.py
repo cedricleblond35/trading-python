@@ -385,11 +385,6 @@ async def main():
                 # # supertrend ###################################################################################
                 spM01_1003 = Supertrend(SYMBOL, "M01", 33, 9)
                 superM01_1003T0, superM01_1003T1, superM01_1003T2 = spM01_1003.getST()
-                print(" superM01_1003T0, superM01_1003T1, superM01_1003T2 :",  superM01_1003T0, " : ", superM01_1003T1, " : ", superM01_1003T2)
-
-                spM05_1003 = Supertrend(SYMBOL, "M05", 10, 3)
-                superM05_1003T0, superM05_1003T1, superM05_1003T2 = spM05_1003.getST()
-                print(" superM05_1003T0, superM05_1003T1, superM05_1003T2 :",  superM05_1003T0, " : ", superM05_1003T1, " : ", superM05_1003T2)
                 #
                 now = datetime.now()
                 current_time = now.strftime("%H:%M:%S")
@@ -469,7 +464,7 @@ async def main():
                                 print("*********tick:", tick)
                                 sl = superM01_1003T1
                                 tp = zoneResistanceVente(bougie1M01.get("SMMA200"), zone)
-                                price = round(tick, 1)
+                                price = round(bougie1M01.get("SMMA200"), 1)
                                 comment = "Vente SMMA200_M1"
                                 print("*********tp:", tp)
                                 o.sellLimit(sl, tp, price, balance, VNL, comment)
