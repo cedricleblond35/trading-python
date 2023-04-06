@@ -49,7 +49,7 @@ class MM(Price):
                     start = len(self._listData) - len(self._listDataLast)
                     idLastEma = start - 1
                     if self._listData[idLastEma].get(name):
-                        EMAPrecedent = self._listData[idLastEma][name]
+                        SMMAPrecedent = self._listData[idLastEma][name]
                     else:
                         logger.info("nettoyage :", self._listData[idLastEma])
                         self._db[self.__timeframe].delete_one({ "_id": self._listData[idLastEma].get('_id') })
@@ -58,7 +58,7 @@ class MM(Price):
                         start = len(self._listData) - len(self._listDataLast)
                         idLastEma = start - 1
                         if self._listData[idLastEma].get(name):
-                            EMAPrecedent = self._listData[idLastEma][name]
+                            SMMAPrecedent = self._listData[idLastEma][name]
                             logger.info("nettoyage reussi")
                         else:
                             logger.info("nettoyage echec")
