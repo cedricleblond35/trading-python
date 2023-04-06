@@ -407,6 +407,8 @@ def NbrLot(balance, position, stp, vnl):
         print("calcul du nombre de lot #############################################################################")
         print("balance :", balance)
         perteAcceptable = round(balance * 0.03, 0)
+        valeurContrat = position*vnl*1       #valeur_contrat pour 1 lot
+        levier = 20
 
         print("perteAcceptable :", perteAcceptable)
         print("position :", position)
@@ -417,10 +419,10 @@ def NbrLot(balance, position, stp, vnl):
         print("ecart type :", ecartPip)
         nbrelot = round(perteAcceptable / ecartPip / vnl, 2 )
 
-        positionMax = round_down(balance*0.70/100/100, 2)
-        print("positionMax :", positionMax)
-        if nbrelot > positionMax:
-            nbrelot = positionMax
+        lotMaxPossible = round_down(balance * levier / valeurContrat, 2)
+        print("lotMaxPossible :", lotMaxPossible)
+        if nbrelot > lotMaxPossible:
+            nbrelot = lotMaxPossible
 
         """
         qtMax = self.round_down((balance["equityFX"] / 20000), 2)

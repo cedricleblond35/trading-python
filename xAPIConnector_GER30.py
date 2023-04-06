@@ -20,7 +20,25 @@ from Service.Command import Command
 from Indicators.Supertrend import Supertrend
 from Service.TransactionSide import TransactionSide
 
-# Variables perso--------------------------------------------------------------------------------------------------------
+######## calcul de lots
+# 10 pips 250€ pour 1 lots
+# 1 pips 25€ pour 1 lots
+#
+# Valeur du contrat
+# 15740 points * 25€ * 1 lot = 393 500€
+#
+# Levier de 20 max
+# Marge : 393 500 € / 20 = 19675€
+#
+# exemple
+# si on a un solde : 19436 €
+# donc marge dispo : 19436 €
+#
+# 19436€ * 20 de levier = 388 720 €
+# nbre de lot = 388 720 / 393500 € = 0,9878 lot
+
+
+
 # horaire---------------
 TradeStartTime = 4
 TradeStopTime = 22
@@ -33,6 +51,7 @@ TICK = False
 PROFIT = False
 SYMBOL = "DE30"
 VNL = 30
+# 1 pips 25€ pour 1 lots
 
 
 # logger properties
