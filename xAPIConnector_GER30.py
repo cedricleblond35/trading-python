@@ -463,11 +463,11 @@ async def main():
 
                                 print("*********tick:", tick)
                                 sl = superM01_1003T1
-                                tp = zoneResistanceVente(bougie1M01.get("SMMA200"), zone)
+                                tp = zoneResistanceVente(bougie1M01.get("SMMA200")-15, zone)
                                 price = round(bougie1M01.get("SMMA200"), 1)
                                 comment = "Vente SMMA200_M1"
                                 print("*********tp:", tp)
-                                o.sellLimit(sl, tp, price-15, balance, VNL, comment)
+                                o.sellLimit(sl, tp, price, balance, VNL, comment)
                     else:
                         print("ordre en cours ...........................................")
                         for trade in tradeOpenDic['returnData']:
@@ -479,7 +479,7 @@ async def main():
                                 if trade['customComment'] == "Achat SMMA200_M1":
                                     if tick > bougie1M01.get("SMMA200"):
                                         sl = superM01_1003T1
-                                        tp = zoneResistance(tick, zone)
+                                        tp = round(zoneResistance(tick+15, zone), 1)
                                         price = round(bougie1M01.get("SMMA200"), 1)
                                         comment = "Achat SMMA200"
                                         o.movebuyLimitWait(trade, sl, tp, price+15, balance, VNL)
@@ -489,7 +489,7 @@ async def main():
                                 if trade['customComment'] == "Vente SMMA200_M1":
                                     if tick < bougie1M01.get("SMMA200"):
                                         sl = superM01_1003T1
-                                        tp = zoneResistanceVente(tick, zone)
+                                        tp = zoneResistanceVente(bougie1M01.get("SMMA200")-15, zone)
                                         price = round(bougie1M01.get("SMMA200"), 1)
                                         o.moveSellLimitWait(trade, sl, tp,price-15, balance, VNL)
                                     elif tick < trade["tp"]:
