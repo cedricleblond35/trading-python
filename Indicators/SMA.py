@@ -74,6 +74,8 @@ class MM(Price):
 
                         sum1 = round(self._sum(duration, start), arrondi)
                         print("===========> sum1:", sum1)
+                        print("===========> SMMAPrecedent:", SMMAPrecedent)
+                        print("===========> close:", list[i]["ctmString"], "  close", list[i]["close"])
                         smma = (sum1 - SMMAPrecedent + list[i]["close"])/duration
                         print("===========> smma:", smma)
                         print("----------------------------")
