@@ -43,6 +43,26 @@ class MM(Price):
                     # rien de rempli
                     SMMAPrecedent = 0
                     start = duration
+                else:
+                    # Des ema existant, on configure le EMAPrecedent et le start correctement
+                    # la 1ere ligne contient le sma ou ema precedent pour le calcul
+                    start = len(self._listData) - len(self._listDataLast)
+                    idLastEma = start - 1
+                    if self._listData[idLastEma].get(name):
+                        EMAPrecedent = self._listData[idLastEma][name]
+                    else:
+                        logger.info("nettoyage :", self._listData[idLastEma])
+                        self._db[self.__timeframe].delete_one({ "_id": self._listData[idLastEma].get('_id') })
+                        self._prepareListData()  # toutes les bougies
+                        self._prepareListEMA(0, duration, name)
+                        start = len(self._listData) - len(self._listDataLast)
+                        idLastEma = start - 1
+                        if self._listData[idLastEma].get(name):
+                            EMAPrecedent = self._listData[idLastEma][name]
+                            logger.info("nettoyage reussi")
+                        else:
+                            logger.info("nettoyage echec")
+                            return
 
                 list = self._listData[start:len(self._listData) - 1]
                 print("nombre :", len(list))
