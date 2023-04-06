@@ -85,6 +85,7 @@ class MM(Price):
                             }}
                         myquery = {"ctm": list[i]["ctm"]}
                         self._db[self.__timeframe].update_one(myquery, newvalues)
+                        sys.exit()
 
                         SMMAPrecedent = smma
                     elif nameSMA in list[i]:
