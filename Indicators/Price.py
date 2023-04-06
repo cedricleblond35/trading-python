@@ -102,7 +102,7 @@ class Price:
     def _sum(self, limit, skip=0, sort=1):
         self.__connectionDB()
         print("===========> _sum:  limit=", limit, "  skip:", skip)
-        for v in self._db[self.__timeframe].aggregate([{"$sort":{"ctm":sort}},{ "$skip":skip},{ "$limit":limit},{'$group': {'_id': None, 'sum_close:': {'$sum': '$close'}}}]):
+        for v in self._db[self.__timeframe].aggregate([{"$sort":{"ctm":sort}},{ "$skip":skip},{ "$limit":limit},{'$group': {'_id': None, 'sum_close': {'$sum': '$close'}}}]):
             print("boucle:", v)
             return v['sum_close']
 
