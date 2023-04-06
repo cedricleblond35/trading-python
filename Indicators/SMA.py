@@ -75,6 +75,8 @@ class MM(Price):
                         sum1 = round(self._sum(duration, start), arrondi)
                         print("===========> sum1:", sum1)
                         smma = (sum1 - SMMAPrecedent + list[i]["close"])/duration
+                        print("===========> smma:", smma)
+                        print("----------------------------")
                         newvalues = {
                             "$set": {
                                 name: round(smma, arrondi)
