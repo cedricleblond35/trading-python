@@ -102,6 +102,7 @@ class Price:
     def _sum(self, limit, skip=0, sort=1):
         self.__connectionDB()
         for v in self._db[self.__timeframe].aggregate([{"$sort":{"ctm":sort}},{ "$skip":skip},{ "$limit":limit},{'$group': {'_id': None, 'sum_val': {'$sum': 'close'}}}]):
+            print("boucle:", v)
             return v['sum_val']
 
     def _avgClose(self, limit, skip=0, sort=1):
