@@ -343,10 +343,9 @@ async def main():
         # # # moyen mobile ##################################################################################################
         moyMobil_05 = MM(SYMBOL, "M05", 0)
         moyMobil_01 = MM(SYMBOL, "M01", 0)
-        await moyMobil_05.calculSMA(200, 1)
+        await moyMobil_01.SMMA(200, 1)
         await moyMobil_05.EMA(70, 1)
         await moyMobil_05.EMA(200, 1)
-        await moyMobil_01.calculSMA(200, 1)
         await moyMobil_01.EMA(200, 1)
         #
         # # Awesome ##################################################################################################
@@ -375,12 +374,9 @@ async def main():
                 # ####################################################################################################
                 await majDatAall(client, SYMBOL, db)
                 # ####################################################################################################
-
-                await moyMobil_05.calculSMA(200, 1)
                 await moyMobil_01.SMMA(200, 1)
                 await moyMobil_05.EMA(70, 1)
                 await moyMobil_05.EMA(200, 1)
-                await moyMobil_01.calculSMA(200, 1)
                 await moyMobil_01.EMA(200, 1)
                 #
                 # # AO ###################################################################################
@@ -453,23 +449,23 @@ async def main():
                         print("demarrage de selection d une strategie")
 
                         # strategie des achats et ventes des support
-                        if bougie1M01.get("SMA200") is not None:
-                            if tick > bougie1M01.get("SMA200"):
+                        if bougie1M01.get("SMMA200") is not None:
+                            if tick > bougie1M01.get("SMMA200"):
                                 print("strategie 1 de achat ***********************************************")
-                                sl = zoneResistanceVente(bougie1M01.get("SMA200"), zone)
-                                tp = round(zoneResistance(tick, zone), 1)
-                                price = round(bougie1M01.get("SMA200"), 1)
-                                comment = "Achat SMA200_M1"
+                                sl = zoneResistanceVente(bougie1M01.get("SMMA200"), zone)
+                                tp = round(zoneResistance(bougie1M01.get("SMMA200"), zone), 1)
+                                price = round(bougie1M01.get("SMMA200"), 1)
+                                comment = "Achat SMMA200_M1"
                                 #round(tp, 1)
                                 o.buyLimit(sl, tp, price, balance, VNL, comment)
                             else:
                                 print("strategie 1 de vente ***********************************************")
 
                                 print("*********tick:", tick)
-                                sl = zoneResistance(bougie1M01.get("SMA200"), zone)
-                                tp = zoneResistanceVente(tick, zone)
-                                price = round(bougie1M01.get("SMA200"), 1)
-                                comment = "Vente SMA200_M1"
+                                sl = zoneResistance(bougie1M01.get("SMMA200"), zone)
+                                tp = zoneResistanceVente(bougie1M01.get("SMMA200"), zone)
+                                price = round(bougie1M01.get("SMMA200"), 1)
+                                comment = "Vente SMMA200_M1"
                                 print("*********tp:", tp)
                                 o.sellLimit(sl, tp, price, balance, VNL, comment)
                     else:
@@ -480,30 +476,30 @@ async def main():
                             #############" ordre en attente #################################################################
                             if TransactionSide.BUY_LIMIT == trade['cmd']:
                                 print(trade)
-                                if trade['customComment'] == "Achat SMA200_M1":
-                                    if tick > bougie1M01.get("SMA200"):
-                                        sl = zoneResistanceVente(bougie1M01.get("SMA200"), zone)
-                                        tp = zoneResistance(tick, zone)
-                                        price = round(bougie1M01.get("SMA200"), 1)
-                                        comment = "Achat SMA200"
+                                if trade['customComment'] == "Achat SMMA200_M1":
+                                    if tick > bougie1M01.get("SMMA200"):
+                                        sl = zoneResistanceVente(bougie1M01.get("SMMA200"), zone)
+                                        tp = zoneResistance(bougie1M01.get("SMMA200"), zone)
+                                        price = round(bougie1M01.get("SMMA200"), 1)
+                                        comment = "Achat SMMA200"
                                         o.movebuyLimitWait(trade, sl, tp, price, balance, VNL)
                                     elif tick > trade["tp"]:
                                         o.delete(trade)
                             elif TransactionSide.SELL_LIMIT == trade['cmd']:
-                                if trade['customComment'] == "Vente SMA200_M1":
+                                if trade['customComment'] == "Vente SMMA200_M1":
                                     print("tick SELL_LIMIT:", tick)
-                                    print("EMA26 SELL_LIMIT:",bougie1M01.get("SMA200"))
-                                    if tick < bougie1M01.get("SMA200"):
-                                        sl = zoneResistance(bougie1M01.get("SMA200"), zone)
-                                        tp = zoneResistanceVente(tick, zone)
-                                        price = round(bougie1M01.get("SMA200"), 1)
+                                    print("EMA26 SELL_LIMIT:",bougie1M01.get("SMMA200"))
+                                    if tick < bougie1M01.get("SMMA200"):
+                                        sl = zoneResistance(bougie1M01.get("SMMA200"), zone)
+                                        tp = zoneResistanceVente(bougie1M01.get("SMMA200"), zone)
+                                        price = round(bougie1M01.get("SMMA200"), 1)
                                         o.moveSellLimitWait(trade, sl, tp,price, balance, VNL)
                                     elif tick < trade["tp"]:
                                         o.delete(trade)
 
                             #############" ordre execute ###################################################################
                             elif TransactionSide.BUY == trade['cmd']:
-                                if trade['customComment'] == "Achat SMA200_M1":
+                                if trade['customComment'] == "Achat SMMA200_M1":
                                     if superM01_1003T1 < trade['sl']:
                                         o.moveStopBuy(trade, superM01_1003T1, tick)
 
@@ -525,7 +521,7 @@ async def main():
                             elif TransactionSide.SELL == trade['cmd']:
                                 print("trade['customComment'] :", trade['customComment'])
 
-                                if trade['customComment'] == "Vente SMA200_M1":
+                                if trade['customComment'] == "Vente SMMA200_M1":
                                     print(trade['sl'] ,">", superM01_1003T1)
                                     if trade['sl'] > superM01_1003T1:
                                         o.moveStopSell(trade, superM01_1003T1, tick)

@@ -65,29 +65,17 @@ class MM(Price):
                             return
 
                 list = self._listData[start:len(self._listData) - 1]
-                print("nombre :", len(list))
-                #sum1 = self._numberDocuments()
-                #print("---------->", sum1)
+                print("SMMA : nombre à mettre à jours", len(list))
                 for i in range(0, len(list)):
                     if SMMAPrecedent > 0:
                         # SMMA(i) = (SUM1 - SMMA1 + CLOSE(i)) / N
-                        prevsum = SMMAPrecedent*duration
-
-                        #sum1 = round(self._sum(duration, start), arrondi)
-                        print("===========> prevsum:", prevsum)
-                        print("===========> SMMAPrecedent:", SMMAPrecedent)
-                        print("===========> close:", list[i]["ctmString"], "  close", list[i]["close"])
-                        smma = (prevsum - SMMAPrecedent + list[i]["close"])/duration
-                        print("===========> smma:", smma)
-                        print("----------------------------")
+                        smma = ((SMMAPrecedent*duration) - SMMAPrecedent + list[i]["close"])/duration
                         newvalues = {
                             "$set": {
                                 name: round(smma, arrondi)
                             }}
                         myquery = {"ctm": list[i]["ctm"]}
                         self._db[self.__timeframe].update_one(myquery, newvalues)
-
-
                         SMMAPrecedent = smma
                     elif nameSMA in list[i]:
                         # c est la première moyenne, il est la SMA on cette valeur comme point de depart
