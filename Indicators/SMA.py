@@ -20,6 +20,79 @@ class MM(Price):
         self.__timeframe = timeframe
         self.__duration = duration
 
+    #La première valeur de cette moyenne mobile lissée est calculée par analogie avec la moyenne mobile simple (SMA).
+    # SUM1 = SUM(CLOSE, N)
+    # SMMA1 = SUM1/N
+    #
+    # La deuxième moyenne mobile et les moyennes mobiles ultérieures sont calculées selon la formule suivante:
+    # SMMA(i) = (SUM1 - SMMA1 + CLOSE(i)) / N
+    # SUM — somme;
+    # SUM1 — somme des prix de clôture de N périodes, calculée à partir de la barre précédente;
+    # SMMA(i - 1) — moyenne mobile lissée de la barre précédente;
+    # SMMA(i) — moyenne mobile lissée de la barre actuelle (sauf la première);
+    # CLOSE(i)— prix actuel de clôture;
+    # N — période — période de lissage.
+    async def SMMA(self, duration, arrondi):
+        try:
+            name = "SMMA" + str(duration)
+            nameSMA = "SMA" + str(duration)
+            self._prepareListData()  # toutes les bougies
+            self._prepareListSMMA(0, duration, name)  # toutes les bougies ne possédant pas EMA (HORS LES X PREMIÈRES)
+            if len(self._listDataLast) > 1:
+                if len(self._listData) - len(self._listDataLast) == duration:
+                    # rien de rempli
+                    SMMAPrecedent = 0
+                    start = duration
+
+                list = self._listData[start:len(self._listData) - 1]
+                print("nombre :", len(list))
+                #sum1 = self._numberDocuments()
+                #print("---------->", sum1)
+                for i in range(0, len(list)):
+                    if SMMAPrecedent > 0:
+                        # SMMA(i) = (SUM1 - SMMA1 + CLOSE(i)) / N
+
+                        sum1 = round(self._sum(duration, start), arrondi)
+                        print("===========> sum1:", sum1)
+                        smma = (sum1 - SMMAPrecedent + list[i]["close"])/duration
+                        newvalues = {
+                            "$set": {
+                                name: round(smma, arrondi)
+                            }}
+                        myquery = {"ctm": list[i]["ctm"]}
+                        self._db[self.__timeframe].update_one(myquery, newvalues)
+
+                        SMMAPrecedent = smma
+                    elif nameSMA in list[i]:
+                        # c est la première moyenne, il est la SMA on cette valeur comme point de depart
+                        newvalues = {
+                            "$set": {
+                                name: list[i][nameSMA]
+                            }}
+                        myquery = {"ctm": list[i]["ctm"]}
+                        self._db[self.__timeframe].update_one(myquery, newvalues)
+                        SMMAPrecedent = list[i][nameSMA]
+                    else:
+                        # c est la première moyenne, il n est pas de SMA on calcule le moyenne SMA comme point de depart
+                        mm = round(self._avgClose(duration), arrondi)
+                        newvalues = {
+                            "$set": {
+                                name: mm
+                            }}
+                        myquery = {"ctm": list[i]["ctm"]}
+                        self._db[self.__timeframe].update_one(myquery, newvalues)
+                        SMMAPrecedent = mm
+
+                    start = start + 1
+
+        except Exception as exc:
+            print("le programe a déclenché une erreur")
+            print("exception de mtype ", exc.__class__)
+            print("message", exc)
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            print(exc_type, fname, exc_tb.tb_lineno)
+
     async def calculSMA(self, duration, arrondi):
         try:
             self._prepareListData(self.__duration)
@@ -58,8 +131,6 @@ class MM(Price):
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
             print(exc_type, fname, exc_tb.tb_lineno)
-
-        # return sma
 
     async def EMA(self, duration, arrondi):
         """

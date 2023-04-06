@@ -60,6 +60,12 @@ class Price:
         for v in self._db[self.__timeframe].find({link_id: {'$exists': False}}).skip(skipValue).limit(limitValue):
             self._listDataLast.append(v)
 
+    def _prepareListSMMA(self, limitValue=0, skipValue=0, link_id='ctm'):
+        self.__connectionDB()
+        self._listDataLast.clear()
+        for v in self._db[self.__timeframe].find({link_id: {'$exists': False}}).skip(skipValue).limit(limitValue):
+            self._listDataLast.append(v)
+
 
     def _prepareListCC(self, limitValue=0, skipValue=0):
         #qelect le nombre de bougie à traiter
@@ -79,7 +85,7 @@ class Price:
 
 
     def _prepareListAW(self, limitValue=0, skipValue=0):
-        #qelect le nombre de bougie à traiter
+        #select le nombre de bougie à traiter
         self.__connectionDB()
         self._listDataLast.clear()
 
@@ -93,12 +99,20 @@ class Price:
 
         self._listData.reverse()
 
-
+    def _sum(self, limit, skip=0, sort=1):
+        self.__connectionDB()
+        for v in self._db[self.__timeframe].aggregate([{"$sort":{"ctm":sort}},{ "$skip":skip},{ "$limit":limit},{'$group': {'_id': None, 'sum_val': {'$sum': 'close'}}}]):
+            return v['sum_val']
 
     def _avgClose(self, limit, skip=0, sort=1):
         self.__connectionDB()
         for v in self._db[self.__timeframe].aggregate([{ "$sort" : { "ctm" : sort}},{ "$skip":skip},{ "$limit":limit},{'$group': {"_id": "$Branch", 'avg_val': {'$avg': '$close'}}}]):
             return v['avg_val']
+
+    def _numberDocuments(self, skip=0, sort=1):
+        self.__connectionDB()
+        for v in self._db[self.__timeframe].aggregate([{"$sort": {"ctm": sort}}, {"$skip": skip}, {'$group': {'_id': None, 'sum_val': {'$sum': 1}}}]):
+            return v['sum_val']
 
     def __connectionDB(self):
         self._db = ConnectionDB().getDB(self.__symbol)
