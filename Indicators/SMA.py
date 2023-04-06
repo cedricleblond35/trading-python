@@ -71,12 +71,13 @@ class MM(Price):
                 for i in range(0, len(list)):
                     if SMMAPrecedent > 0:
                         # SMMA(i) = (SUM1 - SMMA1 + CLOSE(i)) / N
+                        prevsum = SMMAPrecedent*duration
 
-                        sum1 = round(self._sum(duration, start), arrondi)
-                        print("===========> sum1:", sum1)
+                        #sum1 = round(self._sum(duration, start), arrondi)
+                        print("===========> prevsum:", prevsum)
                         print("===========> SMMAPrecedent:", SMMAPrecedent)
                         print("===========> close:", list[i]["ctmString"], "  close", list[i]["close"])
-                        smma = (sum1 - SMMAPrecedent + list[i]["close"])/duration
+                        smma = (prevsum - SMMAPrecedent + list[i]["close"])/duration
                         print("===========> smma:", smma)
                         print("----------------------------")
                         newvalues = {
