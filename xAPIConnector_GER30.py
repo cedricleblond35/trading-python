@@ -362,11 +362,10 @@ async def main():
         # # # moyen mobile ##################################################################################################
         moyMobil_05 = MM(SYMBOL, "M05", 0)
         moyMobil_01 = MM(SYMBOL, "M01", 0)
-        await moyMobil_01.SMMA(200, 1)
         await moyMobil_05.EMA(70, 1)
+        await moyMobil_05.SMMA(200, 1)
+        await moyMobil_01.SMMA(200, 1)
         await moyMobil_01.EMA(70, 1)
-        await moyMobil_05.EMA(200, 1)
-        await moyMobil_01.EMA(200, 1)
         #
         # # Awesome ##################################################################################################
         ao05 = Awesome(SYMBOL, "M05")
@@ -394,8 +393,9 @@ async def main():
                 # ####################################################################################################
                 await majDatAall(client, SYMBOL, db)
                 # ####################################################################################################
-                await moyMobil_01.SMMA(200, 1)
                 await moyMobil_05.EMA(70, 1)
+                await moyMobil_05.SMMA(200, 1)
+                await moyMobil_01.SMMA(200, 1)
                 await moyMobil_01.EMA(70, 1)
                 #
                 # # AO ###################################################################################
