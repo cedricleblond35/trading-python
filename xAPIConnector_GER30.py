@@ -521,44 +521,36 @@ async def main():
                             #############" ordre execute ###################################################################
                             elif TransactionSide.BUY == trade['cmd']:
                                 if trade['customComment'] == "Achat SMMA200_M1":
-                                    if superM01_1003T1 > trade['sl']:
-                                        o.moveStopBuy(trade, superM01_1003T1, tick)
-
-                                else:
                                     # Pour garantir pas de perte : monter le stop  a 5pip de benef :
                                     #   Si cours en dessus de l ouverture avec ecart 20pip
                                     #   Et si AW change de tendance
 
                                     # Si il touche une resistance et AW change de tendance, monter le stop  au ST01 ?? A FAIRE ???????
-                                    if trade['sl'] < trade['open_price'] and tick > trade['open_price'] + 15 and bougie0M05[
-                                        'AW'] < bougie1M05['AW']:
+                                    if trade['sl'] < trade['open_price'] and tick > trade['open_price'] + 25 and \
+                                            bougie0M05[
+                                                'AW'] < bougie1M05['AW']:
                                         sl = trade['open_price'] + 3
                                         o.moveStopBuy(trade, sl, tick)
-                                    else:
-                                        sl = round(superM01_1003T1 - ecart / 4, 2)
-                                        print("sl superM01_1003T1:", sl)
-                                        o.moveStopBuy(trade, sl, tick)
+
+                                    elif superM01_1003T1 > trade['sl']:
+                                        o.moveStopBuy(trade, superM01_1003T1, tick)
 
                             elif TransactionSide.SELL == trade['cmd']:
-                                print("trade['customComment'] :", trade['customComment'])
-
                                 if trade['customComment'] == "Vente SMMA200_M1":
-                                    print(trade['sl'] ,">", superM01_1003T1)
-                                    if superM01_1003T1 < trade['sl']:
-                                        o.moveStopSell(trade, superM01_1003T1, tick)
-                                else:
                                     # descendre le stop  a 5pip de benef :
                                     #   Si cours en dessous de l ouverture avec ecart 20pip
                                     #   Et si AW change de tendance
-                                    if trade['sl'] > trade['open_price'] and tick < trade['open_price'] - 15 and bougie0M05[
-                                        'AW'] > \
+                                    if trade['sl'] > trade['open_price'] and tick < trade['open_price'] - 25 and \
+                                            bougie0M05[
+                                                'AW'] > \
                                             bougie1M05['AW']:
                                         sl = trade['open_pr.ice'] - 3
                                         o.moveStopSell(trade, sl, tick)
-                                    else:
-                                        print("vente direct ok : sl :", superM01_1003T1)
-                                        sl = round(superM01_1003T1 + ecart / 4, 2)
-                                        o.moveStopSell(trade, sl, tick)
+                                        print(trade['sl'] ,">", superM01_1003T1)
+
+                                    elif superM01_1003T1 < trade['sl']:\
+                                        o.moveStopSell(trade, superM01_1003T1, tick)
+
 
                         print("ordre en cours   END...........................................")
                 time.sleep(30)
