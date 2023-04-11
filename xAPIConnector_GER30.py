@@ -364,6 +364,7 @@ async def main():
         moyMobil_01 = MM(SYMBOL, "M01", 0)
         await moyMobil_01.SMMA(200, 1)
         await moyMobil_05.EMA(70, 1)
+        await moyMobil_01.EMA(70, 1)
         await moyMobil_05.EMA(200, 1)
         await moyMobil_01.EMA(200, 1)
         #
@@ -395,6 +396,7 @@ async def main():
                 # ####################################################################################################
                 await moyMobil_01.SMMA(200, 1)
                 await moyMobil_05.EMA(70, 1)
+                await moyMobil_01.EMA(70, 1)
                 await moyMobil_05.EMA(200, 1)
                 await moyMobil_01.EMA(200, 1)
                 #
@@ -546,7 +548,7 @@ async def main():
 
                                     elif superM01_1003T1 < trade['sl']:
                                         o.moveStopSell(trade, superM01_1003T1, tick)
-                                        
+
                         print("ordre en cours   END...........................................")
                 time.sleep(30)
 
