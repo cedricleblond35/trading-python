@@ -469,7 +469,7 @@ async def main():
                             print("tick:", tick)
                             print("superM01_1003T1:", superM01_1003T1)
                             print("smma200:", bougie1M01.get("SMMA200"))
-                            if tick > bougie1M01.get("SMMA200") > superM01_1003T1:
+                            if tick > bougie1M01.get("SMMA200") > superM01_1003T1 and bougie1M01.get("EMA70") > bougie1M01.get("SMMA200"):
                                 print("strategie 1 de achat ***********************************************")
                                 sl = superM01_1003T1
                                 tp = round(zoneResistance(tick+15, zone), 1)
@@ -477,7 +477,7 @@ async def main():
                                 comment = "Achat SMMA200_M1"
                                 #round(tp, 1)
                                 o.buyLimit(sl, tp, price, balance, VNL, comment)
-                            elif tick < bougie1M01.get("SMMA200") < superM01_1003T1:
+                            elif tick < bougie1M01.get("SMMA200") < superM01_1003T1 and bougie1M01.get("EMA70") < bougie1M01.get("SMMA200"):
                                 print("strategie 1 de vente ***********************************************")
 
                                 print("*********tick:", tick)
@@ -527,8 +527,7 @@ async def main():
 
                                     # Si il touche une resistance et AW change de tendance, monter le stop  au ST01 ?? A FAIRE ???????
                                     if trade['sl'] < trade['open_price'] and tick > trade['open_price'] + 25 and \
-                                            bougie0M05[
-                                                'AW'] < bougie1M05['AW']:
+                                            bougie0M05['AW'] < bougie1M05['AW']:
                                         sl = trade['open_price'] + 3
                                         o.moveStopBuy(trade, sl, tick)
 
@@ -541,17 +540,13 @@ async def main():
                                     #   Si cours en dessous de l ouverture avec ecart 20pip
                                     #   Et si AW change de tendance
                                     if trade['sl'] > trade['open_price'] and tick < trade['open_price'] - 25 and \
-                                            bougie0M05[
-                                                'AW'] > \
-                                            bougie1M05['AW']:
-                                        sl = trade['open_pr.ice'] - 3
+                                            bougie0M05['AW'] > bougie1M05['AW']:
+                                        sl = trade['open_price'] - 3
                                         o.moveStopSell(trade, sl, tick)
-                                        print(trade['sl'] ,">", superM01_1003T1)
 
-                                    elif superM01_1003T1 < trade['sl']:\
+                                    elif superM01_1003T1 < trade['sl']:
                                         o.moveStopSell(trade, superM01_1003T1, tick)
-
-
+                                        
                         print("ordre en cours   END...........................................")
                 time.sleep(30)
 
