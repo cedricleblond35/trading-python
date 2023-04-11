@@ -397,8 +397,6 @@ async def main():
                 await moyMobil_01.SMMA(200, 1)
                 await moyMobil_05.EMA(70, 1)
                 await moyMobil_01.EMA(70, 1)
-                await moyMobil_05.EMA(200, 1)
-                await moyMobil_01.EMA(200, 1)
                 #
                 # # AO ###################################################################################
                 await ao05.calculLastCandle(10)
