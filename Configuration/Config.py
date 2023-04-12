@@ -11,7 +11,7 @@ class Config:
     DEFAULT_XAPI_ADDRESS = 'xapi.xtb.com'
     DEFAULT_XAPI_PORT = 5124
     DEFUALT_XAPI_STREAMING_PORT = 5125
-    USER_ID = "14521622"
+    USER_ID = "14631076"
     PASSWORD = "1976Drick!"
 
     # ------Compte reel------------------------------------------------------
