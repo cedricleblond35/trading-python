@@ -388,7 +388,7 @@ class Order:
         detail = {
             "cmd": trade['cmd'],
             "order": trade['order'],
-            "type": 4
+            "type": TransactionSide.DELETE
         }
         print("detail :", detail)
         resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
