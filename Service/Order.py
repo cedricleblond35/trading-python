@@ -18,7 +18,6 @@ class Order:
         self.dbStreaming = dbStreaming
         self.dbTrade = dbTrade
         self.client = client
-
         l = Log()
         self.logger = l.getLogger()
 
@@ -47,6 +46,7 @@ class Order:
             detail['resp'] = resp
             detail['comment'] = comment
             self.dbTrade.insert_one(detail)
+            self.logger.info(detail)
 
         except Exception as exc:
             self.logger.warning("le programe a déclenché une erreur dans l ordre")
@@ -83,6 +83,7 @@ class Order:
             resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
             detail['resp'] = resp
             self.dbTrade.insert_one(detail)
+            self.logger.info(detail)
         except Exception as exc:
             self.logger.warning("le programe a déclenché une erreur dans l ordre")
             self.logger.warning("exception :", exc.__class__)
@@ -96,9 +97,6 @@ class Order:
 
     ################### ordre direct ##################################################
     def sellNow(self, sl, tp, price, balance, vnl, comment=""):
-        # tp = round(tp, 1)
-        # sl = round(sl, 1)
-
         h = self.client.commandExecute('getServerTime')
         timeExpiration = h['returnData']['time'] + 3600000
         nbrelot = NbrLot(balance, price, sl, vnl)
@@ -118,6 +116,7 @@ class Order:
         detail['resp'] = resp
         detail['comment'] = comment
         self.dbTrade.insert_one(detail)
+        self.logger.info(detail)
         '''
         respString = json.dumps(resp) + "forex robot Action"
         detailString = json.dumps(detail)
@@ -146,6 +145,7 @@ class Order:
         detail['resp'] = resp
         detail['comment'] = comment
         self.dbTrade.insert_one(detail)
+        self.logger.info(detail)
 
     ############################ move stop après ordre executé ###########################
 
@@ -165,6 +165,7 @@ class Order:
                  }
                 print("moveStopBuy :", detail)
                 resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
+                self.logger.info(detail)
 
         except Exception as exc:
             self.logger.warning("le programe a déclenché une erreur dans l ordre")
@@ -192,8 +193,7 @@ class Order:
                 }
                 print("moveStopSell :", detail)
                 resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
-
-                self.logger.info("resp moveStopSell:", resp)
+                self.logger.info(detail)
         except Exception as exc:
             self.logger.warning("le programe a déclenché une erreur dans l ordre")
             self.logger.warning("exception :", exc.__class__)

@@ -20,6 +20,8 @@ from Service.Command import Command
 from Indicators.Supertrend import Supertrend
 from Service.TransactionSide import TransactionSide
 
+from Configuration.Log import Log
+
 ######## calcul de lots
 # 10 pips 250€ pour 1 lots
 # 1 pips 25€ pour 1 lots
@@ -341,6 +343,7 @@ async def main():
     ssid = loginResponse['streamSessionId']
     logger.info(str(loginResponse))
 
+
     # check if user logged in correctly
     if not loginResponse['status']:
         print('Login failed. Error code: {0}'.format(loginResponse['errorCode']))
@@ -457,6 +460,7 @@ async def main():
                     ###############################################################################################################
                     # start order
                     ###############################################################################################################
+                    logger.info('RD à', current_time, " :", len(tradeOpen['returnData']) )
                     if len(tradeOpen['returnData']) == 0:
                         ###############################################################################################################
                         # Aucun ordre
