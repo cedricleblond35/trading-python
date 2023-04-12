@@ -385,9 +385,11 @@ class Order:
             self.dbTrade.insert_one(detail)
 
     def delete(self, trade):
+
         detail = {
             "cmd": trade['cmd'],
             "order": trade['order'],
+            "symbol": self.symbol,
             "type": TransactionSide.DELETE
         }
         print("detail :", detail)
