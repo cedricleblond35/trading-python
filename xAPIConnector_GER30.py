@@ -375,7 +375,10 @@ async def main():
         await ao05.calculAllCandles()
         #
         o = Order(SYMBOL, dbStreaming, client, db["trade"])
-        # logger.info("mise à jour du start fini ")
+        tradeOpenDic = findopenOrder(client)
+        for trade in tradeOpenDic['returnData']:
+            o.delete(trade)
+            print("suppression des ancien ordre fini")
 
         while True:
             ############### gestion des jours et heures de trading ##########################""
