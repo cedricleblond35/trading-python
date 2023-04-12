@@ -377,8 +377,8 @@ async def main():
         o = Order(SYMBOL, dbStreaming, client, db["trade"])
         tradeOpenDic = findopenOrder(client)
         for trade in tradeOpenDic['returnData']:
+            print("suppression des ancien ordre fini :", trade)
             o.delete(trade)
-            print("suppression des ancien ordre fini")
 
         while True:
             ############### gestion des jours et heures de trading ##########################""
