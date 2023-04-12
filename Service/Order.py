@@ -392,6 +392,7 @@ class Order:
         }
         print("detail :", detail)
         resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
+        print("resp delete:", resp)
 
 def NbrLot(balance, position, stp, vnl):
     '''
