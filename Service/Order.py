@@ -45,6 +45,7 @@ class Order:
             resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
             detail['resp'] = resp
             detail['comment'] = comment
+            print("retour dee l ordre:",resp)
             self.dbTrade.insert_one(detail)
             self.logger.info(detail)
 
@@ -83,6 +84,7 @@ class Order:
             resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
             detail['resp'] = resp
             self.dbTrade.insert_one(detail)
+            print("retour dee l ordre:", resp)
             self.logger.info(detail)
         except Exception as exc:
             self.logger.warning("le programe a déclenché une erreur dans l ordre")
@@ -165,6 +167,7 @@ class Order:
                  }
                 print("moveStopBuy :", detail)
                 resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
+                print("retour dee l ordre:", resp)
                 self.logger.info(detail)
 
         except Exception as exc:
@@ -193,6 +196,7 @@ class Order:
                 }
                 print("moveStopSell :", detail)
                 resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
+                print("retour dee l ordre:", resp)
                 self.logger.info(detail)
         except Exception as exc:
             self.logger.warning("le programe a déclenché une erreur dans l ordre")
@@ -232,6 +236,7 @@ class Order:
             }
             print("movebuyLimit :", detail)
             resp = self.client.commandExecute('tradeTransaction',  {"tradeTransInfo": detail })
+            print("retour dee l ordre:", resp)
             #self.logger.info("resp :", resp)
         except Exception as exc:
             self.logger.warning("le programe a déclenché une erreur dans l ordre")
@@ -266,6 +271,7 @@ class Order:
                       }
                 print("***************movebuyLimitWait :",detail)
                 resp = self.client.commandExecute('tradeTransaction', { "tradeTransInfo": detail})
+                print("retour dee l ordre:", resp)
             else:
                 print("delete order buy !!!!!!!!!!!! because volume is differente")
                 detail = {
@@ -280,7 +286,7 @@ class Order:
                 }
                 print("detail :", detail)
                 resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
-                print("resp :", resp)
+                print("retour dee l ordre:", resp)
 
 
                 #new order
@@ -305,6 +311,7 @@ class Order:
                 resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
                 detail['resp'] = resp
                 detail['comment'] = comment
+                print("retour dee l ordre:", resp)
                 self.dbTrade.insert_one(detail)
 
             #self.logger.info("resp :", resp)
@@ -382,6 +389,7 @@ class Order:
             # self.logger.info"detail :", detail)
             resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
             detail['resp'] = resp
+            print("retour dee l ordre:", resp)
             self.dbTrade.insert_one(detail)
 
     def delete(self, trade):
