@@ -469,7 +469,7 @@ async def main():
                         ###############################################################################################################
                         print("-- Aucun ordre   ***************************************")
                         print("demarrage de selection d une strategie")
-                        diff = superM01_1003T1 - bougie1M01.get(
+                        diff_ST_SMMA200 = superM01_1003T1 - bougie1M01.get(
                             "SMMA200")  # ecart entre le stop et overture doit etre > 5 pip
 
                         # strategie des achats et ventes des support
@@ -478,9 +478,9 @@ async def main():
                             print("superM01_1003T1:", superM01_1003T1)
                             print("smma200:", bougie1M01.get("SMMA200"))
                             print("ema70",bougie1M01.get("EMA70"))
-                            print("diff :", diff)
+                            print("diff :", diff_ST_SMMA200)
 
-                            if tick > bougie1M01.get("SMMA200") > superM01_1003T1 and bougie1M01.get("EMA70") > bougie1M01.get("SMMA200") and abs(diff) > 5:
+                            if tick > bougie1M01.get("SMMA200") > superM01_1003T1 and bougie1M01.get("EMA70") > bougie1M01.get("SMMA200") and 30 > abs(diff_ST_SMMA200) > 5:
                                 print("strategie 1 de achat ***********************************************")
                                 sl = superM01_1003T1
                                 tp = round(zoneResistance(tick+15, zone), 1)
@@ -488,7 +488,7 @@ async def main():
                                 comment = "Achat SMMA200_M1"
                                 #round(tp, 1)
                                 o.buyLimit(sl, tp, price, balance, VNL, comment)
-                            elif tick < bougie1M01.get("SMMA200") < superM01_1003T1 and bougie1M01.get("EMA70") < bougie1M01.get("SMMA200") and abs(diff) > 5:
+                            elif tick < bougie1M01.get("SMMA200") < superM01_1003T1 and bougie1M01.get("EMA70") < bougie1M01.get("SMMA200") and 30 >  abs(diff_ST_SMMA200) > 5:
                                 print("strategie 1 de vente ***********************************************")
 
                                 print("*********tick:", tick)
@@ -507,7 +507,7 @@ async def main():
                             if TransactionSide.BUY_LIMIT == trade['cmd']:
                                 print(trade)
                                 if trade['customComment'] == "Achat SMMA200_M1":
-                                    if superM01_1003T1 > bougie1M01.get("SMMA200") or abs(diff) < 5:
+                                    if superM01_1003T1 > bougie1M01.get("SMMA200") or 30 > abs(diff_ST_SMMA200) < 5:
                                         o.delete(trade)
 
                                     elif tick > bougie1M01.get("SMMA200"):
@@ -520,7 +520,7 @@ async def main():
                                         o.delete(trade)
                             elif TransactionSide.SELL_LIMIT == trade['cmd']:
                                 if trade['customComment'] == "Vente SMMA200_M1":
-                                    if superM01_1003T1 < bougie1M01.get("SMMA200") or abs(diff) < 5:
+                                    if superM01_1003T1 < bougie1M01.get("SMMA200") or 30 > abs(diff_ST_SMMA200) < 5:
                                         o.delete(trade)
                                     elif tick < bougie1M01.get("SMMA200"):
                                         sl = superM01_1003T1
