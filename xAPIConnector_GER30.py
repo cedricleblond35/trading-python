@@ -386,8 +386,8 @@ async def main():
             today = datetime.now()
             todayPlus2Hours = today + timedelta(hours=2)
             print("todayPlus2Hours :", todayPlus2Hours.hour)
-            
-            if 0 <= j < 5 and 2 < todayPlus2Hours.hour < 22:
+
+            if 0 <= j < 5 and 13 < todayPlus2Hours.hour < 14 or 14 < todayPlus2Hours.hour < 16:
                 ############### calcul des indicateurs ##########################""
                 current_time = today.strftime("%H:%M:%S")
                 print(
