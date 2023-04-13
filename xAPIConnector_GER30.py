@@ -385,9 +385,9 @@ async def main():
             j = datetime.today().weekday() #0:lundi ; 4 vendredi
             today = datetime.now()
             todayPlus2Hours = today + timedelta(hours=2)
-            print("todayPlus2Hours :", todayPlus2Hours.hour)
+            print("todayPlus2Hours :", todayPlus2Hours)
 
-            if 0 <= j < 5 and 13 < todayPlus2Hours.hour < 14 or 14 < todayPlus2Hours.hour < 16:
+            if 0 <= j < 5 and 13 < todayPlus2Hours.hour < 15 or 15 < todayPlus2Hours.hour < 17:
                 ############### calcul des indicateurs ##########################""
                 current_time = today.strftime("%H:%M:%S")
                 print(
@@ -563,7 +563,7 @@ async def main():
 
                         print("ordre en cours   END...........................................")
                 time.sleep(30)
-
+            time.sleep(30)
     except Exception as exc:
         logger.info("le programe a déclenché une erreur xApiconnector_US100")
         logger.info("exception de mtype ", exc.__class__)
