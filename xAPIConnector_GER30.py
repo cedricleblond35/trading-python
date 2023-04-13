@@ -385,6 +385,8 @@ async def main():
             j = datetime.today().weekday() #0:lundi ; 4 vendredi
             today = datetime.now()
             todayPlus2Hours = today + timedelta(hours=2)
+            print("todayPlus2Hours :", todayPlus2Hours.hour)
+            logger.info("todayPlus2Hours", todayPlus2Hours.hour)
             if 0 <= j < 5 and 2 < todayPlus2Hours.hour < 22:
                 ############### calcul des indicateurs ##########################""
                 current_time = today.strftime("%H:%M:%S")
