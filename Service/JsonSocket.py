@@ -13,6 +13,9 @@ class JsonSocket(object):
 
         logger = logging.getLogger()
         handler = logging.StreamHandler()
+        formatter = logging.Formatter(
+            '%(asctime)s %(name)-12s %(levelname)-8s %(message)s')
+        handler.setFormatter(formatter)
         logger.addHandler(handler)
         logger.setLevel(logging.DEBUG)
         self.log = logger
@@ -121,8 +124,7 @@ class JsonSocket(object):
         self.log.warning(self.socket)
 
         #https://stackoverflow.com/questions/48024720/python-how-to-check-if-socket-is-still-connected
-        print("self.socket:", self.socket)
-
+        
         if not self.socket:
             print("client deconnecté")
             return True
