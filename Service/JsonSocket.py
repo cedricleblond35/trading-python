@@ -1,23 +1,22 @@
 from socket import socket
 import json
 import socket
-import time
 import ssl
-import logging
 
 from Configuration.Config import Config
+
 import logging
+import logging.handlers as handlers
+import time
 
 class JsonSocket(object):
     def __init__(self, address, port, encrypt=False):
+        logger = logging.getLogger('my_app')
+        logger.setLevel(logging.INFO)
 
-        logger = logging.getLogger()
-        handler = logging.StreamHandler()
-        formatter = logging.Formatter(
-            '%(asctime)s %(name)-12s %(levelname)-8s %(message)s')
-        handler.setFormatter(formatter)
-        logger.addHandler(handler)
-        logger.setLevel(logging.DEBUG)
+        logHandler = handlers.RotatingFileHandler('app.log', maxBytes=500, backupCount=2)
+        logHandler.setLevel(logging.INFO)
+        logger.addHandler(logHandler)
         self.log = logger
 
         self._ssl = encrypt
@@ -121,10 +120,10 @@ class JsonSocket(object):
         pass
 
     def is_socket_closed(self) -> bool:
-        self.log.warning(self.socket)
+        self.log.info(self.socket)
 
         #https://stackoverflow.com/questions/48024720/python-how-to-check-if-socket-is-still-connected
-        
+
         if not self.socket:
             print("client deconnecté")
             return True
