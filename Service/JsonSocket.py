@@ -124,19 +124,11 @@ class JsonSocket(object):
 
     def is_socket_closed(self) -> bool:
         #https://stackoverflow.com/questions/48024720/python-how-to-check-if-socket-is-still-connected
-        try:
-            # this will try to read bytes without blocking and also without removing them from buffer (peek only)
-            data = self.socket.recv(16, socket.MSG_DONTWAIT | socket.MSG_PEEK)
-            if len(data) == 0:
-                return True
-        except BlockingIOError:
-            return False  # socket is open and reading from it would block
-        except ConnectionResetError:
-            return True  # socket was closed for some other reason
-        except Exception as e:
-            logger.exception("unexpected exception when checking if a socket is closed")
+        if not self.socket:
+            return True
+        else:
             return False
-        return False
+
 
     logger = logging.getLogger(__name__)
     timeout = property(_get_timeout, _set_timeout, doc='Get/set the socket timeout')
