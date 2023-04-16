@@ -6,18 +6,12 @@ import ssl
 import logging
 
 from Configuration.Config import Config
-
-# logger properties
-logger = logging.getLogger("jsonSocket")
-FORMAT = '[%(asctime)-15s][%(funcName)s:%(lineno)d] %(message)s'
-logging.basicConfig(format=FORMAT)
-
-# set to true on debug environment only
-DEBUG = True
-
+from Configuration.Log import Log
 
 class JsonSocket(object):
     def __init__(self, address, port, encrypt=False):
+        l = Log()
+        self.logger = l.getLogger()
         self._ssl = encrypt
         if self._ssl != True:
             self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -31,10 +25,6 @@ class JsonSocket(object):
         self._decoder = json.JSONDecoder()
         self._receivedData = ''
 
-        if DEBUG:
-            logger.setLevel(logging.DEBUG)
-        else:
-            logger.setLevel(logging.CRITICAL)
 
     def connect(self):
         for i in range(Config.API_MAX_CONN_TRIES):
@@ -42,9 +32,9 @@ class JsonSocket(object):
                 self.socket.connect((self.address, self.port))
             except socket.error as msg:
                 print("SockThread Error: %s" % msg)
-                logger.error("SockThread Error: %s" % msg)
+                self.logger.error("SockThread Error: %s" % msg)
                 time.sleep(0.25);
-                logger.info("Socket connected")
+                self.logger.info("Socket connected")
                 continue
             return True
         return False
@@ -85,10 +75,10 @@ class JsonSocket(object):
         return msg
 
     def close(self):
-        logger.debug("Closing socket")
+        self.logger.debug("Closing socket")
         self._closeSocket()
         if self.socket is not self.conn:
-            logger.debug("Closing connection socket")
+            self.logger.debug("Closing connection socket")
             self._closeConnection()
 
     def _closeSocket(self):
@@ -124,6 +114,7 @@ class JsonSocket(object):
 
     def is_socket_closed(self) -> bool:
         #https://stackoverflow.com/questions/48024720/python-how-to-check-if-socket-is-still-connected
+        self.logger.info(self.socket)
         print("self.socket:", self.socket)
         if not self.socket:
             return True

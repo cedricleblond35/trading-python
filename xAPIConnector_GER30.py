@@ -324,8 +324,6 @@ async def main():
     client = APIClient()  # create & connect to RR socket
     print(client)
     loginResponse = client.identification()  # connect to RR socket, login
-    # get ssId from login response
-    ssid = loginResponse['streamSessionId']
     logger.info(str(loginResponse))
 
     # check if user logged in correctly
@@ -372,7 +370,7 @@ async def main():
             print("todayPlus2Hours :", todayPlus2Hours)
 
             if client.is_socket_closed():
-                print(("!!!!!!!!! client deconnecté, reconnection en cours !!!!!!!!!!!!!!!!!!!"))
+                logger.warning("!!!!!!!!! client deconnecté, reconnection en cours !!!!!!!!!!!!!!!!!!!")
                 client = APIClient()  # create & connect to RR socket
                 loginResponse = client.identification()  # connect to RR socket, login
                 # get ssId from login response
@@ -381,7 +379,7 @@ async def main():
 
                 # check if user logged in correctly
                 if not loginResponse['status']:
-                    print('Login failed. Error code: {0}'.format(loginResponse['errorCode']))
+                    logger.warning('Login failed. Error code: {0}'.format(loginResponse['errorCode']))
                     return
 
             if 0 <= j < 5 and 13 < todayPlus2Hours.hour < 15 or 15 < todayPlus2Hours.hour < 17:
