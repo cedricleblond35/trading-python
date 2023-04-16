@@ -6,12 +6,20 @@ import ssl
 import logging
 
 from Configuration.Config import Config
-from Configuration.Log import Log
+import logging
 
 class JsonSocket(object):
     def __init__(self, address, port, encrypt=False):
-        l = Log()
-        self.logger = l.getLogger()
+
+        logger = logging.getLogger()
+        handler = logging.StreamHandler()
+        formatter = logging.Formatter(
+            '%(asctime)s %(name)-12s %(levelname)-8s %(message)s')
+        handler.setFormatter(formatter)
+        logger.addHandler(handler)
+        logger.setLevel(logging.DEBUG)
+        self.log = logger
+
         self._ssl = encrypt
         if self._ssl != True:
             self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -113,16 +121,7 @@ class JsonSocket(object):
         pass
 
     def is_socket_closed(self) -> bool:
-        import logging
-        logger = logging.getLogger()
-        handler = logging.StreamHandler()
-        formatter = logging.Formatter(
-            '%(asctime)s %(name)-12s %(levelname)-8s %(message)s')
-        handler.setFormatter(formatter)
-        logger.addHandler(handler)
-        logger.setLevel(logging.DEBUG)
-        logging.debug(self.socket)
-
+        self.log.warning(self.socket)
 
         #https://stackoverflow.com/questions/48024720/python-how-to-check-if-socket-is-still-connected
         print("self.socket:", self.socket)
