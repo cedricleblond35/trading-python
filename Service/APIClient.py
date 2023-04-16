@@ -27,6 +27,3 @@ class APIClient(JsonSocket):
     def identification(self):
         self._sendObj(self._command.loginCommand())
         return self._readObj()
-
-    def printSocketLog(self):
-        self.log(self.socket)
