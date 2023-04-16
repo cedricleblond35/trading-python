@@ -342,6 +342,8 @@ async def main():
     # get ssId from login response
     ssid = loginResponse['streamSessionId']
     logger.info(str(loginResponse))
+    resultSocket = client.is_socket_closed()
+    print("resultSocket:", resultSocket)
 
 
     # check if user logged in correctly
@@ -386,6 +388,7 @@ async def main():
             today = datetime.now()
             todayPlus2Hours = today + timedelta(hours=2)
             print("todayPlus2Hours :", todayPlus2Hours)
+
 
             if 0 <= j < 5 and 13 < todayPlus2Hours.hour < 15 or 15 < todayPlus2Hours.hour < 17:
                 ############### calcul des indicateurs ##########################""
