@@ -122,11 +122,11 @@ class JsonSocket(object):
     def _set_encrypt(self, encrypt):
         pass
 
-    def is_socket_closed(self, sock: socket.socket) -> bool:
+    def is_socket_closed(self) -> bool:
         #https://stackoverflow.com/questions/48024720/python-how-to-check-if-socket-is-still-connected
         try:
             # this will try to read bytes without blocking and also without removing them from buffer (peek only)
-            data = sock.recv(16, socket.MSG_DONTWAIT | socket.MSG_PEEK)
+            data = socket.socket.recv(16, socket.MSG_DONTWAIT | socket.MSG_PEEK)
             if len(data) == 0:
                 return True
         except BlockingIOError:
