@@ -113,9 +113,17 @@ class JsonSocket(object):
         pass
 
     def is_socket_closed(self) -> bool:
+        import logging
+        logger = logging.getLogger('mylogger')
+        handler = logging.FileHandler('test.log')
+        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        handler.setFormatter(formatter)
+        logger.addHandler(handler)
+        logger.setLevel(logging.WARNING)
+
         #https://stackoverflow.com/questions/48024720/python-how-to-check-if-socket-is-still-connected
         print("self.socket:", self.socket)
-        self.logger.warning(self.socket)
+        logger.warning(self.socket)
         if not self.socket:
             print("client deconnecté")
             return True
