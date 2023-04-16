@@ -382,7 +382,7 @@ async def main():
                     logger.warning('Login failed. Error code: {0}'.format(loginResponse['errorCode']))
                     return
 
-            if 0 <= j < 5 and 13 < todayPlus2Hours.hour < 15 or 15 < todayPlus2Hours.hour < 17:
+            if 0 <= j < 5 and 3 < todayPlus2Hours.hour < 5 or 6 < todayPlus2Hours.hour < 8:
 
                 ############### calcul des indicateurs ##########################""
                 current_time = today.strftime("%H:%M:%S")
