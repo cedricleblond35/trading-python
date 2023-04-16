@@ -8,6 +8,7 @@ import asyncio
 import math as math
 import numpy as np
 import logging
+from Configuration.Log import Log
 from datetime import datetime, timedelta
 from pymongo import MongoClient
 from Indicators.Awesome import Awesome
@@ -54,21 +55,6 @@ PROFIT = False
 SYMBOL = "DE30"
 VNL = 30
 # 1 pips 25€ pour 1 lots
-
-
-# logger properties
-logger = logging.getLogger("jsonSocket")
-FORMAT = '[%(asctime)-15s][%(funcName)s:%(lineno)d] %(message)s'
-logging.basicConfig(format=FORMAT)
-
-# set to true on debug environment only
-DEBUG = True
-
-if DEBUG:
-    logger.setLevel(logging.DEBUG)
-else:
-    logger.setLevel(logging.CRITICAL)
-
 
 def startEA_Horaire():
     time = datetime.now().time()
@@ -336,6 +322,8 @@ async def pivot():
 
 
 async def main():
+    l = Log()
+    logger = l.getLogger()
     client = APIClient()  # create & connect to RR socket
     print(client)
     loginResponse = client.identification()  # connect to RR socket, login
@@ -578,12 +566,11 @@ async def main():
                 time.sleep(30)
             time.sleep(30)
     except Exception as exc:
-        logger.info("le programe a déclenché une erreur xApiconnector_US100")
-        logger.info("exception de mtype ", exc.__class__)
-        logger.info("message", exc)
+        logger.warning("exception de mtype ", exc.__class__)
+        logger.warning("message", exc)
         exc_type, exc_obj, exc_tb = sys.exc_info()
         fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-        logger.info(exc_type, fname, exc_tb.tb_lineno)
+        logger.warning(exc_type, fname, exc_tb.tb_lineno)
 
         client.disconnect()
         exit(0)
