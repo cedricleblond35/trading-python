@@ -19,10 +19,6 @@ class APIClient(JsonSocket):
     def disconnect(self):
         self.close()
 
-    def is_disconnect(self):
-        self.is_socket_closed()
-
-
     def commandExecute(self, commandName, arguments=None):
         return self.execute(self._command.baseCommand(commandName, arguments))
 
