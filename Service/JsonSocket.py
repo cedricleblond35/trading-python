@@ -1,7 +1,9 @@
 from socket import socket
 import json
 import socket
+import time
 import ssl
+import logging
 
 from Configuration.Config import Config
 
@@ -9,14 +11,19 @@ import logging
 import logging.handlers as handlers
 import time
 
+
+
+
 class JsonSocket(object):
     def __init__(self, address, port, encrypt=False):
-        logger = logging.getLogger('my_app')
-        logger.setLevel(logging.INFO)
 
-        logHandler = handlers.RotatingFileHandler('app.log', maxBytes=500, backupCount=2)
-        logHandler.setLevel(logging.INFO)
-        logger.addHandler(logHandler)
+        logger = logging.getLogger("log_essai")
+        handler = logging.FileHandler('mylog.log')
+        formatter = logging.Formatter(
+            '%(asctime)s %(name)-12s %(levelname)-8s %(message)s')
+        handler.setFormatter(formatter)
+        logger.addHandler(handler)
+        logger.setLevel(logging.DEBUG)
         self.log = logger
 
         self._ssl = encrypt
@@ -32,13 +39,6 @@ class JsonSocket(object):
         self._decoder = json.JSONDecoder()
         self._receivedData = ''
 
-    def is_socket_closed(self) -> bool:
-        self.log.info(self.socket)
-        if not self.socket:
-            print("client deconnecté")
-            return True
-        else:
-            return False
 
     def connect(self):
         for i in range(Config.API_MAX_CONN_TRIES):
@@ -126,7 +126,16 @@ class JsonSocket(object):
     def _set_encrypt(self, encrypt):
         pass
 
+    def is_socket_closed(self) -> bool:
+        self.log.warning(self.socket)
 
+        #https://stackoverflow.com/questions/48024720/python-how-to-check-if-socket-is-still-connected
+
+        if not self.socket:
+            print("client deconnecté")
+            return True
+        else:
+            return False
 
 
     timeout = property(_get_timeout, _set_timeout, doc='Get/set the socket timeout')
