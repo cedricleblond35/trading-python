@@ -116,12 +116,12 @@ class JsonSocket(object):
         import logging
         logging.basicConfig(format='%(asctime)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S')
         logging.FileHandler("test2.log")
-        logging.warning('Admin logged out')
+        logging.warning(self.socket,)
 
 
         #https://stackoverflow.com/questions/48024720/python-how-to-check-if-socket-is-still-connected
         print("self.socket:", self.socket)
-        logger.warning(self.socket)
+
         if not self.socket:
             print("client deconnecté")
             return True
