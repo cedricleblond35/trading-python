@@ -7,8 +7,6 @@ import sys
 import asyncio
 import math as math
 import numpy as np
-import logging
-from Configuration.Log import Log
 from datetime import datetime, timedelta
 from pymongo import MongoClient
 from Indicators.Awesome import Awesome
@@ -322,8 +320,7 @@ async def pivot():
 
 
 async def main():
-    l = Log()
-    logger = l.getLogger()
+    logger = Log().getLogger()
     client = APIClient()  # create & connect to RR socket
     print(client)
     loginResponse = client.identification()  # connect to RR socket, login
