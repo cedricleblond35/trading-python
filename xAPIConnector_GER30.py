@@ -368,7 +368,7 @@ async def main():
             today = datetime.now()
             todayPlus2Hours = today + timedelta(hours=2)
             print("todayPlus2Hours :", todayPlus2Hours)
-            
+
             if client.is_socket_closed():
                 logger.warning("!!!!!!!!! client deconnecté, reconnection en cours !!!!!!!!!!!!!!!!!!!")
                 client = APIClient()  # create & connect to RR socket
