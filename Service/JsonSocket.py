@@ -32,6 +32,13 @@ class JsonSocket(object):
         self._decoder = json.JSONDecoder()
         self._receivedData = ''
 
+    def is_socket_closed(self) -> bool:
+        self.log.info(self.socket)
+        if not self.socket:
+            print("client deconnecté")
+            return True
+        else:
+            return False
 
     def connect(self):
         for i in range(Config.API_MAX_CONN_TRIES):
@@ -119,16 +126,7 @@ class JsonSocket(object):
     def _set_encrypt(self, encrypt):
         pass
 
-    def is_socket_closed(self) -> bool:
-        self.log.info(self.socket)
 
-        #https://stackoverflow.com/questions/48024720/python-how-to-check-if-socket-is-still-connected
-
-        if not self.socket:
-            print("client deconnecté")
-            return True
-        else:
-            return False
 
 
     timeout = property(_get_timeout, _set_timeout, doc='Get/set the socket timeout')
