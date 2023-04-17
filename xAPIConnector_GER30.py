@@ -473,7 +473,6 @@ async def main():
                     print("superM01_1003T1:", superM01_1003T1)
                     print("smma200:", bougie1M01.get("SMMA200"))
                     print("ema70", bougie1M01.get("EMA70"))
-                    print("diff :", diff_ST_SMMA200)
                     if len(tradeOpen['returnData']) == 0:
                         ###############################################################################################################
                         # Aucun ordre
@@ -483,6 +482,7 @@ async def main():
                         diff_ST_SMMA200 = superM01_1003T1 - bougie1M01.get(
                             "SMMA200")  # ecart entre le stop et overture doit etre > 5 pip
 
+                        print("diff :", diff_ST_SMMA200)
                         # strategie des achats et ventes des support
                         if bougie1M01.get("SMMA200") is not None:
                             if tick > bougie1M01.get("SMMA200") > superM01_1003T1 and bougie1M01.get("EMA70") > bougie1M01.get("SMMA200") and 30 > abs(diff_ST_SMMA200) > 5:
