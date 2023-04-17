@@ -158,7 +158,7 @@ async def majDatAall(client, symbol, db):
     '''
     #print("**************************************** mise à jour majDatAall ****************************************")
     try:
-
+        print("maj 1")
         # ctmRefStart = db["D"].find().sort("ctm", -1).skip(1).limit(1)
         endTime = int(round(time.time() * 1000)) + (6 * 60 * 1000)
 
@@ -171,6 +171,7 @@ async def majDatAall(client, symbol, db):
         json_data_Day = client.commandExecute(
             'getChartRangeRequest',
             {"info": {"start": startTime, "end": endTime, "period": 1440, "symbol": symbol, "ticks": 0}})
+        print(json_data_Day)
         dataDAY = json.dumps(json_data_Day)
         dataDAYDownload = json.loads(dataDAY)
         await insertData(db["D"], dataDAYDownload, lastBougie)
@@ -219,6 +220,7 @@ async def majDatAall(client, symbol, db):
 
         await insertData(db["M05"], dataM05Download, lastBougie)
 
+        print("maj 3")
     except Exception as exc:
         print("majDatAall a déclenché une erreur")
         print("exception de mtype ", exc.__class__)
@@ -320,7 +322,7 @@ async def pivot():
 
 
 async def main():
-    logger = Log().getLogger()
+    logger = Log().getLogger("main")
     client = APIClient()  # create & connect to RR socket
     print(client)
     loginResponse = client.identification()  # connect to RR socket, login

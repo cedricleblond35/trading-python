@@ -47,7 +47,7 @@ class JsonSocket(object):
             except socket.error as msg:
                 print("SockThread Error: %s" % msg)
                 self.logger.error("SockThread Error: %s" % msg)
-                time.sleep(0.25);
+                time.sleep(0.25)
                 self.logger.info("Socket connected")
                 continue
             return True
