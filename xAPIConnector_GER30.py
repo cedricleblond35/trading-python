@@ -7,6 +7,7 @@ import sys
 import asyncio
 import math as math
 import numpy as np
+import logging
 from datetime import datetime, timedelta
 from pymongo import MongoClient
 from Indicators.Awesome import Awesome
@@ -322,7 +323,15 @@ async def pivot():
 
 
 async def main():
-    logger = Log().getLogger()
+    logger = logging.getLogger("log_essai")
+    handler = logging.FileHandler('mylog.log')
+    formatter = logging.Formatter(
+        '%(asctime)s %(name)-12s %(levelname)-8s %(message)s')
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+    logger.setLevel(logging.DEBUG)
+
+
     client = APIClient()  # create & connect to RR socket
     print(client)
     loginResponse = client.identification()  # connect to RR socket, login
@@ -385,39 +394,36 @@ async def main():
                     return
 
             print("todayPlus2Hours.min :", todayPlus2Hours.minute )
-            if 0 <= j < 5 and 13 < todayPlus2Hours.minute < 18 or 19 < todayPlus2Hours.minute < 22:
-            #if 0 <= j < 5 and 13 < todayPlus2Hours.hour < 15 or 16 < todayPlus2Hours.hour < 18:
-
-                ############### calcul des indicateurs ##########################""
-                current_time = today.strftime("%H:%M:%S")
-                print(
-                    "*****************************************************************************************************")
-                print("Current Time =", current_time)
-                print("mise à jour des indicateurs : ", current_time, " -----------------------------------------------")
-                if updatePivot():
-                     zone = await pivot()
-                #
-                print("pivot :", zone)
-                # ####################################################################################################
-                await majDatAall(client, SYMBOL, db)
-                # ####################################################################################################
-                await moyMobil_05.EMA(70, 1)
-                await moyMobil_05.SMMA(200, 1)
-                await moyMobil_01.SMMA(200, 1)
-                await moyMobil_01.EMA(70, 1)
-                #
-                # # AO ###################################################################################
-                await ao05.calculLastCandle(10)
-                #
-                # # supertrend ###################################################################################
-                spM01_1003 = Supertrend(SYMBOL, "M01", 33, 9)
-                superM01_1003T0, superM01_1003T1, superM01_1003T2 = spM01_1003.getST()
-                #
-                now = datetime.now()
-                current_time = now.strftime("%H:%M:%S")
-                print("Mise à jour ", current_time)
-                #
-                if c.getTick() is not None:
+            current_time = today.strftime("%H:%M:%S")
+            print(
+                "*****************************************************************************************************")
+            print("Current Time =", current_time)
+            print("mise à jour des indicateurs : ", current_time, " -----------------------------------------------")
+            if updatePivot():
+                 zone = await pivot()
+            #
+            print("pivot :", zone)
+            # ####################################################################################################
+            await majDatAall(client, SYMBOL, db)
+            # ####################################################################################################
+            await moyMobil_05.EMA(70, 1)
+            await moyMobil_05.SMMA(200, 1)
+            await moyMobil_01.SMMA(200, 1)
+            await moyMobil_01.EMA(70, 1)
+            #
+            # # AO ###################################################################################
+            await ao05.calculLastCandle(10)
+            #
+            # # supertrend ###################################################################################
+            spM01_1003 = Supertrend(SYMBOL, "M01", 33, 9)
+            superM01_1003T0, superM01_1003T1, superM01_1003T2 = spM01_1003.getST()
+            #
+            now = datetime.now()
+            current_time = now.strftime("%H:%M:%S")
+            print("Mise à jour ", current_time)
+            #
+            if c.getTick() is not None:
+                if 0 <= j < 5 and 5 < todayPlus2Hours.hour < 21:
                     tick = c.getTick()["ask"]
 
                     ###############################################################################################################
@@ -562,8 +568,8 @@ async def main():
                                         o.moveStopSell(trade, superM01_1003T1, tick)
 
                         print("ordre en cours   END...........................................")
-                time.sleep(30)
             time.sleep(30)
+
     except Exception as exc:
         logger.warning("exception de mtype ", exc.__class__)
         logger.warning("message", exc)
