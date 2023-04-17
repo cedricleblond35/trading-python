@@ -385,7 +385,7 @@ async def main():
                     return
 
             print("todayPlus2Hours.min :", todayPlus2Hours.minute )
-            if 0 <= j < 5 and 13 < todayPlus2Hours.min < 16 or 17 < todayPlus2Hours.min < 20:
+            if 0 <= j < 5 and 13 < todayPlus2Hours.minute < 18 or 19 < todayPlus2Hours.minute < 22:
             #if 0 <= j < 5 and 13 < todayPlus2Hours.hour < 15 or 16 < todayPlus2Hours.hour < 18:
 
                 ############### calcul des indicateurs ##########################""
