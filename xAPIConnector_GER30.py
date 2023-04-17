@@ -20,8 +20,6 @@ from Service.Command import Command
 from Indicators.Supertrend import Supertrend
 from Service.TransactionSide import TransactionSide
 
-from Configuration.Log import Log
-
 ######## calcul de lots
 # 10 pips 250€ pour 1 lots
 # 1 pips 25€ pour 1 lots
@@ -471,6 +469,11 @@ async def main():
                     ###############################################################################################################
                     # start order
                     ###############################################################################################################
+                    print("tick:", tick)
+                    print("superM01_1003T1:", superM01_1003T1)
+                    print("smma200:", bougie1M01.get("SMMA200"))
+                    print("ema70", bougie1M01.get("EMA70"))
+                    print("diff :", diff_ST_SMMA200)
                     if len(tradeOpen['returnData']) == 0:
                         ###############################################################################################################
                         # Aucun ordre
@@ -482,12 +485,6 @@ async def main():
 
                         # strategie des achats et ventes des support
                         if bougie1M01.get("SMMA200") is not None:
-                            print("tick:", tick)
-                            print("superM01_1003T1:", superM01_1003T1)
-                            print("smma200:", bougie1M01.get("SMMA200"))
-                            print("ema70",bougie1M01.get("EMA70"))
-                            print("diff :", diff_ST_SMMA200)
-
                             if tick > bougie1M01.get("SMMA200") > superM01_1003T1 and bougie1M01.get("EMA70") > bougie1M01.get("SMMA200") and 30 > abs(diff_ST_SMMA200) > 5:
                                 print("strategie 1 de achat ***********************************************")
                                 sl = superM01_1003T1
