@@ -385,8 +385,8 @@ async def main():
                     return
 
 
-            if 0 <= j < 5 and 10 < todayPlus2Hours.min < 14 or 16 < todayPlus2Hours.min < 18:
-            #if 0 <= j < 5 and 13 < todayPlus2Hours.hour < 15 or 16 < todayPlus2Hours.hour < 18:
+            #if 0 <= j < 5 and 10 < todayPlus2Hours.min < 14 or 16 < todayPlus2Hours.min < 18:
+            if 0 <= j < 5 and 13 < todayPlus2Hours.hour < 15 or 16 < todayPlus2Hours.hour < 18:
 
                 ############### calcul des indicateurs ##########################""
                 current_time = today.strftime("%H:%M:%S")
