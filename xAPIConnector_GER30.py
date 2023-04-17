@@ -384,7 +384,7 @@ async def main():
                     logger.warning('Login failed. Error code: {0}'.format(loginResponse['errorCode']))
                     return
 
-
+            print("todayPlus2Hours.min :", todayPlus2Hours.min )
             #if 0 <= j < 5 and 10 < todayPlus2Hours.min < 14 or 16 < todayPlus2Hours.min < 18:
             if 0 <= j < 5 and 13 < todayPlus2Hours.hour < 15 or 16 < todayPlus2Hours.hour < 18:
 
