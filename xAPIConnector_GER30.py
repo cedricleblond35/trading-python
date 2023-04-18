@@ -157,7 +157,6 @@ async def majDatAall(client, symbol, db):
     '''
     #print("**************************************** mise à jour majDatAall ****************************************")
     try:
-        print("maj 1")
         # ctmRefStart = db["D"].find().sort("ctm", -1).skip(1).limit(1)
         endTime = int(round(time.time() * 1000)) + (6 * 60 * 1000)
 
@@ -219,7 +218,6 @@ async def majDatAall(client, symbol, db):
 
         await insertData(db["M05"], dataM05Download, lastBougie)
 
-        print("maj 3")
     except Exception as exc:
         print("majDatAall a déclenché une erreur")
         print("exception de mtype ", exc.__class__)
@@ -395,9 +393,6 @@ async def main():
                     return
 
             print("todayPlus2Hours.min :", todayPlus2Hours.minute )
-            current_time = today.strftime("%H:%M:%S")
-            print("Current Time =", current_time)
-            print("mise à jour des indicateurs : ", current_time, " -----------------------------------------------")
             if updatePivot():
                  zone = await pivot()
             #
