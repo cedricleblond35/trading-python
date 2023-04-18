@@ -17,8 +17,8 @@ import time
 class JsonSocket(object):
     def __init__(self, address, port, encrypt=False):
 
-        logger = logging.getLogger("log_essai")
-        handler = logging.FileHandler('mylog.log')
+        logger = logging.getLogger("JsonSocket")
+        handler = logging.FileHandler('JsonSocketlog.log')
         formatter = logging.Formatter(
             '%(asctime)s %(name)-12s %(levelname)-8s %(message)s')
         handler.setFormatter(formatter)

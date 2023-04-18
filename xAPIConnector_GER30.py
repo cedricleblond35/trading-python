@@ -319,8 +319,8 @@ async def pivot():
 
 
 async def main():
-    logger = logging.getLogger("log_essai")
-    handler = logging.FileHandler('mylog.log')
+    logger = logging.getLogger("main")
+    handler = logging.FileHandler('mainlog.log')
     formatter = logging.Formatter(
         '%(asctime)s %(name)-12s %(levelname)-8s %(message)s')
     handler.setFormatter(formatter)
