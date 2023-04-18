@@ -421,7 +421,8 @@ async def main():
             print("Mise à jour ", current_time)
             #
             if c.getTick() is not None:
-                if 0 <= j < 5 and 5 < todayPlus2Hours.hour < 21:
+                if 0 <= j < 5 and 19 < todayPlus2Hours.hour < 21:
+                    print("dans le if !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
                     tick = c.getTick()["ask"]
 
                     ###############################################################################################################
