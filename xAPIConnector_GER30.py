@@ -393,6 +393,10 @@ async def main():
                     return
 
             print("todayPlus2Hours.min :", todayPlus2Hours.minute )
+            if 0 <= j < 5 and 40 < todayPlus2Hours.minute < 45:
+                print("dans********************************************")
+
+
             if updatePivot():
                  zone = await pivot()
             #
