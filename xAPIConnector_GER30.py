@@ -380,7 +380,7 @@ async def main():
             print("todayPlus2Hours :", todayPlus2Hours)
 
             if client.is_socket_closed():
-                logger.warning("!!!!!!!!! client deconnecté, reconnection en cours !!!!!!!!!!!!!!!!!!!")
+                logger.info("!!!!!!!!! client deconnecté, reconnection en cours !!!!!!!!!!!!!!!!!!!")
                 client = APIClient()  # create & connect to RR socket
                 loginResponse = client.identification()  # connect to RR socket, login
                 # get ssId from login response
@@ -421,7 +421,7 @@ async def main():
             print("Mise à jour ", current_time)
             #
             if c.getTick() is not None:
-                if 0 <= j < 5 and 18 < todayPlus2Hours.hour < 20:
+                if 0 <= j < 5 and 20 < todayPlus2Hours.hour < 23:
                     print("dans le if !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
                     tick = c.getTick()["ask"]
 
