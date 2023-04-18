@@ -372,6 +372,9 @@ async def main():
             o.delete(trade)
 
         while True:
+            print(
+                "*****************************************************************************************************")
+
             ############### gestion des jours et heures de trading ##########################""
             j = datetime.today().weekday() #0:lundi ; 4 vendredi
             today = datetime.now()
@@ -393,9 +396,7 @@ async def main():
 
             print("todayPlus2Hours.min :", todayPlus2Hours.minute )
             current_time = today.strftime("%H:%M:%S")
-            print(
-                "*****************************************************************************************************")
-            print("Current Time =", current_time)
+                        print("Current Time =", current_time)
             print("mise à jour des indicateurs : ", current_time, " -----------------------------------------------")
             if updatePivot():
                  zone = await pivot()
