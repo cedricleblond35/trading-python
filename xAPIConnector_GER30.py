@@ -365,6 +365,7 @@ async def main():
         #
         o = Order(SYMBOL, dbStreaming, client, db["trade"])
         tradeOpenDic = findopenOrder(client)
+        tradeOpen = json.loads(json.dumps(tradeOpenDic))
         for trade in tradeOpenDic['returnData']:
             print("suppression des ancien ordre fini :", trade)
             o.delete(trade)
@@ -377,7 +378,7 @@ async def main():
             j = datetime.today().weekday() #0:lundi ; 4 vendredi
             today = datetime.now()
             todayPlus2Hours = today + timedelta(hours=2)
-            print("todayPlus2Hours :", todayPlus2Hours)
+            print("mise à jour :", todayPlus2Hours)
 
             if client.is_socket_closed():
                 logger.info("!!!!!!!!! client deconnecté, reconnection en cours !!!!!!!!!!!!!!!!!!!")
@@ -391,8 +392,6 @@ async def main():
                 if not loginResponse['status']:
                     logger.warning('Login failed. Error code: {0}'.format(loginResponse['errorCode']))
                     return
-
-
 
             if updatePivot():
                  zone = await pivot()
