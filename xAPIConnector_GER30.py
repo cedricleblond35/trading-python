@@ -366,7 +366,7 @@ async def main():
         o = Order(SYMBOL, dbStreaming, client, db["trade"])
         tradeOpenDic = findopenOrder(client)
         tradeOpen = json.loads(json.dumps(tradeOpenDic))
-        for trade in tradeOpenDic['returnData']:
+        for trade in tradeOpen['returnData']:
             print("suppression des ancien ordre fini :", trade)
             o.delete(trade)
 
