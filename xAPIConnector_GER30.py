@@ -278,7 +278,6 @@ def zoneResistance(close, zone):
 
 def zoneResistanceVente(close, zone):
     arrayT = sorted(zone, reverse=True)
-    print("zoneResistanceVente:", arrayT)
     resistance = 0
     for v in arrayT:
         if v < close and resistance == 0:
@@ -308,7 +307,6 @@ def subscribe(loginResponse):
 
 
 async def pivot():
-    print('calcul pivot ')
     P = Pivot(SYMBOL, "D")
     PPF, R1F, R2F, R3F, S1F, S2F, S3F = await P.fibonacci()  # valeurs ok
     R1D, S1D = await P.demark()  # valeurs ok
@@ -329,7 +327,6 @@ async def main():
 
 
     client = APIClient()  # create & connect to RR socket
-    print(client)
     loginResponse = client.identification()  # connect to RR socket, login
     logger.info(str(loginResponse))
 
@@ -340,11 +337,9 @@ async def main():
 
     try:
         sclient, c = subscribe(loginResponse)
-
         connection = MongoClient('localhost', 27017)
         db = connection[SYMBOL]
         dbStreaming = connection["STREAMING"]
-        print("insert db")
 
         await majDatAall(client, SYMBOL, db)
 
@@ -364,9 +359,10 @@ async def main():
         await ao05.calculAllCandles()
         #
         o = Order(SYMBOL, dbStreaming, client, db["trade"])
+
+        # effacer ancien ordre
         tradeOpenDic = findopenOrder(client)
         tradeOpen = json.loads(json.dumps(tradeOpenDic))
-        print("===>",tradeOpen)
         if tradeOpen['status'] and len(tradeOpen["returnData"]) > 0:
             print("ordre detecte")
             for trade in tradeOpen["returnData"]['rateInfos']:
@@ -403,6 +399,7 @@ async def main():
             # ####################################################################################################
             await majDatAall(client, SYMBOL, db)
             # ####################################################################################################
+            print("Mise à jour ", todayPlus2Hours)
             await moyMobil_05.EMA(70, 1)
             await moyMobil_05.SMMA(200, 1)
             await moyMobil_01.SMMA(200, 1)
@@ -415,7 +412,7 @@ async def main():
             spM01_1003 = Supertrend(SYMBOL, "M01", 33, 9)
             superM01_1003T0, superM01_1003T1, superM01_1003T2 = spM01_1003.getST()
 
-            print("Mise à jour ", todayPlus2Hours)
+
             #
             if c.getTick() is not None:
                 if 0 <= j < 5 and 12 < todayPlus2Hours.hour < 15 and 15 < todayPlus2Hours.hour < 20:
