@@ -150,7 +150,6 @@ class MM(Price):
                             return
 
                 list = self._listData[start:len(self._listData) - 1]
-                print("nombre :", len(list))
                 for i in range(0, len(list)):
                     if EMAPrecedent > 0:
                         close = list[i]["close"]

@@ -65,7 +65,6 @@ class MM(Price):
                             return
 
                 list = self._listData[start:len(self._listData) - 1]
-                print("SMMA : nombre à mettre à jours", len(list))
                 for i in range(0, len(list)):
                     if SMMAPrecedent > 0:
                         # SMMA(i) = (SUM1 - SMMA1 + CLOSE(i)) / N
@@ -163,8 +162,6 @@ class MM(Price):
             α = round(2 / (duration + 1), 5)
             self._prepareListData()                         #toutes les bougies
             self._prepareListEMA(0, duration, name)         #toutes les bougies ne possédant pas EMA (HORS LES X PREMIÈRES)
-            #print("----- calcul ", name)
-            #print("----- _listDataLast :", len(self._listDataLast))
             if len(self._listDataLast) > 1:
                 #1 ou plusieurs bougies sont à traiter
                 # configurer le start et EMAPrecedent
@@ -194,7 +191,6 @@ class MM(Price):
                             return
 
                 list = self._listData[start:len(self._listData) - 1]
-                print("nombre :", len(list))
                 for i in range(0, len(list)):
                     if EMAPrecedent > 0:
                         close = list[i]["close"]
