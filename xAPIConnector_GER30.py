@@ -405,7 +405,7 @@ async def main():
             superM01_1003T0, superM01_1003T1, superM01_1003T2 = spM01_1003.getST()
 
             if c.getTick() is not None:
-                if 0 <= j < 5 and 12 < todayPlus2Hours.hour < 15 and 15 < todayPlus2Hours.hour < 20:
+                if 0 <= j < 5 and 12 < todayPlus2Hours.hour < 15 or 15 < todayPlus2Hours.hour < 20:
                     print("dans le if !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
                     tick = c.getTick()["ask"]
 
