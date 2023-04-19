@@ -392,10 +392,7 @@ async def main():
                     logger.warning('Login failed. Error code: {0}'.format(loginResponse['errorCode']))
                     return
 
-            print("todayPlus2Hours.min :", todayPlus2Hours.minute )
-            if 0 <= j < 5 and 40 < todayPlus2Hours.minute < 45:
-                print("dans********************************************")
-
+       
 
             if updatePivot():
                  zone = await pivot()
@@ -415,13 +412,11 @@ async def main():
             # # supertrend ###################################################################################
             spM01_1003 = Supertrend(SYMBOL, "M01", 33, 9)
             superM01_1003T0, superM01_1003T1, superM01_1003T2 = spM01_1003.getST()
-            #
-            now = datetime.now()
-            current_time = now.strftime("%H:%M:%S")
-            print("Mise à jour ", current_time)
+
+            print("Mise à jour ", todayPlus2Hours)
             #
             if c.getTick() is not None:
-                if 0 <= j < 5 and 20 < todayPlus2Hours.hour < 23:
+                if 0 <= j < 5 and 9 < todayPlus2Hours.hour < 13 and 14 < todayPlus2Hours.hour < 20:
                     print("dans le if !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
                     tick = c.getTick()["ask"]
 
