@@ -367,7 +367,7 @@ async def main():
         tradeOpenDic = findopenOrder(client)
         tradeOpen = json.loads(json.dumps(tradeOpenDic))
         print("===>",tradeOpen)
-        if tradeOpen['status'] and len(tradeOpen["returnData"]['rateInfos']) > 0:
+        if tradeOpen['status'] and len(tradeOpen["returnData"]) > 0:
             print("ordre detecte")
             for trade in tradeOpen["returnData"]['rateInfos']:
                 print("suppression des ancien ordre fini :", trade)
