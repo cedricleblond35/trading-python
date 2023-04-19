@@ -494,60 +494,61 @@ async def main():
                             print(trade)
                             print(tick)
                             #############" ordre en attente #################################################################
-                            if TransactionSide.BUY_LIMIT == trade['cmd']:
-                                print(trade)
-                                if trade['customComment'] == "Achat SMMA200_M1":
-                                    if superM01_1003T1 > bougie1M01.get("SMMA200") or 30 > abs(diff_ST_SMMA200) < 5:
-                                        o.delete(trade)
+                            if bougie1M01.get("SMMA200") is not None:
+                                if TransactionSide.BUY_LIMIT == trade['cmd']:
+                                    print(trade)
+                                    if trade['customComment'] == "Achat SMMA200_M1":
+                                        if superM01_1003T1 > bougie1M01.get("SMMA200") or 30 > abs(diff_ST_SMMA200) < 5:
+                                            o.delete(trade)
 
-                                    elif tick > bougie1M01.get("SMMA200"):
-                                        sl = superM01_1003T1
-                                        tp = round(zoneResistance(tick+15, zone), 1)
-                                        price = round(bougie1M01.get("SMMA200"), 1)+2
-                                        comment = "Achat SMMA200"
-                                        o.movebuyLimitWait(trade, sl, tp, price, balance, VNL)
-                                    elif tick > trade["tp"]:
-                                        o.delete(trade)
-                            elif TransactionSide.SELL_LIMIT == trade['cmd']:
-                                if trade['customComment'] == "Vente SMMA200_M1":
-                                    if superM01_1003T1 < bougie1M01.get("SMMA200") or 30 > abs(diff_ST_SMMA200) < 5:
-                                        o.delete(trade)
-                                    elif tick < bougie1M01.get("SMMA200"):
-                                        sl = superM01_1003T1
-                                        tp = zoneResistanceVente(bougie1M01.get("SMMA200")-15, zone)
-                                        price = round(bougie1M01.get("SMMA200"), 1)-2
-                                        o.moveSellLimitWait(trade, sl, tp,price, balance, VNL)
-                                    elif tick < trade["tp"]:
-                                        o.delete(trade)
+                                        elif tick > bougie1M01.get("SMMA200"):
+                                            sl = superM01_1003T1
+                                            tp = round(zoneResistance(tick+15, zone), 1)
+                                            price = round(bougie1M01.get("SMMA200"), 1)+2
+                                            comment = "Achat SMMA200"
+                                            o.movebuyLimitWait(trade, sl, tp, price, balance, VNL)
+                                        elif tick > trade["tp"]:
+                                            o.delete(trade)
+                                elif TransactionSide.SELL_LIMIT == trade['cmd']:
+                                    if trade['customComment'] == "Vente SMMA200_M1":
+                                        if superM01_1003T1 < bougie1M01.get("SMMA200") or 30 > abs(diff_ST_SMMA200) < 5:
+                                            o.delete(trade)
+                                        elif tick < bougie1M01.get("SMMA200"):
+                                            sl = superM01_1003T1
+                                            tp = zoneResistanceVente(bougie1M01.get("SMMA200")-15, zone)
+                                            price = round(bougie1M01.get("SMMA200"), 1)-2
+                                            o.moveSellLimitWait(trade, sl, tp,price, balance, VNL)
+                                        elif tick < trade["tp"]:
+                                            o.delete(trade)
 
-                            #############" ordre execute ###################################################################
-                            elif TransactionSide.BUY == trade['cmd']:
-                                if trade['customComment'] == "Achat SMMA200_M1":
-                                    # Pour garantir pas de perte : monter le stop  a 5pip de benef :
-                                    #   Si cours en dessus de l ouverture avec ecart 20pip
-                                    #   Et si AW change de tendance
+                                #############" ordre execute ###################################################################
+                                elif TransactionSide.BUY == trade['cmd']:
+                                    if trade['customComment'] == "Achat SMMA200_M1":
+                                        # Pour garantir pas de perte : monter le stop  a 5pip de benef :
+                                        #   Si cours en dessus de l ouverture avec ecart 20pip
+                                        #   Et si AW change de tendance
 
-                                    # Si il touche une resistance et AW change de tendance, monter le stop  au ST01 ?? A FAIRE ???????
-                                    if trade['sl'] < trade['open_price'] and tick > trade['open_price'] + 25 and \
-                                            bougie0M05['AW'] < bougie1M05['AW']:
-                                        sl = trade['open_price'] + 3
-                                        o.moveStopBuy(trade, sl, tick)
+                                        # Si il touche une resistance et AW change de tendance, monter le stop  au ST01 ?? A FAIRE ???????
+                                        if trade['sl'] < trade['open_price'] and tick > trade['open_price'] + 25 and \
+                                                bougie0M05['AW'] < bougie1M05['AW']:
+                                            sl = trade['open_price'] + 3
+                                            o.moveStopBuy(trade, sl, tick)
 
-                                    elif superM01_1003T1 > trade['sl']:
-                                        o.moveStopBuy(trade, superM01_1003T1, tick)
+                                        elif superM01_1003T1 > trade['sl']:
+                                            o.moveStopBuy(trade, superM01_1003T1, tick)
 
-                            elif TransactionSide.SELL == trade['cmd']:
-                                if trade['customComment'] == "Vente SMMA200_M1":
-                                    # descendre le stop  a 5pip de benef :
-                                    #   Si cours en dessous de l ouverture avec ecart 20pip
-                                    #   Et si AW change de tendance
-                                    if trade['sl'] > trade['open_price'] and tick < trade['open_price'] - 25 and \
-                                            bougie0M05['AW'] > bougie1M05['AW']:
-                                        sl = trade['open_price'] - 3
-                                        o.moveStopSell(trade, sl, tick)
+                                elif TransactionSide.SELL == trade['cmd']:
+                                    if trade['customComment'] == "Vente SMMA200_M1":
+                                        # descendre le stop  a 5pip de benef :
+                                        #   Si cours en dessous de l ouverture avec ecart 20pip
+                                        #   Et si AW change de tendance
+                                        if trade['sl'] > trade['open_price'] and tick < trade['open_price'] - 25 and \
+                                                bougie0M05['AW'] > bougie1M05['AW']:
+                                            sl = trade['open_price'] - 3
+                                            o.moveStopSell(trade, sl, tick)
 
-                                    elif superM01_1003T1 < trade['sl']:
-                                        o.moveStopSell(trade, superM01_1003T1, tick)
+                                        elif superM01_1003T1 < trade['sl']:
+                                            o.moveStopSell(trade, superM01_1003T1, tick)
 
                         print("ordre en cours   END...........................................")
             time.sleep(30)
