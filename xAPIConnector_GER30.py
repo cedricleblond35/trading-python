@@ -392,7 +392,7 @@ async def main():
                     logger.warning('Login failed. Error code: {0}'.format(loginResponse['errorCode']))
                     return
 
-       
+
 
             if updatePivot():
                  zone = await pivot()
@@ -416,7 +416,7 @@ async def main():
             print("Mise à jour ", todayPlus2Hours)
             #
             if c.getTick() is not None:
-                if 0 <= j < 5 and 9 < todayPlus2Hours.hour < 13 and 14 < todayPlus2Hours.hour < 20:
+                if 0 <= j < 5 and 12 < todayPlus2Hours.hour < 15 and 15 < todayPlus2Hours.hour < 20:
                     print("dans le if !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
                     tick = c.getTick()["ask"]
 
