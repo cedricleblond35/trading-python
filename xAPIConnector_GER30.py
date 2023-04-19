@@ -486,6 +486,8 @@ async def main():
                             print(tick)
                             #############" ordre en attente #################################################################
                             if bougie1M01.get("SMMA200") is not None:
+                                diff_ST_SMMA200 = superM01_1003T1 - bougie1M01.get(
+                                    "SMMA200")  # ecart entre le stop et overture doit etre > 5 pip
                                 if TransactionSide.BUY_LIMIT == trade['cmd']:
                                     print(trade)
                                     if trade['customComment'] == "Achat SMMA200_M1":
