@@ -366,6 +366,7 @@ async def main():
         o = Order(SYMBOL, dbStreaming, client, db["trade"])
         tradeOpenDic = findopenOrder(client)
         tradeOpen = json.loads(json.dumps(tradeOpenDic))
+        print("===>",tradeOpen)
         if tradeOpen['status'] and len(tradeOpen["returnData"]['rateInfos']) > 0:
             print("ordre detecte")
             for trade in tradeOpen["returnData"]['rateInfos']:
