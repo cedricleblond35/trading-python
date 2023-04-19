@@ -388,12 +388,10 @@ async def main():
 
             if updatePivot():
                  zone = await pivot()
-            #
-            print("pivot :", zone)
+
             # ####################################################################################################
             await majDatAall(client, SYMBOL, db)
             # ####################################################################################################
-            print("Mise à jour ", todayPlus2Hours)
             await moyMobil_05.EMA(70, 1)
             await moyMobil_05.SMMA(200, 1)
             await moyMobil_01.SMMA(200, 1)
