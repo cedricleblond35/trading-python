@@ -169,7 +169,6 @@ async def majDatAall(client, symbol, db):
         json_data_Day = client.commandExecute(
             'getChartRangeRequest',
             {"info": {"start": startTime, "end": endTime, "period": 1440, "symbol": symbol, "ticks": 0}})
-        print(json_data_Day)
         dataDAY = json.dumps(json_data_Day)
         dataDAYDownload = json.loads(dataDAY)
         await insertData(db["D"], dataDAYDownload, lastBougie)
@@ -349,14 +348,9 @@ async def main():
         # # # moyen mobile ##################################################################################################
         moyMobil_05 = MM(SYMBOL, "M05", 0)
         moyMobil_01 = MM(SYMBOL, "M01", 0)
-        await moyMobil_05.EMA(70, 1)
-        await moyMobil_05.SMMA(200, 1)
-        await moyMobil_01.SMMA(200, 1)
-        await moyMobil_01.EMA(70, 1)
-        #
+
         # # Awesome ##################################################################################################
         ao05 = Awesome(SYMBOL, "M05")
-        await ao05.calculAllCandles()
         #
         o = Order(SYMBOL, dbStreaming, client, db["trade"])
 
@@ -412,8 +406,6 @@ async def main():
             spM01_1003 = Supertrend(SYMBOL, "M01", 33, 9)
             superM01_1003T0, superM01_1003T1, superM01_1003T2 = spM01_1003.getST()
 
-
-            #
             if c.getTick() is not None:
                 if 0 <= j < 5 and 12 < todayPlus2Hours.hour < 15 and 15 < todayPlus2Hours.hour < 20:
                     print("dans le if !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
