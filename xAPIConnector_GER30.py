@@ -447,6 +447,7 @@ async def main():
                     print("superM01_1003T1:", superM01_1003T1)
                     print("smma200:", bougie1M01.get("SMMA200"))
                     print("ema70", bougie1M01.get("EMA70"))
+                    print("tradeOpen", tradeOpen['returnData'])
                     if len(tradeOpen['returnData']) == 0:
                         ###############################################################################################################
                         # Aucun ordre
