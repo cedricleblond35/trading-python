@@ -342,8 +342,6 @@ async def main():
 
         await majDatAall(client, SYMBOL, db)
 
-        # # # pivot##################################################################################################
-        zone = await pivot()
         #
         # # # moyen mobile ##################################################################################################
         moyMobil_05 = MM(SYMBOL, "M05", 0)
@@ -377,8 +375,7 @@ async def main():
                     logger.warning('Login failed. Error code: {0}'.format(loginResponse['errorCode']))
                     return
 
-            if updatePivot():
-                 zone = await pivot()
+            zone = await pivot()
 
             # ####################################################################################################
             await majDatAall(client, SYMBOL, db)
@@ -396,6 +393,7 @@ async def main():
             superM01_1003T0, superM01_1003T1, superM01_1003T2 = spM01_1003.getST()
 
             if c.getTick() is not None:
+                print("jour:", j ," h:", todayPlus2Hours.hour)
                 if 0 <= j < 5 and 6 < todayPlus2Hours.hour < 22:
                     print("dans le if !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
                     tick = c.getTick()["ask"]
