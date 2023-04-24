@@ -389,7 +389,7 @@ async def main():
             await ao05.calculLastCandle(10)
             #
             # # supertrend ###################################################################################
-            spM01_1003 = Supertrend(SYMBOL, "M01", 33, 9)
+            spM01_1003 = Supertrend(SYMBOL, "M05", 10, 3)
             superM01_1003T0, superM01_1003T1, superM01_1003T2 = spM01_1003.getST()
 
             if c.getTick() is not None:
