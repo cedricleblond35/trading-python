@@ -456,10 +456,11 @@ async def main():
                         print("demarrage de selection d une strategie")
                         diff_ST_SMMA200 = superM01_1003T1 - bougie1M01.get(
                             "SMMA200")  # ecart entre le stop et overture doit etre > 5 pip
+                        print("tradeOpen", abs(diff_ST_SMMA200))
 
                         # strategie des achats et ventes des support
                         if bougie1M01.get("SMMA200") is not None:
-                            if tick > bougie1M01.get("SMMA200") > superM01_1003T1 and bougie1M01.get("EMA70") > bougie1M01.get("SMMA200") and 30 > abs(diff_ST_SMMA200) > 5:
+                            if diff_ST_SMMA200 > bougie1M01.get("SMMA200") > superM01_1003T1 and bougie1M01.get("EMA70") > bougie1M01.get("SMMA200") and 30 > abs(diff_ST_SMMA200) > 5:
                                 print("strategie 1 de achat ***********************************************")
                                 sl = superM01_1003T1
                                 tp = round(zoneResistance(tick+15, zone), 1)
@@ -496,7 +497,6 @@ async def main():
                                             sl = superM01_1003T1
                                             tp = round(zoneResistance(tick+15, zone), 1)
                                             price = round(bougie1M01.get("SMMA200"), 1)+2
-                                            comment = "Achat SMMA200"
                                             o.movebuyLimitWait(trade, sl, tp, price, balance, VNL)
                                         elif tick > trade["tp"]:
                                             o.delete(trade)
