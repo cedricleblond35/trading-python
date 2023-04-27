@@ -355,6 +355,16 @@ async def main():
         while True:
             print(
                 "*****************************************************************************************************")
+            if sclient.is_socket_closed():
+                client = APIClient()  # create & connect to RR socket
+                loginResponse = client.identification()  # connect to RR socket, login
+                logger.info(str(loginResponse))
+
+                # check if user logged in correctly
+                if not loginResponse['status']:
+                    print('Login failed. Error code: {0}'.format(loginResponse['errorCode']))
+                    return
+                sclient, c = subscribe(loginResponse)
 
             ############### gestion des jours et heures de trading ##########################""
             j = datetime.today().weekday() #0:lundi ; 4 vendredi
@@ -462,7 +472,7 @@ async def main():
 
                         # strategie des achats et ventes des support
                         if bougie1M01.get("SMMA200") is not None:
-                            if diff_ST_SMMA200 > bougie1M01.get("SMMA200") > superM01_1003T1 and bougie1M01.get("EMA70") > bougie1M01.get("SMMA200") and 30 > abs(diff_ST_SMMA200) > 5:
+                            if tick > bougie1M01.get("SMMA200") > superM01_1003T1 and bougie1M01.get("EMA70") > bougie1M01.get("SMMA200") and 30 > abs(diff_ST_SMMA200) > 5:
                                 print("strategie 1 de achat ***********************************************")
                                 sl = superM01_1003T1
                                 tp = round(zoneResistance(tick+15, zone), 1)
