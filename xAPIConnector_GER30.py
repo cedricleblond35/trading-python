@@ -355,22 +355,12 @@ async def main():
         while True:
             print(
                 "*****************************************************************************************************")
-            if sclient.is_socket_closed():
-                client = APIClient()  # create & connect to RR socket
-                loginResponse = client.identification()  # connect to RR socket, login
-                logger.info(str(loginResponse))
-
-                # check if user logged in correctly
-                if not loginResponse['status']:
-                    print('Login failed. Error code: {0}'.format(loginResponse['errorCode']))
-                    return
-                sclient, c = subscribe(loginResponse)
-
             ############### gestion des jours et heures de trading ##########################""
             j = datetime.today().weekday() #0:lundi ; 4 vendredi
             today = datetime.now()
             todayPlus2Hours = today + timedelta(hours=2)
             print("mise à jour :", todayPlus2Hours)
+            print("verif connexion:", client.is_socket_closed())
 
             if client.is_socket_closed():
                 logger.info("!!!!!!!!! client deconnecté, reconnection en cours !!!!!!!!!!!!!!!!!!!")
@@ -404,7 +394,7 @@ async def main():
 
             if c.getTick() is not None:
                 print("jour:", j ," h:", todayPlus2Hours.hour)
-                if 0 <= j < 5 and 6 < todayPlus2Hours.hour < 22:
+                if 0 <= j < 5 and 13 < todayPlus2Hours.hour < 22:
                     print("dans le if !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
                     tick = c.getTick()["ask"]
 
