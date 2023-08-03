@@ -423,6 +423,10 @@ async def main():
         logger.info("mise à jour du start fini ")
 
         while True:
+            # ####################################################################################################
+            await majDatAall(client, SYMBOL, db)
+            # ####################################################################################################
+
             ############### gestion des jours et heures de trading ##########################""
             j = datetime.today().weekday()  # 0:lundi ; 4 vendredi
             today = datetime.now()
