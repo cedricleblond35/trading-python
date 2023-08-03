@@ -366,9 +366,8 @@ async def main():
                 logger.info("!!!!!!!!! client deconnecté, reconnection en cours !!!!!!!!!!!!!!!!!!!")
                 client = APIClient()  # create & connect to RR socket
                 loginResponse = client.identification()  # connect to RR socket, login
-                # get ssId from login response
-                ssid = loginResponse['streamSessionId']
                 logger.info(str(loginResponse))
+                sclient, c = subscribe(loginResponse)
 
                 # check if user logged in correctly
                 if not loginResponse['status']:
@@ -394,7 +393,7 @@ async def main():
 
             if c.getTick() is not None:
                 print("jour:", j ," h:", todayPlus2Hours.hour)
-                if 0 <= j < 5 and 13 < todayPlus2Hours.hour < 22:
+                if 0 <= j < 5 and 9 < todayPlus2Hours.hour < 22:
                     print("dans le if !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
                     tick = c.getTick()["ask"]
 
