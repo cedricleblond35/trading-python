@@ -423,6 +423,16 @@ async def main():
         logger.info("mise à jour du start fini ")
 
         while True:
+            if sclient.is_socket_closed():
+                client = APIClient()  # create & connect to RR socket
+                loginResponse = client.identification()  # connect to RR socket, login
+                logger.info(str(loginResponse))
+
+                # check if user logged in correctly
+                if not loginResponse['status']:
+                    print('Login failed. Error code: {0}'.format(loginResponse['errorCode']))
+                    return
+                sclient, c = subscribe(loginResponse)
             # ####################################################################################################
             await majDatAall(client, SYMBOL, db)
             # ####################################################################################################
