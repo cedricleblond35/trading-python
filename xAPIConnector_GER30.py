@@ -360,7 +360,7 @@ async def main():
             today = datetime.now()
             todayPlus2Hours = today + timedelta(hours=2)
             print("mise à jour :", todayPlus2Hours)
-            print("verif connexion:", client.is_socket_closed())
+            print("socket_closed:", client.is_socket_closed())
 
             if client.is_socket_closed():
                 logger.info("!!!!!!!!! client deconnecté, reconnection en cours !!!!!!!!!!!!!!!!!!!")
@@ -393,7 +393,7 @@ async def main():
 
             if c.getTick() is not None:
                 print("jour:", j ," h:", todayPlus2Hours.hour)
-                if 0 <= j < 5 and 14 < todayPlus2Hours.hour < 22:
+                if 0 <= j < 5 and 5 < todayPlus2Hours.hour < 22:
                     print("dans le if !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
                     tick = c.getTick()["ask"]
 
