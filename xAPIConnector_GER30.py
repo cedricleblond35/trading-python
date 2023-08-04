@@ -443,9 +443,13 @@ async def main():
                     # start order
                     ###############################################################################################################
                     print("tick:", tick)
+                    print("--------------------------------------")
                     print("superM05_5003T1:", superM05_5003T1)
                     print("smma200:", bougie1M01.get("SMMA200"))
+                    print("--------------------------------------")
                     print("ema70", bougie1M01.get("EMA70"))
+                    print("smma200:", bougie1M01.get("SMMA200"))
+                    print("--------------------------------------")
                     print("tradeOpen", tradeOpen['returnData'])
 
                     if len(tradeOpen['returnData']) == 0:
