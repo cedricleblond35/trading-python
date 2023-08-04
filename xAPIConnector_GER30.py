@@ -443,9 +443,10 @@ async def main():
                     # start order
                     ###############################################################################################################
                     print("tick:", tick)
-                    print("--------------------------------------")
-                    print("superM05_5003T1:", superM05_5003T1)
                     print("smma200:", bougie1M01.get("SMMA200"))
+                    print("--------------------------------------")
+                    print("smma200:", bougie1M01.get("SMMA200"))
+                    print("superM05_5003T1:", superM05_5003T1)
                     print("--------------------------------------")
                     print("ema70", bougie1M01.get("EMA70"))
                     print("smma200:", bougie1M01.get("SMMA200"))
@@ -459,9 +460,8 @@ async def main():
                         print("-- Aucun ordre   ***************************************")
                         print("demarrage de selection d une strategie")
                         diff_ST_SMMA200 = superM05_5003T1 - bougie1M01.get("SMMA200")  # ecart entre le stop et overture doit etre > 5 pip
-                        print("diff_ST_SMMA200 : ", diff_ST_SMMA200)
                         diff = abs(diff_ST_SMMA200)
-                        print("diff_ST_SMMA200 : ", diff)
+                        print("diff_ST_SMMA200 : 30 > ", diff, " > 5")
 
                         # strategie des achats et ventes des support
                         if bougie1M01.get("SMMA200") is not None:
