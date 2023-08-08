@@ -130,7 +130,6 @@ class JsonSocket(object):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         result = s.connect_ex((self.address, self.port))
         if result:
-
             # self.log.warning(self.socket)
             print("client deconnecté")
             return False
