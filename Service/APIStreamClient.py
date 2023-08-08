@@ -12,7 +12,8 @@ class APIStreamClient(JsonSocket):
                  balanceFun=None,
                  tradeStatusFun=None,
                  profitFun=None,
-                 newsFun=None
+                 newsFun=None,
+                 candles=None
                  ):
         super(APIStreamClient, self).__init__(address, port, encrypt)
         self._ssId = ssId
@@ -23,6 +24,7 @@ class APIStreamClient(JsonSocket):
         self._tradeStatusFun = tradeStatusFun
         self._profitFun = profitFun
         self._newsFun = newsFun
+        self._candles = candles
 
         if (not self.connect()):
             raise Exception("Cannot connect to streaming on " + address + ":" + str(port) + " after " + str(
@@ -49,6 +51,8 @@ class APIStreamClient(JsonSocket):
                 self._profitFun(msg)
             elif (msg["command"] == "news"):
                 self._newsFun(msg)
+            elif (msg["command"] == "candle"):
+                self._candles(msg)
 
     def disconnect(self):
         self._running = False
@@ -58,7 +62,7 @@ class APIStreamClient(JsonSocket):
     def execute(self, dictionary):
         self._sendObj(dictionary)
 
-    def getCandles(self, symbol):
+    def subscribeCandles(self, symbol):
         self.execute(dict(command='getCandles', symbol=symbol, streamSessionId=self._ssId))
 
     def subscribePrice(self, symbol):

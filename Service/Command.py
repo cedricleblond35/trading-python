@@ -12,6 +12,7 @@ class Command:
         self.news = None
         self.trade = None
         self.tradeStatus = None
+        self.candles = None
 
         # Command templates
 
@@ -25,7 +26,7 @@ class Command:
 
     # example function for processing ticks from Streaming socket
     def procTickExample(self, msg):
-        # print(msg)
+        #print("tick: ", msg)
         dataDownload = json.loads(json.dumps(msg))
         self.tick = dataDownload['data']
 
@@ -50,6 +51,11 @@ class Command:
         dataDownload = json.loads(json.dumps(msg))
         self.news = dataDownload['data']
 
+    def procCandles(self, msg):
+        print("==================================== candles: ", msg)
+        dataDownload = json.loads(json.dumps(msg))
+        self.candles = dataDownload['data']
+
     def getTick(self):
         return self.tick
 
@@ -67,3 +73,6 @@ class Command:
 
     def getTradeStatus(self):
         return self.tradeStatus
+
+    def getCandles(self):
+        return self.candles

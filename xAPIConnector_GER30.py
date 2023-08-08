@@ -297,13 +297,15 @@ def subscribe(loginResponse):
         tradeFun=c.procTradeExample,
         balanceFun=c.procBalanceExample,
         tradeStatusFun=c.procTradeStatusExample,
-        profitFun=c.procProfitExample
+        profitFun=c.procProfitExample,
+        candles=c.procCandles
     )
     sclient.subscribePrice(SYMBOL)
     sclient.subscribeProfits()
     sclient.subscribeTradeStatus()
     sclient.subscribeTrades()
     sclient.subscribeBalance()
+    sclient.subscribeCandles(SYMBOL)
 
     return sclient, c
 
@@ -348,7 +350,7 @@ async def main():
 
         await majDatAall(client, SYMBOL, db)
 
-        #
+
         # # # moyen mobile ##################################################################################################
         moyMobil_05 = MM(SYMBOL, "M05", 0)
         moyMobil_01 = MM(SYMBOL, "M01", 0)
@@ -372,7 +374,11 @@ async def main():
                 sclient, c, client = connectionAPI()
 
             zone = await pivot()
+            c.getTick()
 
+
+            candles = c.getCandles()
+            print("=================> candles:", candles)
             # ####################################################################################################
             await majDatAall(client, SYMBOL, db)
             # ####################################################################################################
@@ -387,6 +393,7 @@ async def main():
             # # supertrend ###################################################################################
             spM05_1003 = Supertrend(SYMBOL, "M05", 10, 3)
             superM05_5003T0, superM05_5003T1, superM05_5003T2 = spM05_1003.getST()
+
 
             if c.getTick() is not None:
                 print("jour:", j, " h:", todayPlus2Hours.hour)

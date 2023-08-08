@@ -127,15 +127,19 @@ class JsonSocket(object):
         pass
 
     def is_socket_closed(self) -> bool:
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        result = s.connect_ex((self.address, self.port))
-        if result:
-            # self.log.warning(self.socket)
-            print("client deconnecté")
-            return True
-        else:
-            print("client connecté")
-            return False
+        try:
+            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            result = s.connect_ex((self.address, self.port))
+            if result:
+                print("client deconnecté")
+                return True
+            else:
+                print("client connecté")
+                return False
+        except Exception as exc:
+            print("connexion non stable")
+            time.sleep(3)
+            self.is_socket_closed()
 
 
     timeout = property(_get_timeout, _set_timeout, doc='Get/set the socket timeout')

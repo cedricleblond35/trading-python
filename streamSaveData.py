@@ -154,14 +154,19 @@ class JsonSocket(object):
     def is_socket_closed(self) -> bool:
         #self.log.warning(self.socket)
         #https://stackoverflow.com/questions/48024720/python-how-to-check-if-socket-is-still-connected
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        result = s.connect_ex((self.address, self.port))
-        if result:
-            print("client deconnecté")
-            return True
-        else:
-            print("client connecté")
-            return False
+        try:
+            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            result = s.connect_ex((self.address, self.port))
+            if result:
+                print("client deconnecté")
+                return True
+            else:
+                print("client connecté")
+                return False
+        except Exception as exc:
+            print("connexion non stable")
+            time.sleep(3)
+            self.is_socket_closed()
 
 
     timeout = property(_get_timeout, _set_timeout, doc='Get/set the socket timeout')
@@ -190,7 +195,7 @@ class APIClient(JsonSocket):
 
 class APIStreamClient(JsonSocket):
     def __init__(self, address=DEFAULT_XAPI_ADDRESS, port=DEFUALT_XAPI_STREAMING_PORT, encrypt=True, ssId=None,
-                 tickFun=None, tradeFun=None, balanceFun=None, tradeStatusFun=None, profitFun=None, newsFun=None):
+                 tickFun=None, tradeFun=None, balanceFun=None, tradeStatusFun=None, profitFun=None, newsFun=None, candles=None):
         super(APIStreamClient, self).__init__(address, port, encrypt)
         self._ssId = ssId
 
@@ -200,6 +205,7 @@ class APIStreamClient(JsonSocket):
         self._tradeStatusFun = tradeStatusFun
         self._profitFun = profitFun
         self._newsFun = newsFun
+        self._candles = candles
 
         if (not self.connect()):
             raise Exception("Cannot connect to streaming on " + address + ":" + str(port) + " after " + str(
@@ -226,6 +232,8 @@ class APIStreamClient(JsonSocket):
                 self._profitFun(msg)
             elif (msg["command"] == "news"):
                 self._newsFun(msg)
+            elif (msg["command"] == "candles"):
+                self._candles
 
     def disconnect(self):
         self._running = False
@@ -244,6 +252,9 @@ class APIStreamClient(JsonSocket):
 
     def subscribeTrades(self):
         self.execute(dict(command='getTrades', streamSessionId=self._ssId))
+
+    def subscribCandles(self,symbol):
+        self.execute(dict(command='getCandles',symbol=symbol, streamSessionId=self._ssId))
 
     def subscribeBalance(self):
         self.execute(dict(command='getBalance', streamSessionId=self._ssId))
@@ -266,6 +277,9 @@ class APIStreamClient(JsonSocket):
 
     def unsubscribeTrades(self):
         self.execute(dict(command='stopTrades', streamSessionId=self._ssId))
+
+    def unsubscribeCandles(self):
+        self.execute(dict(command='stopCandles', streamSessionId=self._ssId))
 
     def unsubscribeBalance(self):
         self.execute(dict(command='stopBalance', streamSessionId=self._ssId))
@@ -315,6 +329,8 @@ def procTradeStatusExample(msg):
 def procProfitExample(msg):
     print("PROFIT: ", msg)
 
+def procCandles(msg):
+    print("procCandles:", msg)
 
 # example function for processing news from Streaming socket
 def procNewsExample(msg):
@@ -350,20 +366,40 @@ def main():
     sclient = APIStreamClient(ssId=ssid, tickFun=procTickExample,
                               tradeFun=procTradeExample,
                               profitFun=procProfitExample,
-                              tradeStatusFun=procTradeStatusExample)
+                              tradeStatusFun=procTradeStatusExample,
+                              newsFun=procNewsExample,
+                              candles=procCandles)
 
-    # subscribe for trades
+
+    sclient.subscribeNews()
+
+    sclient.subscribCandles('EURUSD')
+
+
+    # ordre ouvert ou fermé
+    #TRADE:  {'command': 'trade', 'data': {'cmd': 2, 'order': 535473825, 'digits': 5, 'offset': 0, 'order2': 535473825, 'position': 535473825, 'symbol': 'EURGBP', 'comment': '', 'customComment': None, 'commission': 0.0, 'storage': 0.0, 'margin_rate': 0.0, 'close_price': 0.0, 'open_price': 0.7505, 'nominalValue': 0.0, 'profit': None, 'volume': 0.01, 'sl': 0.0, 'tp': 0.0, 'closed': False, 'type': 1, 'open_time': 1691487393904, 'close_time': None, 'expiration': None, 'state': 'Modified'}}
     sclient.subscribeTrades()
+
+    # synthse d'un ordre passé
+    #sclient.subscribeTradeStatus()
+
+    # position ouverte par l utilisateur
+    #PROFIT:  {'command': 'profit', 'data': {'order': 535472119, 'order2': 535472203, 'position': 535472119, 'profit': -0.53, 'marketValue': 0.0, 'profitCalcPrice': 15878.9, 'profitRecalcPrice': 1.0}}
+    #sclient.subscribeProfits()
 
     # subscribe for prices
     #sclient.subscribePrices(['EURUSD', 'EURGBP', 'EURJPY'])
     #sclient.subscribePrice('GER30')
+
     # subscribe for profits
     #sclient.subscribeProfits()
 
     while True:
         # this is an example, make it run for 5 seconds
         client.is_socket_closed()
+
+        #tradesHistoryString = client.commandExecute('getNews', {"start": 1691450964, "end": 0})
+        #print(tradesHistoryString)
 
         time.sleep(1)
 
