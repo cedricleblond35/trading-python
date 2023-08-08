@@ -327,7 +327,8 @@ async def connectionAPI():
     if not loginResponse['status']:
         print('Login failed. Error code: {0}'.format(loginResponse['errorCode']))
         return
-    return subscribe(loginResponse), client
+    sclient, c = subscribe(loginResponse)
+    return sclient, c, client
 
 
 async def main():
@@ -340,7 +341,7 @@ async def main():
     logger.setLevel(logging.DEBUG)
 
     try:
-        sclient, c, client = connectionAPI()
+        sclient, c, client = await connectionAPI()
         connection = MongoClient('localhost', 27017)
         db = connection[SYMBOL]
         dbStreaming = connection["STREAMING"]
