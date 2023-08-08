@@ -38,7 +38,6 @@ from Service.TransactionSide import TransactionSide
 # nbre de lot = 388 720 / 393500 € = 0,9878 lot
 
 
-
 # horaire---------------
 TradeStartTime = 4
 TradeStopTime = 22
@@ -51,6 +50,8 @@ TICK = False
 PROFIT = False
 SYMBOL = "DE30"
 VNL = 30
+
+
 # 1 pips 25€ pour 1 lots
 
 def startEA_Horaire():
@@ -86,7 +87,7 @@ async def insertData(collection, dataDownload, lastBougieDB):
                 high = (value['open'] + value['high']) / 10.0
                 low = (value['open'] + value['low']) / 10.0
                 pointMedian = round((high + low) / 2, 2)
-                #print(value['ctm'] ,">", lastBougieDB['ctm'])
+                # print(value['ctm'] ,">", lastBougieDB['ctm'])
                 if lastBougieDB is None or value['ctm'] > lastBougieDB['ctm']:
                     open = value['open'] / 10.0
                     newvalues = {
@@ -120,6 +121,7 @@ async def insertData(collection, dataDownload, lastBougieDB):
         fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
         print(exc_type, fname, exc_tb.tb_lineno)
 
+
 def findTradesHistory(client, start):
     '''
     Selectionner les ordres ouverts
@@ -141,6 +143,7 @@ def findopenOrder(client):
     tradeOpenJson = json.dumps(tradeOpenString)
     return json.loads(tradeOpenJson)
 
+
 async def majDatAall(client, symbol, db):
     '''
     Mise à jour de la base de données
@@ -155,7 +158,7 @@ async def majDatAall(client, symbol, db):
     :param db: collection selectionné selon symbol
     :return:
     '''
-    #print("**************************************** mise à jour majDatAall ****************************************")
+    # print("**************************************** mise à jour majDatAall ****************************************")
     try:
         # ctmRefStart = db["D"].find().sort("ctm", -1).skip(1).limit(1)
         endTime = int(round(time.time() * 1000)) + (6 * 60 * 1000)
@@ -164,7 +167,7 @@ async def majDatAall(client, symbol, db):
         lastBougie = db["D"].find_one({}, sort=[('ctm', -1)])
         startTime = int(round(time.time() * 1000)) - (60 * 60 * 24 * 30 * 13) * 1000
         if lastBougie is not None:
-            startTime = lastBougie["ctm"] - (60 * 60 * 24 ) * 1000
+            startTime = lastBougie["ctm"] - (60 * 60 * 24) * 1000
 
         json_data_Day = client.commandExecute(
             'getChartRangeRequest',
@@ -177,7 +180,7 @@ async def majDatAall(client, symbol, db):
         lastBougie = db["H4"].find_one({}, sort=[('ctm', -1)])
         startTime = int(round(time.time() * 1000)) - (60 * 60 * 24 * 30 * 13) * 1000
         if lastBougie is not None:
-            startTime = lastBougie["ctm"] - (60 * 60 * 8 ) * 1000
+            startTime = lastBougie["ctm"] - (60 * 60 * 8) * 1000
 
         json_data_H4 = client.commandExecute('getChartRangeRequest', {
             "info": {"start": startTime, "end": endTime, "period": 240,
@@ -309,10 +312,22 @@ async def pivot():
     P = Pivot(SYMBOL, "D")
     PPF, R1F, R2F, R3F, S1F, S2F, S3F = await P.fibonacci()  # valeurs ok
     R1D, S1D = await P.demark()  # valeurs ok
-    PPW,R1W, R2W, S1W, S2W = await P.woodie()  # valeurs ok
-    #PPC, R1C, R2C, R3C, R4C, S1C, S2C, S3C, S4C = await P.camarilla()  # valeurs ok
+    PPW, R1W, R2W, S1W, S2W = await P.woodie()  # valeurs ok
+    # PPC, R1C, R2C, R3C, R4C, S1C, S2C, S3C, S4C = await P.camarilla()  # valeurs ok
     zone = np.array([R1W, R2W, S1W, S2W, R1D, S1D, PPF, R1F, R2F, R3F, S1F, S2F, S3F])
     return np.sort(zone)
+
+
+async def connectionAPI():
+    client = APIClient()  # create & connect to RR socket
+    loginResponse = client.identification()  # connect to RR socket, login
+    # logger.inf.o(str(loginResponse))
+
+    # check if user logged in correctly
+    if not loginResponse['status']:
+        print('Login failed. Error code: {0}'.format(loginResponse['errorCode']))
+        return
+    return subscribe(loginResponse), client
 
 
 async def main():
@@ -324,18 +339,8 @@ async def main():
     logger.addHandler(handler)
     logger.setLevel(logging.DEBUG)
 
-
-    client = APIClient()  # create & connect to RR socket
-    loginResponse = client.identification()  # connect to RR socket, login
-    logger.info(str(loginResponse))
-
-    # check if user logged in correctly
-    if not loginResponse['status']:
-        print('Login failed. Error code: {0}'.format(loginResponse['errorCode']))
-        return
-
     try:
-        sclient, c = subscribe(loginResponse)
+        sclient, c, client = connectionAPI()
         connection = MongoClient('localhost', 27017)
         db = connection[SYMBOL]
         dbStreaming = connection["STREAMING"]
@@ -356,7 +361,7 @@ async def main():
             print(
                 "*****************************************************************************************************")
             ############### gestion des jours et heures de trading ##########################""
-            j = datetime.today().weekday() #0:lundi ; 4 vendredi
+            j = datetime.today().weekday()  # 0:lundi ; 4 vendredi
             today = datetime.now()
             todayPlus2Hours = today + timedelta(hours=2)
             print("mise à jour :", todayPlus2Hours)
@@ -364,15 +369,7 @@ async def main():
 
             if client.is_socket_closed():
                 logger.info("!!!!!!!!! client deconnecté, reconnection en cours !!!!!!!!!!!!!!!!!!!")
-                client = APIClient()  # create & connect to RR socket
-                loginResponse = client.identification()  # connect to RR socket, login
-                logger.info(str(loginResponse))
-                sclient, c = subscribe(loginResponse)
-
-                # check if user logged in correctly
-                if not loginResponse['status']:
-                    logger.warning('Login failed. Error code: {0}'.format(loginResponse['errorCode']))
-                    return
+                sclient, c, client = connectionAPI()
 
             zone = await pivot()
 
@@ -392,7 +389,7 @@ async def main():
             superM05_5003T0, superM05_5003T1, superM05_5003T2 = spM05_1003.getST()
 
             if c.getTick() is not None:
-                print("jour:", j ," h:", todayPlus2Hours.hour)
+                print("jour:", j, " h:", todayPlus2Hours.hour)
                 if 0 <= j < 5 and 5 < todayPlus2Hours.hour < 22:
                     print("dans le if !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
                     tick = c.getTick()["ask"]
@@ -416,8 +413,6 @@ async def main():
 
                     bougie0M05 = db["M05"].find({}, sort=[('ctm', -1)]).limit(1).skip(0)[0]
                     bougie1M05 = db["M05"].find({}, sort=[('ctm', -1)]).limit(1).skip(1)[0]
-
-
 
                     ###############################################################################################################
                     # balance
@@ -459,27 +454,30 @@ async def main():
                         ###############################################################################################################
                         print("-- Aucun ordre   ***************************************")
                         print("demarrage de selection d une strategie")
-                        diff_ST_SMMA200 = superM05_5003T1 - bougie1M01.get("SMMA200")  # ecart entre le stop et overture doit etre > 5 pip
+                        diff_ST_SMMA200 = superM05_5003T1 - bougie1M01.get(
+                            "SMMA200")  # ecart entre le stop et overture doit etre > 5 pip
                         diff = abs(diff_ST_SMMA200)
                         print("diff_ST_SMMA200 : 30 > ", diff, " > 5")
 
                         # strategie des achats et ventes des support
                         if bougie1M01.get("SMMA200") is not None:
-                            if tick > bougie1M01.get("SMMA200") > superM05_5003T1 and bougie1M01.get("EMA70") > bougie1M01.get("SMMA200") and 30 > abs(diff_ST_SMMA200) > 5:
+                            if tick > bougie1M01.get("SMMA200") > superM05_5003T1 and bougie1M01.get(
+                                    "EMA70") > bougie1M01.get("SMMA200") and 30 > abs(diff_ST_SMMA200) > 5:
                                 print("strategie 1 de achat ***********************************************")
                                 sl = superM05_5003T1
-                                tp = round(zoneResistance(tick+15, zone), 1)
-                                price = round(bougie1M01.get("SMMA200")+2, 1)
+                                tp = round(zoneResistance(tick + 15, zone), 1)
+                                price = round(bougie1M01.get("SMMA200") + 2, 1)
                                 comment = "Achat SMMA200_M1"
-                                #round(tp, 1)
+                                # round(tp, 1)
                                 o.buyLimit(sl, tp, price, balance, VNL, comment)
-                            elif tick < bougie1M01.get("SMMA200") < superM05_5003T1 and bougie1M01.get("EMA70") < bougie1M01.get("SMMA200") and 30 >  abs(diff_ST_SMMA200) > 5:
+                            elif tick < bougie1M01.get("SMMA200") < superM05_5003T1 and bougie1M01.get(
+                                    "EMA70") < bougie1M01.get("SMMA200") and 30 > abs(diff_ST_SMMA200) > 5:
                                 print("strategie 1 de vente ***********************************************")
 
                                 print("*********tick:", tick)
                                 sl = superM05_5003T1
-                                tp = zoneResistanceVente(bougie1M01.get("SMMA200")-15, zone)
-                                price = round(bougie1M01.get("SMMA200")-2, 1)
+                                tp = zoneResistanceVente(bougie1M01.get("SMMA200") - 15, zone)
+                                price = round(bougie1M01.get("SMMA200") - 2, 1)
                                 comment = "Vente SMMA200_M1"
                                 print("*********tp:", tp)
                                 o.sellLimit(sl, tp, price, balance, VNL, comment)
@@ -500,8 +498,8 @@ async def main():
 
                                         elif tick > bougie1M01.get("SMMA200"):
                                             sl = superM05_5003T1
-                                            tp = round(zoneResistance(tick+15, zone), 1)
-                                            price = round(bougie1M01.get("SMMA200"), 1)+2
+                                            tp = round(zoneResistance(tick + 15, zone), 1)
+                                            price = round(bougie1M01.get("SMMA200"), 1) + 2
                                             o.movebuyLimitWait(trade, sl, tp, price, balance, VNL)
                                         elif tick > trade["tp"]:
                                             o.delete(trade)
@@ -511,9 +509,9 @@ async def main():
                                             o.delete(trade)
                                         elif tick < bougie1M01.get("SMMA200"):
                                             sl = superM05_5003T1
-                                            tp = zoneResistanceVente(bougie1M01.get("SMMA200")-15, zone)
-                                            price = round(bougie1M01.get("SMMA200"), 1)-2
-                                            o.moveSellLimitWait(trade, sl, tp,price, balance, VNL)
+                                            tp = zoneResistanceVente(bougie1M01.get("SMMA200") - 15, zone)
+                                            price = round(bougie1M01.get("SMMA200"), 1) - 2
+                                            o.moveSellLimitWait(trade, sl, tp, price, balance, VNL)
                                         elif tick < trade["tp"]:
                                             o.delete(trade)
 
