@@ -132,10 +132,10 @@ class JsonSocket(object):
         if result:
             # self.log.warning(self.socket)
             print("client deconnecté")
-            return False
+            return True
         else:
             print("client connecté")
-            return True
+            return False
 
 
     timeout = property(_get_timeout, _set_timeout, doc='Get/set the socket timeout')

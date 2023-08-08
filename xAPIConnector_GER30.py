@@ -366,7 +366,6 @@ async def main():
             today = datetime.now()
             todayPlus2Hours = today + timedelta(hours=2)
             print("mise à jour :", todayPlus2Hours)
-            print("socket_closed:", client.is_socket_closed())
 
             if client.is_socket_closed():
                 logger.info("!!!!!!!!! client deconnecté, reconnection en cours !!!!!!!!!!!!!!!!!!!")
