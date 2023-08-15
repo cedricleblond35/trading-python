@@ -104,7 +104,7 @@ class Order:
         nbrelot = NbrLot(balance, price, sl, vnl)
         detail = {
             "cmd": TransactionSide.SELL,
-            "customComment": "Vente direct",
+            "customComment": comment,
             "expiration": timeExpiration,
             "offset": 0,
             "price": price-50,
@@ -133,7 +133,7 @@ class Order:
         nbrelot = NbrLot(balance, price, sl, vnl)
         detail = {
             "cmd": 0,
-            "customComment": "Achat direct",
+            "customComment": comment,
             "expiration": timeExpiration,
             "offset": 0,
             "price": price+50,

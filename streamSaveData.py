@@ -1,9 +1,11 @@
 import json
 import socket
 import logging
-import time
 import ssl
 from threading import Thread
+import calendar
+import time
+
 
 # set to true on debug environment only
 DEBUG = True
@@ -371,25 +373,29 @@ def main():
                               candles=procCandles)
 
 
-    sclient.subscribeNews()
+    #sclient.subscribeNews()
 
-    sclient.subscribCandles('EURUSD')
+    #sclient.subscribCandles('EURUSD')
 
 
-    # ordre ouvert ou fermé
+    # ouverture ou fermeture d ordre
     #TRADE:  {'command': 'trade', 'data': {'cmd': 2, 'order': 535473825, 'digits': 5, 'offset': 0, 'order2': 535473825, 'position': 535473825, 'symbol': 'EURGBP', 'comment': '', 'customComment': None, 'commission': 0.0, 'storage': 0.0, 'margin_rate': 0.0, 'close_price': 0.0, 'open_price': 0.7505, 'nominalValue': 0.0, 'profit': None, 'volume': 0.01, 'sl': 0.0, 'tp': 0.0, 'closed': False, 'type': 1, 'open_time': 1691487393904, 'close_time': None, 'expiration': None, 'state': 'Modified'}}
     sclient.subscribeTrades()
 
-    # synthse d'un ordre passé
+    # synthèse d'un ordre passé
+    # {'command': 'tradeStatus', 'data': {'order': 536284740, 'requestStatus': 3, 'message': None, 'customComment': None, 'price': 1.10124}}
     #sclient.subscribeTradeStatus()
 
-    # position ouverte par l utilisateur
+    # position ouverte par l utilisateur, il indique le profit d un ordre precis =>
+    # 'order': 535472119
+    # 'profit': -0.53
     #PROFIT:  {'command': 'profit', 'data': {'order': 535472119, 'order2': 535472203, 'position': 535472119, 'profit': -0.53, 'marketValue': 0.0, 'profitCalcPrice': 15878.9, 'profitRecalcPrice': 1.0}}
     #sclient.subscribeProfits()
 
     # subscribe for prices
+    # collecter en direct tous les ordres pour une paire
     #sclient.subscribePrices(['EURUSD', 'EURGBP', 'EURJPY'])
-    #sclient.subscribePrice('GER30')
+    #sclient.subscribePrice('DE30')
 
     # subscribe for profits
     #sclient.subscribeProfits()
@@ -400,6 +406,12 @@ def main():
 
         #tradesHistoryString = client.commandExecute('getNews', {"start": 1691450964, "end": 0})
         #print(tradesHistoryString)
+
+        #tradesopen = client.commandExecute('getTrades', {"openedOnly":  True})
+        #print(tradesopen)
+
+        tradesopen = client.commandExecute('getTradesHistory', {"end": 0,"start": 0})
+        print(tradesopen)
 
         time.sleep(1)
 
