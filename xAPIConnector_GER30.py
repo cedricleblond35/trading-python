@@ -455,9 +455,9 @@ async def AW_pivot_st1004(o, tick, spM05_1003T0, spM01_1005T0,
                     sl = trade['open_price'] + 2
                     o.moveStopBuy(trade, sl, tick)
 
-                elif bougie1M05.get("AW") > 10 and trade['sl'] < spM01_1005T0 < tick:
+                elif bougie1M05.get("AW") > 20 and trade['sl'] < spM01_1005T0 < tick:
                     o.moveStopBuy(trade, spM01_1005T0, tick)
-                elif bougie1M05.get("AW") < 10 and trade['sl'] < spM05_1003T0 < tick:
+                elif bougie1M05.get("AW") < 20 and trade['sl'] < spM05_1003T0 < tick:
                     o.moveStopBuy(trade, spM01_1005T0, tick)
 
             elif TransactionSide.SELL == trade['cmd'] and trade['customComment'] == "AW_pivot_st1004":
@@ -470,9 +470,9 @@ async def AW_pivot_st1004(o, tick, spM05_1003T0, spM01_1005T0,
                     sl = trade['open_price'] - 2
                     o.moveStopSell(trade, sl, tick)
 
-                elif bougie1M05.get("AW") < -10 and trade['sl'] > spM01_1005T0 > tick:
+                elif bougie1M05.get("AW") < -20 and trade['sl'] > spM01_1005T0 > tick:
                     o.moveStopSell(trade, spM01_1005T0, tick)
-                elif bougie1M05.get("AW") > -10 and trade['sl'] > spM05_1003T0 > tick:
+                elif bougie1M05.get("AW") > -20 and trade['sl'] > spM05_1003T0 > tick:
                     o.moveStopSell(trade, spM05_1003T0, tick)
 
     if orderExist is False:
