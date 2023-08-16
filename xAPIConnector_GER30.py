@@ -434,6 +434,45 @@ async def SMMA200_M1_EMA70(o, tick, bougie1M01, superM05_5003T1, zone, balance, 
 
         print("ordre en cours   END...........................................")
 
+async def ema_st(o, tick, spM01_4005T0, balance, tradeOpen, tradeOpenDic, bougie1M01):
+    orderExist = False
+    # move order
+    if len(tradeOpen['returnData']) > 0:
+        for trade in tradeOpenDic['returnData']:
+            print("trade['customComment']:", trade['customComment'])
+            print("trade['cmd']:", trade['cmd'])
+            if TransactionSide.BUY_LIMIT == trade['cmd'] and trade['customComment'] == "ema_st":
+                orderExist = True
+                sl = spM01_4005T0 - 2
+                price = bougie1M01.get("EMA200")+1
+                tp = 0
+                o.movebuyLimitWait(trade, sl, tp, price, balance, VNL)
+            elif TransactionSide.BUY == trade['cmd'] and trade['customComment'] == "ema_st":
+                orderExist = True
+                if trade['sl'] < spM01_4005T0 < tick:
+                    o.moveStopBuy(trade, spM01_4005T0, tick)
+            elif TransactionSide.SELL_LIMIT == trade['cmd'] and trade['customComment'] == "ema_st":
+                orderExist = True
+                sl = spM01_4005T0 + 2
+                price = bougie1M01.get("EMA200")-1
+                tp = 0
+                o.moveSellLimitWait(trade, sl, tp, price, balance, VNL)
+            elif TransactionSide.SELL == trade['cmd'] and trade['customComment'] == "ema_st":
+                orderExist = True
+                if trade['sl'] > spM01_4005T0 > tick:
+                    o.moveStopBuy(trade, spM01_4005T0, tick)
+
+    if orderExist is False:
+        if tick > bougie1M01.get("EMA40") > bougie1M01.get("EMA200") > spM01_4005T0:
+            sl = spM01_4005T0 - 2
+            tp = 0
+            price = bougie1M01.get("EMA200")+1
+            o.buyLimit(sl, tp, price, balance, VNL, "ema_st")
+        elif tick < bougie1M01.get("EMA40") < bougie1M01.get("EMA200") < spM01_4005T0:
+            sl = spM01_4005T0 + 2
+            tp = 0
+            price = bougie1M01.get("EMA200") - 1
+            o.sellLimit(sl, tp, price, balance, VNL, "ema_st")
 
 async def AW_pivot_st1004(o, tick, spM05_1003T0, spM01_1005T0,
                           balance, tradeOpen, tradeOpenDic, bougie1M05, bougie0M05, bougie1M01, bougie2M01):
@@ -542,8 +581,11 @@ async def main():
             # ####################################################################################################
             await moyMobil_05.EMA(70, 1)
             await moyMobil_05.SMMA(200, 1)
+
             await moyMobil_01.SMMA(200, 1)
+            await moyMobil_01.EMA(40, 1)
             await moyMobil_01.EMA(70, 1)
+            await moyMobil_01.EMA(200, 1)
 
             await moyMobil_01.EMA(26, 1)
             #
@@ -556,6 +598,9 @@ async def main():
 
             spM01_1005 = Supertrend(SYMBOL, "M01", 10, 5)
             spM01_1005T0, spM01_1005T1, spM01_1005T2 = spM01_1005.getST()
+
+            spM01_4005 = Supertrend(SYMBOL, "M01",40, 5)
+            spM01_4005T0, spM01_4005T1, spM01_4005T2 = spM01_4005.getST()
 
             if c.getTick() is not None:
                 print("jour:", j, " h:", todayPlus2Hours.hour)
@@ -625,6 +670,8 @@ async def main():
                     await AW_pivot_st1004(o, tick, superM05_1003T0, spM01_1005T0,
                                           balance, tradeOpen, tradeOpenDic, bougie1M05, bougie0M05, bougie1M01,
                                           bougie2M01)
+
+                    await ema_st(o, tick, spM01_4005T0, balance, tradeOpen, tradeOpenDic, bougie1M01)
             time.sleep(30)
 
     except Exception as exc:
