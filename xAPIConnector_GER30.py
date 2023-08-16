@@ -604,7 +604,7 @@ async def main():
 
             if c.getTick() is not None:
                 print("jour:", j, " h:", todayPlus2Hours.hour)
-                if 0 <= j < 5 and 5 < todayPlus2Hours.hour < 22:
+                if 0 <= j < 5 and 2 < todayPlus2Hours.hour < 22:
                     print("dans le if !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
                     tick = c.getTick()["ask"]
 
