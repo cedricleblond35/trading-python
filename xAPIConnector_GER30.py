@@ -7,7 +7,6 @@ import sys
 import asyncio
 import math as math
 import numpy as np
-import logging
 from datetime import datetime, timedelta
 from pymongo import MongoClient
 from Indicators.Awesome import Awesome
@@ -19,6 +18,8 @@ from Service.APIStreamClient import APIStreamClient
 from Service.Command import Command
 from Indicators.Supertrend import Supertrend
 from Service.TransactionSide import TransactionSide
+
+from Configuration.Log import Log
 
 ######## calcul de lots
 # 10 pips 250€ pour 1 lots
@@ -320,10 +321,10 @@ async def pivot():
     return np.sort(zone)
 
 
-async def connectionAPI():
+async def connectionAPI(logger):
     client = APIClient()  # create & connect to RR socket
     loginResponse = client.identification()  # connect to RR socket, login
-    # logger.inf.o(str(loginResponse))
+    logger.info(str(loginResponse))
 
     # check if user logged in correctly
     if not loginResponse['status']:
@@ -434,115 +435,116 @@ async def SMMA200_M1_EMA70(o, tick, bougie1M01, superM05_5003T1, zone, balance, 
 
         print("ordre en cours   END...........................................")
 
-async def ema_st(o, tick, spM01_4005T0, balance, tradeOpen, tradeOpenDic, bougie1M01):
-    orderExist = False
-    # move order
-    if len(tradeOpen['returnData']) > 0:
-        for trade in tradeOpenDic['returnData']:
-            print("trade['customComment']:", trade['customComment'])
-            print("trade['cmd']:", trade['cmd'])
-            if TransactionSide.BUY_LIMIT == trade['cmd'] and trade['customComment'] == "ema_st":
-                orderExist = True
+async def ema_st(logger, o, tick, spM01_4005T0, balance, tradeOpen, tradeOpenDic, bougie1M01):
+    try:
+        orderExist = False
+        # move order
+        if len(tradeOpen['returnData']) > 0:
+            for trade in tradeOpenDic['returnData']:
+                print("trade['customComment']:", trade['customComment'])
+                print("trade['cmd']:", trade['cmd'])
+                if TransactionSide.BUY_LIMIT == trade['cmd'] and trade['customComment'] == "ema_st":
+                    orderExist = True
+                    sl = spM01_4005T0 - 2
+                    price = bougie1M01.get("EMA200")+1
+                    tp = 0
+                    o.movebuyLimitWait(trade, sl, tp, price, balance, VNL)
+                elif TransactionSide.BUY == trade['cmd'] and trade['customComment'] == "ema_st":
+                    orderExist = True
+                    if trade['sl'] < spM01_4005T0 < tick:
+                        o.moveStopBuy(trade, spM01_4005T0, tick)
+                elif TransactionSide.SELL_LIMIT == trade['cmd'] and trade['customComment'] == "ema_st":
+                    orderExist = True
+                    sl = spM01_4005T0 + 2
+                    price = bougie1M01.get("EMA200")-1
+                    tp = 0
+                    o.moveSellLimitWait(trade, sl, tp, price, balance, VNL)
+                elif TransactionSide.SELL == trade['cmd'] and trade['customComment'] == "ema_st":
+                    orderExist = True
+                    if trade['sl'] > spM01_4005T0 > tick:
+                        o.moveStopBuy(trade, spM01_4005T0, tick)
+
+        if orderExist is False:
+            if tick > bougie1M01.get("EMA40") > bougie1M01.get("EMA200") > spM01_4005T0:
                 sl = spM01_4005T0 - 2
+                tp = 0
                 price = bougie1M01.get("EMA200")+1
-                tp = 0
-                o.movebuyLimitWait(trade, sl, tp, price, balance, VNL)
-            elif TransactionSide.BUY == trade['cmd'] and trade['customComment'] == "ema_st":
-                orderExist = True
-                if trade['sl'] < spM01_4005T0 < tick:
-                    o.moveStopBuy(trade, spM01_4005T0, tick)
-            elif TransactionSide.SELL_LIMIT == trade['cmd'] and trade['customComment'] == "ema_st":
-                orderExist = True
+                o.buyLimit(sl, tp, price, balance, VNL, "ema_st")
+            elif tick < bougie1M01.get("EMA40") < bougie1M01.get("EMA200") < spM01_4005T0:
                 sl = spM01_4005T0 + 2
-                price = bougie1M01.get("EMA200")-1
                 tp = 0
-                o.moveSellLimitWait(trade, sl, tp, price, balance, VNL)
-            elif TransactionSide.SELL == trade['cmd'] and trade['customComment'] == "ema_st":
-                orderExist = True
-                if trade['sl'] > spM01_4005T0 > tick:
-                    o.moveStopBuy(trade, spM01_4005T0, tick)
+                price = bougie1M01.get("EMA200") - 1
+                o.sellLimit(sl, tp, price, balance, VNL, "ema_st")
 
-    if orderExist is False:
-        if tick > bougie1M01.get("EMA40") > bougie1M01.get("EMA200") > spM01_4005T0:
-            sl = spM01_4005T0 - 2
-            tp = 0
-            price = bougie1M01.get("EMA200")+1
-            o.buyLimit(sl, tp, price, balance, VNL, "ema_st")
-        elif tick < bougie1M01.get("EMA40") < bougie1M01.get("EMA200") < spM01_4005T0:
-            sl = spM01_4005T0 + 2
-            tp = 0
-            price = bougie1M01.get("EMA200") - 1
-            o.sellLimit(sl, tp, price, balance, VNL, "ema_st")
+    except Exception as exc:
+        logger.warning(exc)
 
-async def AW_pivot_st1004(o, tick, spM05_1003T0, spM01_1005T0,
+async def AW_pivot_st1004(logger, o, tick, spM05_1003T0, spM01_1005T0,
                           balance, tradeOpen, tradeOpenDic, bougie1M05, bougie0M05, bougie1M01, bougie2M01):
-    orderExist = False
-    # move order
-    if len(tradeOpen['returnData']) > 0:
-        for trade in tradeOpenDic['returnData']:
-            print("trade['customComment']:", trade['customComment'])
-            print("trade['cmd']:", trade['cmd'])
-            if TransactionSide.BUY == trade['cmd'] and trade['customComment'] == "AW_pivot_st1004":
-                orderExist = True
-                print("ordre en cours :", trade['customComment'])
-                # Pour garantir pas de perte : monter le stop  a 5pip de benef :
-                #   Si cours en dessus de l ouverture avec ecart 20pip
-                #   Et si AW change de tendance
-                # Si il touche une resistance et AW change de tendance, monter le stop  au ST01 ?? A FAIRE ???????
-                if trade['sl'] < trade['open_price'] and tick > trade['open_price'] + 25 and \
-                        bougie1M01['AW'] < bougie2M01['AW']:
-                    sl = trade['open_price'] + 2
-                    o.moveStopBuy(trade, sl, tick)
+    try:
+        orderExist = False
+        # move order
+        if len(tradeOpen['returnData']) > 0:
+            for trade in tradeOpenDic['returnData']:
+                print("trade['customComment']:", trade['customComment'])
+                print("trade['cmd']:", trade['cmd'])
+                if TransactionSide.BUY == trade['cmd'] and trade['customComment'] == "AW_pivot_st1004":
+                    orderExist = True
+                    print("ordre en cours :", trade['customComment'])
+                    # Pour garantir pas de perte : monter le stop  a 5pip de benef :
+                    #   Si cours en dessus de l ouverture avec ecart 20pip
+                    #   Et si AW change de tendance
+                    # Si il touche une resistance et AW change de tendance, monter le stop  au ST01 ?? A FAIRE ???????
+                    if trade['sl'] < trade['open_price'] and tick > trade['open_price'] + 25 and \
+                            bougie1M01['AW'] < bougie2M01['AW']:
+                        sl = trade['open_price'] + 2
+                        o.moveStopBuy(trade, sl, tick)
 
-                elif bougie1M05.get("AW") > 20 and trade['sl'] < spM01_1005T0 < tick:
-                    o.moveStopBuy(trade, spM01_1005T0, tick)
-                elif bougie1M05.get("AW") < 20 and trade['sl'] < spM05_1003T0 < tick:
-                    o.moveStopBuy(trade, spM01_1005T0, tick)
+                    elif bougie1M05.get("AW") > 20 and trade['sl'] < spM01_1005T0 < tick:
+                        o.moveStopBuy(trade, spM01_1005T0, tick)
+                    elif bougie1M05.get("AW") < 20 and trade['sl'] < spM05_1003T0 < tick:
+                        o.moveStopBuy(trade, spM01_1005T0, tick)
 
-            elif TransactionSide.SELL == trade['cmd'] and trade['customComment'] == "AW_pivot_st1004":
-                orderExist = True
-                # descendre le stop  a 5pip de benef :
-                #   Si cours en dessous de l ouverture avec ecart 20pip
-                #   Et si AW change de tendance
-                if trade['sl'] > trade['open_price'] and tick < trade['open_price'] - 25 and \
-                        bougie1M01['AW'] < bougie2M01['AW']:
-                    sl = trade['open_price'] - 2
-                    o.moveStopSell(trade, sl, tick)
+                elif TransactionSide.SELL == trade['cmd'] and trade['customComment'] == "AW_pivot_st1004":
+                    orderExist = True
+                    # descendre le stop  a 5pip de benef :
+                    #   Si cours en dessous de l ouverture avec ecart 20pip
+                    #   Et si AW change de tendance
+                    if trade['sl'] > trade['open_price'] and tick < trade['open_price'] - 25 and \
+                            bougie1M01['AW'] < bougie2M01['AW']:
+                        sl = trade['open_price'] - 2
+                        o.moveStopSell(trade, sl, tick)
 
-                elif bougie1M05.get("AW") < -20 and trade['sl'] > spM01_1005T0 > tick:
-                    o.moveStopSell(trade, spM01_1005T0, tick)
-                elif bougie1M05.get("AW") > -20 and trade['sl'] > spM05_1003T0 > tick:
-                    o.moveStopSell(trade, spM05_1003T0, tick)
+                    elif bougie1M05.get("AW") < -20 and trade['sl'] > spM01_1005T0 > tick:
+                        o.moveStopSell(trade, spM01_1005T0, tick)
+                    elif bougie1M05.get("AW") > -20 and trade['sl'] > spM05_1003T0 > tick:
+                        o.moveStopSell(trade, spM05_1003T0, tick)
 
-    if orderExist is False:
-        print("-- Aucun ordre  AW_pivot_st1004 ********************")
-        if tick > spM01_1005T0 and bougie1M01.get("close") > spM01_1005T0 and bougie0M05.get(
-                "close") > spM05_1003T0 and tick > spM05_1003T0:
-            sl = spM05_1003T0 - 2
-            tp = 0
-            price = tick + 10
-            o.buyNow(sl, tp, price, balance, VNL, "AW_pivot_st1004")
+        if orderExist is False:
+            print("-- Aucun ordre  AW_pivot_st1004 ********************")
+            if tick > spM01_1005T0 and bougie1M01.get("close") > spM01_1005T0 and bougie0M05.get(
+                    "close") > spM05_1003T0 and tick > spM05_1003T0:
+                sl = spM05_1003T0 - 2
+                tp = 0
+                price = tick + 10
+                o.buyNow(sl, tp, price, balance, VNL, "AW_pivot_st1004")
 
-        elif tick < spM01_1005T0 and bougie1M01.get("close") < spM01_1005T0 and bougie0M05.get(
-                "close") < spM05_1003T0 and tick < spM05_1003T0:
-            sl = spM05_1003T0 + 2
-            tp = 0
-            price = tick - 10
-            o.sellNow(sl, tp, price, balance, VNL, "AW_pivot_st1004")
-
+            elif tick < spM01_1005T0 and bougie1M01.get("close") < spM01_1005T0 and bougie0M05.get(
+                    "close") < spM05_1003T0 and tick < spM05_1003T0:
+                sl = spM05_1003T0 + 2
+                tp = 0
+                price = tick - 10
+                o.sellNow(sl, tp, price, balance, VNL, "AW_pivot_st1004")
+    except Exception as exc:
+        logger.warning(exc)
 
 async def main():
-    logger = logging.getLogger("main")
-    handler = logging.FileHandler('mainlog.log')
-    formatter = logging.Formatter(
-        '%(asctime)s %(name)-12s %(levelname)-8s %(message)s')
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
-    logger.setLevel(logging.DEBUG)
+    l = Log()
+    logger = l.getLogger()
 
     order = []
     try:
-        sclient, c, client = await connectionAPI()
+        sclient, c, client = await connectionAPI(logger)
         connection = MongoClient('localhost', 27017)
         db = connection[SYMBOL]
         dbStreaming = connection["STREAMING"]
@@ -569,7 +571,7 @@ async def main():
 
             if client.is_socket_closed():
                 logger.info("!!!!!!!!! client deconnecté, reconnection en cours !!!!!!!!!!!!!!!!!!!")
-                sclient, c, client = connectionAPI()
+                sclient, c, client = connectionAPI(logger)
 
             zone = await pivot()
             c.getTick()
@@ -667,25 +669,21 @@ async def main():
 
                     # await SMMA200_M1_EMA70(o, tick, bougie1M01, superM05_1003T1, zone, balance, tradeOpen, tradeOpenDic, bougie0M05, bougie1M05)
 
-                    await AW_pivot_st1004(o, tick, superM05_1003T0, spM01_1005T0,
+                    await AW_pivot_st1004(logger, o, tick, superM05_1003T0, spM01_1005T0,
                                           balance, tradeOpen, tradeOpenDic, bougie1M05, bougie0M05, bougie1M01,
                                           bougie2M01)
 
-                    await ema_st(o, tick, spM01_4005T0, balance, tradeOpen, tradeOpenDic, bougie1M01)
+                    await ema_st(logger, o, tick, spM01_4005T0, balance, tradeOpen, tradeOpenDic, bougie1M01)
             time.sleep(30)
 
     except Exception as exc:
-        logger.warning("exception de mtype ", exc.__class__)
-        logger.warning("message", exc)
-        exc_type, exc_obj, exc_tb = sys.exc_info()
-        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-        logger.warning(exc_type, fname, exc_tb.tb_lineno)
-
+        logger.warning(exc)
         client.disconnect()
         exit(0)
 
-    except OSError as err:
-        logger.info("OS error: {0}".format(err))
+    except OSError as exc:
+        logger.warning(exc)
+
         client.disconnect()
         exit(0)
 

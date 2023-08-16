@@ -27,7 +27,7 @@ class Order:
             h = self.client.commandExecute('getServerTime')
             timeExpiration = h['returnData']['time'] + 3600000
 
-            nbrelot = NbrLot(balance, price, sl, vnl)
+            nbrelot = NbrLot(self.logger,balance, price, sl, vnl)
             print("**************comment :", comment)
             detail = {
                 "cmd": TransactionSide.BUY_LIMIT,
@@ -50,15 +50,7 @@ class Order:
             self.logger.info(detail)
 
         except Exception as exc:
-            self.logger.warning("le programe a déclenché une erreur dans l ordre")
-            self.logger.warning("exception :", exc.__class__)
-            self.logger.warning("message", exc)
-            exc_type, exc_obj, exc_tb = sys.exc_info()
-            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            self.logger.warning(exc_type, fname, exc_tb.tb_lineno)
-            template = "An exception of type {0} occurred. Arguments:\n{1!r}"
-            message = template.format(type(exc).__name__, exc.args)
-            self.logger.warning("message detail", message)
+            self.logger.warning(exc)
 
     def sellLimit(self,  sl, tp, price, balance, vnl, comment="sellLimit"):
         try:
@@ -66,7 +58,7 @@ class Order:
             timeExpiration = h['returnData']['time'] + 3600000
             print("**************comment :", comment)
 
-            nbrelot = NbrLot(balance, price, sl, vnl)
+            nbrelot = NbrLot(self.logger,balance, price, sl, vnl)
             detail = {
                 "cmd": TransactionSide.SELL_LIMIT,
                 "customComment": comment,
@@ -87,21 +79,13 @@ class Order:
             print("retour dee l ordre:", resp)
             self.logger.info(detail)
         except Exception as exc:
-            self.logger.warning("le programe a déclenché une erreur dans l ordre")
-            self.logger.warning("exception :", exc.__class__)
-            self.logger.warning("message", exc)
-            exc_type, exc_obj, exc_tb = sys.exc_info()
-            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            self.logger.warning(exc_type, fname, exc_tb.tb_lineno)
-            template = "An exception of type {0} occurred. Arguments:\n{1!r}"
-            message = template.format(type(exc).__name__, exc.args)
-            self.logger.warning("message detail", message)
+            self.logger.warning(exc)
 
     ################### ordre direct ##################################################
     def sellNow(self, sl, tp, price, balance, vnl, comment=""):
         h = self.client.commandExecute('getServerTime')
         timeExpiration = h['returnData']['time'] + 3600000
-        nbrelot = NbrLot(balance, price, sl, vnl)
+        nbrelot = NbrLot(self.logger,balance, price, sl, vnl)
         detail = {
             "cmd": TransactionSide.SELL,
             "customComment": comment,
@@ -130,7 +114,7 @@ class Order:
         # sl = round(sl, 1)
         h = self.client.commandExecute('getServerTime')
         timeExpiration = h['returnData']['time'] + 3600000
-        nbrelot = NbrLot(balance, price, sl, vnl)
+        nbrelot = NbrLot(self.logger,balance, price, sl, vnl)
         detail = {
             "cmd": 0,
             "customComment": comment,
@@ -171,15 +155,7 @@ class Order:
                 self.logger.info(detail)
 
         except Exception as exc:
-            self.logger.warning("le programe a déclenché une erreur dans l ordre")
-            self.logger.warning("exception :", exc.__class__)
-            self.logger.warning("message", exc)
-            exc_type, exc_obj, exc_tb = sys.exc_info()
-            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            self.logger.warning(exc_type, fname, exc_tb.tb_lineno)
-            template = "An exception of type {0} occurred. Arguments:\n{1!r}"
-            message = template.format(type(exc).__name__, exc.args)
-            self.logger.warning("message detail", message)
+            self.logger.warning(exc)
 
     def moveStopSell(self, trade, sl, tick):
         try:
@@ -199,15 +175,7 @@ class Order:
                 print("retour dee l ordre:", resp)
                 self.logger.info(detail)
         except Exception as exc:
-            self.logger.warning("le programe a déclenché une erreur dans l ordre")
-            self.logger.warning("exception :", exc.__class__)
-            self.logger.warning("message", exc)
-            exc_type, exc_obj, exc_tb = sys.exc_info()
-            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            self.logger.warning(exc_type, fname, exc_tb.tb_lineno)
-            template = "An exception of type {0} occurred. Arguments:\n{1!r}"
-            message = template.format(type(exc).__name__, exc.args)
-            self.logger.warning("message detail", message)
+            self.logger.warning(exc)
 
     ###############################################################
 
@@ -221,7 +189,7 @@ class Order:
             h = self.client.commandExecute('getServerTime')
             timeExpiration = h['returnData']['time'] + 3600000
 
-            nbrelot = NbrLot(balance, price, sl)
+            nbrelot = NbrLot(self.logger,balance, price, sl)
             detail = {
                   "cmd": trade['order'],
                 "customComment": trade["customComment"],
@@ -239,15 +207,7 @@ class Order:
             print("retour dee l ordre:", resp)
             #self.logger.info("resp :", resp)
         except Exception as exc:
-            self.logger.warning("le programe a déclenché une erreur dans l ordre")
-            self.logger.warning("exception :", exc.__class__)
-            self.logger.warning("message", exc)
-            exc_type, exc_obj, exc_tb = sys.exc_info()
-            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            self.logger.warning(exc_type, fname, exc_tb.tb_lineno)
-            template = "An exception of type {0} occurred. Arguments:\n{1!r}"
-            message = template.format(type(exc).__name__, exc.args)
-            self.logger.warning("message detail", message)
+            self.logger.warning(exc)
 
     def movebuyLimitWait(self,trade, sl, tp, price, balance, vnl, comment=""):
         try:
@@ -256,7 +216,7 @@ class Order:
             # tp = round(tp, 1)
             # sl = round(sl, 1)
 
-            nbrelot = NbrLot(balance, price, sl, vnl)
+            nbrelot = NbrLot(self.logger,balance, price, sl, vnl)
             if float(trade['volume']) == nbrelot:
                 detail = {
                           "cmd": trade['cmd'],
@@ -293,7 +253,7 @@ class Order:
                 h = self.client.commandExecute('getServerTime')
                 timeExpiration = h['returnData']['time'] + 3600000
 
-                nbrelot = NbrLot(balance, price, sl, vnl)
+                nbrelot = NbrLot(self.logger,balance, price, sl, vnl)
                 print("**************comment :", comment)
                 detail = {
                     "cmd": TransactionSide.BUY_LIMIT,
@@ -316,22 +276,14 @@ class Order:
 
             #self.logger.info("resp :", resp)
         except Exception as exc:
-            self.logger.warning("le programe a déclenché une erreur dans l ordre")
-            self.logger.warning("exception :", exc.__class__)
-            self.logger.warning("message", exc)
-            exc_type, exc_obj, exc_tb = sys.exc_info()
-            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            self.logger.warning(exc_type, fname, exc_tb.tb_lineno)
-            template = "An exception of type {0} occurred. Arguments:\n{1!r}"
-            message = template.format(type(exc).__name__, exc.args)
-            self.logger.warning("message detail", message)
+            self.logger.warning(exc)
 
     def moveSellLimitWait(self,trade, sl , tp, price, balance, vnl):
         self.logger.info("------------- moveSellLimit ************************-----------------")
         print("trade :", trade)
         # tp = round(tp, 1)
         # sl = round(sl, 1)
-        nbrelot = NbrLot(balance, price, sl, vnl)
+        nbrelot = NbrLot(self.logger,balance, price, sl, vnl)
         print(float(trade['volume']) ,"==", nbrelot)
 
         if float(trade['volume']) == nbrelot:
@@ -372,7 +324,7 @@ class Order:
             timeExpiration = h['returnData']['time'] + 3600000
             print("**************comment :", trade["customComment"])
 
-            nbrelot = NbrLot(balance, price, sl, vnl)
+            nbrelot = NbrLot(self.logger,balance, price, sl, vnl)
             detail = {
                 "cmd": TransactionSide.SELL_LIMIT,
                 "customComment": trade["customComment"],
@@ -403,7 +355,7 @@ class Order:
         resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
         print("resp delete:", resp)
 
-def NbrLot(balance, position, stp, vnl):
+def NbrLot(logger,balance, position, stp, vnl):
     '''
     Calcul le nombre de posible à prendre
     GER30 : 2,5 € de perte max, Stop loss : 10, valeur nominale du lot : 25 €
@@ -446,8 +398,9 @@ def NbrLot(balance, position, stp, vnl):
 
         return nbrelot
 
-    except (RuntimeError, TypeError, NameError):
-        pass
+
+    except Exception as exc:
+        logger.warning(exc)
 
 
 def round_up(n, decimals=0):
