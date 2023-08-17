@@ -407,11 +407,11 @@ def main():
         #tradesHistoryString = client.commandExecute('getNews', {"start": 1691450964, "end": 0})
         #print(tradesHistoryString)
 
-        #tradesopen = client.commandExecute('getTrades', {"openedOnly":  True})
-        #print(tradesopen)
-
-        tradesopen = client.commandExecute('getTradesHistory', {"end": 0,"start": 0})
+        tradesopen = client.commandExecute('getTrades', {"openedOnly":  True})
         print(tradesopen)
+
+        #tradesopen = client.commandExecute('getTradesHistory', {"end": 0,"start": 0})
+        #print(tradesopen)
 
         time.sleep(1)
 
