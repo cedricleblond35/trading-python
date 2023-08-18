@@ -1,12 +1,6 @@
 from Indicators.Price import Price
-import os
-import sys
-import logging
+from Configuration.Log import Log
 
-# logger properties
-logger = logging.getLogger("jsonSocket")
-FORMAT = '[%(asctime)-15s][%(funcName)s:%(lineno)d] %(message)s'
-logging.basicConfig(format=FORMAT)
 
 class MM(Price):
     def __init__(self, symbol, timeframe, duration):
@@ -19,6 +13,8 @@ class MM(Price):
         """
         self.__timeframe = timeframe
         self.__duration = duration
+        l = Log()
+        self.logger = l.getLogger()
 
     #La première valeur de cette moyenne mobile lissée est calculée par analogie avec la moyenne mobile simple (SMA).
     # SUM1 = SUM(CLOSE, N)
@@ -51,7 +47,8 @@ class MM(Price):
                     if self._listData[idLastEma].get(name):
                         SMMAPrecedent = self._listData[idLastEma][name]
                     else:
-                        logger.info("nettoyage :", self._listData[idLastEma])
+
+                        self.logger.info("nettoyage :", self._listData[idLastEma])
                         self._db[self.__timeframe].delete_one({ "_id": self._listData[idLastEma].get('_id') })
                         self._prepareListData()  # toutes les bougies
                         self._prepareListEMA(0, duration, name)
@@ -59,9 +56,9 @@ class MM(Price):
                         idLastEma = start - 1
                         if self._listData[idLastEma].get(name):
                             SMMAPrecedent = self._listData[idLastEma][name]
-                            logger.info("nettoyage reussi")
+                            self.logger.info("nettoyage reussi")
                         else:
-                            logger.info("nettoyage echec")
+                            self.logger.info("nettoyage echec")
                             return
 
                 list = self._listData[start:len(self._listData) - 1]
@@ -99,12 +96,7 @@ class MM(Price):
                     start = start + 1
 
         except Exception as exc:
-            print("le programe a déclenché une erreur")
-            print("exception de mtype ", exc.__class__)
-            print("message", exc)
-            exc_type, exc_obj, exc_tb = sys.exc_info()
-            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            print(exc_type, fname, exc_tb.tb_lineno)
+            self.logger.warning(exc)
 
     async def calculSMA(self, duration, arrondi):
         try:
@@ -138,12 +130,7 @@ class MM(Price):
                     myquery = {"ctm": v["ctm"]}
                     self._db[self.__timeframe].update_one(myquery, newvalues)
         except Exception as exc:
-            print("le programe a déclenché une erreur")
-            print("exception de mtype ", exc.__class__)
-            print("message", exc)
-            exc_type, exc_obj, exc_tb = sys.exc_info()
-            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            print(exc_type, fname, exc_tb.tb_lineno)
+            self.logger.warning(exc)
 
     async def EMA(self, duration, arrondi):
         """
@@ -177,7 +164,7 @@ class MM(Price):
                     if self._listData[idLastEma].get(name):
                         EMAPrecedent = self._listData[idLastEma][name]
                     else:
-                        logger.info("nettoyage :", self._listData[idLastEma])
+                        self.logger.info("nettoyage :", self._listData[idLastEma])
                         self._db[self.__timeframe].delete_one({ "_id": self._listData[idLastEma].get('_id') })
                         self._prepareListData()  # toutes les bougies
                         self._prepareListEMA(0, duration, name)
@@ -185,9 +172,9 @@ class MM(Price):
                         idLastEma = start - 1
                         if self._listData[idLastEma].get(name):
                             EMAPrecedent = self._listData[idLastEma][name]
-                            logger.info("nettoyage reussi")
+                            self.logger.info("nettoyage reussi")
                         else:
-                            logger.info("nettoyage echec")
+                            self.logger.info("nettoyage echec")
                             return
 
                 list = self._listData[start:len(self._listData) - 1]
@@ -222,9 +209,4 @@ class MM(Price):
                         self._db[self.__timeframe].update_one(myquery, newvalues)
                         EMAPrecedent = mm
         except Exception as exc:
-            print("le programe a déclenché une erreur SMA.py")
-            print("exception de mtype ", exc.__class__)
-            print("message", exc)
-            exc_type, exc_obj, exc_tb = sys.exc_info()
-            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            print(exc_type, fname, exc_tb.tb_lineno)
+            self.logger.warning(exc)

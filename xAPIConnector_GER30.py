@@ -18,6 +18,7 @@ from Service.APIStreamClient import APIStreamClient
 from Service.Command import Command
 from Indicators.Supertrend import Supertrend
 from Service.TransactionSide import TransactionSide
+from Service.Email import Email
 
 from Configuration.Log import Log
 
@@ -71,7 +72,7 @@ def updatePivot():
         return False
 
 
-async def insertData(collection, dataDownload, lastBougieDB):
+async def insertData(logger, email, collection, dataDownload, lastBougieDB):
     '''
     Insertion des données dans l base de donnée ou mise à jour de a dernière donnée de la collection
     :param collection: collection à la quelle on insere des données
@@ -115,12 +116,8 @@ async def insertData(collection, dataDownload, lastBougieDB):
                     collection.update_many(myquery, newvalues)
 
     except Exception as exc:
-        print("insertData a déclenché une erreur")
-        print("exception de mtype ", exc.__class__)
-        print("message", exc)
-        exc_type, exc_obj, exc_tb = sys.exc_info()
-        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-        print(exc_type, fname, exc_tb.tb_lineno)
+        logger.warning(exc)
+        email.sendMail(exc)
 
 
 def findTradesHistory(client, start):
@@ -145,7 +142,7 @@ def findopenOrder(client):
     return json.loads(tradeOpenJson)
 
 
-async def majDatAall(client, symbol, db):
+async def majDatAall(logger, email, client, symbol, db):
     '''
     Mise à jour de la base de données
     Limitations: there are limitations in charts data availability. Detailed ranges for charts data, what can be accessed with specific period, are as follows:
@@ -175,7 +172,7 @@ async def majDatAall(client, symbol, db):
             {"info": {"start": startTime, "end": endTime, "period": 1440, "symbol": symbol, "ticks": 0}})
         dataDAY = json.dumps(json_data_Day)
         dataDAYDownload = json.loads(dataDAY)
-        await insertData(db["D"], dataDAYDownload, lastBougie)
+        await insertData(logger, email, db["D"], dataDAYDownload, lastBougie)
 
         # MAJ H4 : 13 mois max------------------------------------------------------------------------
         lastBougie = db["H4"].find_one({}, sort=[('ctm', -1)])
@@ -189,7 +186,7 @@ async def majDatAall(client, symbol, db):
                      "ticks": 0}})
         data_H4 = json.dumps(json_data_H4)
         dataH4Download = json.loads(data_H4)
-        await insertData(db["H4"], dataH4Download, lastBougie)
+        await insertData(logger, email,db["H4"], dataH4Download, lastBougie)
 
         # MAJ Minute : 1 mois max------------------------------------------------------------------------
         lastBougie = db["M01"].find_one({}, sort=[('ctm', -1)])
@@ -204,7 +201,7 @@ async def majDatAall(client, symbol, db):
         dataM01 = json.dumps(json_data_M01)
         dataDownload = json.loads(dataM01)
 
-        await insertData(db["M01"], dataDownload, lastBougie)
+        await insertData(logger, email, db["M01"], dataDownload, lastBougie)
 
         # MAJ 5 min ------------------------------------------------------------------------
         lastBougie = db["M05"].find_one({}, sort=[('ctm', -1)])
@@ -219,15 +216,12 @@ async def majDatAall(client, symbol, db):
         dataM05 = json.dumps(json_data_M05)
         dataM05Download = json.loads(dataM05)
 
-        await insertData(db["M05"], dataM05Download, lastBougie)
+        await insertData(logger, email,db["M05"], dataM05Download, lastBougie)
 
     except Exception as exc:
-        print("majDatAall a déclenché une erreur")
-        print("exception de mtype ", exc.__class__)
-        print("message", exc)
-        exc_type, exc_obj, exc_tb = sys.exc_info()
-        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-        print(exc_type, fname, exc_tb.tb_lineno)
+        logger.warning(exc)
+        client.disconnect()
+        exit(0)
 
 
 def round_up(n, decimals=0):
@@ -541,6 +535,7 @@ async def AW_pivot_st1004(logger, o, tick, spM05_1003T0, spM01_1005T0,
 async def main():
     l = Log()
     logger = l.getLogger()
+    email = Email()
 
     order = []
     try:
@@ -549,7 +544,7 @@ async def main():
         db = connection[SYMBOL]
         dbStreaming = connection["STREAMING"]
 
-        await majDatAall(client, SYMBOL, db)
+        await majDatAall(logger, email, client, SYMBOL, db)
 
         # # # moyen mobile ##################################################################################################
         moyMobil_05 = MM(SYMBOL, "M05", 0)
@@ -579,7 +574,7 @@ async def main():
             candles = c.getCandles()
             print("=================> candles:", candles)
             # ####################################################################################################
-            await majDatAall(client, SYMBOL, db)
+            await majDatAall(logger, email, client, SYMBOL, db)
             # ####################################################################################################
             await moyMobil_05.EMA(70, 1)
             await moyMobil_05.SMMA(200, 1)
@@ -678,12 +673,13 @@ async def main():
 
     except Exception as exc:
         logger.warning(exc)
+        email.sendMail(exc)
         client.disconnect()
         exit(0)
 
     except OSError as exc:
         logger.warning(exc)
-
+        email.sendMail(exc)
         client.disconnect()
         exit(0)
 

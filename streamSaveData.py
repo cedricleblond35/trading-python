@@ -413,6 +413,24 @@ def main():
         #tradesopen = client.commandExecute('getTradesHistory', {"end": 0,"start": 0})
         #print(tradesopen)
 
+        from email.mime.multipart import MIMEMultipart
+        from email.mime.text import MIMEText
+        import smtplib
+        msg = MIMEMultipart()
+        msg['From'] = 'cedricleb35@gmail.com'
+        msg['To'] = 'cedricleb35@gmail.com'
+        msg['Subject'] = "subject"
+        message = "message"
+        msg.attach(MIMEText(message))
+        mailserver = smtplib.SMTP('smtp.gmail.com', 587)
+        mailserver.ehlo()
+        mailserver.starttls()
+        mailserver.ehlo()
+        mailserver.login('drick35@gmail.com', 'hdfykpdsoireyedl')
+        mailserver.sendmail('drick35@gmail.com', 'drick35@gmail.com', msg.as_string())
+        mailserver.quit()
+
+
         time.sleep(1)
 
 

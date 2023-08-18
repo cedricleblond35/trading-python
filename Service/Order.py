@@ -2,8 +2,6 @@ import math as math
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-import os
-import sys
 from Service.Email import Email
 from Configuration.Log import Log
 from Service.TransactionSide import TransactionSide

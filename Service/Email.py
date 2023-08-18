@@ -3,7 +3,7 @@ from email.mime.text import MIMEText
 import smtplib
 
 class Email():
-    def sendMail(subject, message):
+    def sendMail(self, subject, message):
         msg = MIMEMultipart()
         msg['From'] = 'drick35@gmail.com'
         msg['To'] = 'drick35@gmail.com'

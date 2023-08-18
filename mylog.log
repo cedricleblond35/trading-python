@@ -1,130 +1,52 @@
-2023-08-16 13:04:15,045 - mylogger - INFO - {'status': True, 'streamSessionId': '005056fffeb96ad7-00374e0e-01331876-1bdd4bc58cf8f772-006a200b'}
-2023-08-16 13:04:15,045 - mylogger - INFO - {'status': True, 'streamSessionId': '005056fffeb96ad7-00374e0e-01331876-1bdd4bc58cf8f772-006a200b'}
-2023-08-16 13:04:45,665 - mylogger - WARNING - 'AW'
-2023-08-16 13:04:45,665 - mylogger - WARNING - 'AW'
-2023-08-16 13:04:45,665 - mylogger - WARNING - 'AW'
-2023-08-16 13:09:04,220 - mylogger - INFO - {'status': True, 'streamSessionId': '005056fffeb96ad7-00374e0e-01332d19-05d9c8e877f4610b-1cfc68af'}
-2023-08-16 13:09:04,220 - mylogger - INFO - {'status': True, 'streamSessionId': '005056fffeb96ad7-00374e0e-01332d19-05d9c8e877f4610b-1cfc68af'}
-2023-08-16 13:09:09,167 - mylogger - WARNING - 'AW'
-2023-08-16 13:09:09,167 - mylogger - WARNING - 'AW'
-2023-08-16 13:09:09,167 - mylogger - WARNING - 'AW'
-2023-08-16 13:09:09,377 - mylogger - INFO - {'cmd': 2, 'customComment': 'ema_st', 'expiration': 1692187749187, 'offset': 0, 'price': 15828.4, 'sl': 15812.2, 'symbol': 'DE30', 'tp': 0, 'type': 0, 'volume': 0.07, 'resp': {'status': True, 'returnData': {'order': 538040797}}, 'comment': 'ema_st', '_id': ObjectId('64dcae5538ea203200276da1')}
-2023-08-16 13:09:09,377 - mylogger - INFO - {'cmd': 2, 'customComment': 'ema_st', 'expiration': 1692187749187, 'offset': 0, 'price': 15828.4, 'sl': 15812.2, 'symbol': 'DE30', 'tp': 0, 'type': 0, 'volume': 0.07, 'resp': {'status': True, 'returnData': {'order': 538040797}}, 'comment': 'ema_st', '_id': ObjectId('64dcae5538ea203200276da1')}
-2023-08-16 13:09:09,377 - mylogger - INFO - {'cmd': 2, 'customComment': 'ema_st', 'expiration': 1692187749187, 'offset': 0, 'price': 15828.4, 'sl': 15812.2, 'symbol': 'DE30', 'tp': 0, 'type': 0, 'volume': 0.07, 'resp': {'status': True, 'returnData': {'order': 538040797}}, 'comment': 'ema_st', '_id': ObjectId('64dcae5538ea203200276da1')}
-2023-08-16 13:09:43,157 - mylogger - WARNING - 'AW'
-2023-08-16 13:09:43,157 - mylogger - WARNING - 'AW'
-2023-08-16 13:09:43,157 - mylogger - WARNING - 'AW'
-2023-08-16 13:09:43,258 - mylogger - INFO - {'order': 538040739, 'customComment': 'ema_st', 'sl': 15814.2, 'price': 15831.1, 'symbol': 'DE30', 'volume': 0.07, 'tp': 0.0, 'type': 3}
-2023-08-16 13:09:43,258 - mylogger - INFO - {'order': 538040739, 'customComment': 'ema_st', 'sl': 15814.2, 'price': 15831.1, 'symbol': 'DE30', 'volume': 0.07, 'tp': 0.0, 'type': 3}
-2023-08-16 13:09:43,258 - mylogger - INFO - {'order': 538040739, 'customComment': 'ema_st', 'sl': 15814.2, 'price': 15831.1, 'symbol': 'DE30', 'volume': 0.07, 'tp': 0.0, 'type': 3}
-2023-08-16 13:10:17,017 - mylogger - WARNING - 'AW'
-2023-08-16 13:10:17,017 - mylogger - WARNING - 'AW'
-2023-08-16 13:10:17,017 - mylogger - WARNING - 'AW'
-2023-08-16 13:10:50,558 - mylogger - WARNING - 'AW'
-2023-08-16 13:10:50,558 - mylogger - WARNING - 'AW'
-2023-08-16 13:10:50,558 - mylogger - WARNING - 'AW'
-2023-08-16 13:11:24,426 - mylogger - WARNING - 'AW'
-2023-08-16 13:11:24,426 - mylogger - WARNING - 'AW'
-2023-08-16 13:11:24,426 - mylogger - WARNING - 'AW'
-2023-08-16 13:11:58,304 - mylogger - WARNING - 'AW'
-2023-08-16 13:11:58,304 - mylogger - WARNING - 'AW'
-2023-08-16 13:11:58,304 - mylogger - WARNING - 'AW'
-2023-08-16 13:12:32,040 - mylogger - WARNING - 'AW'
-2023-08-16 13:12:32,040 - mylogger - WARNING - 'AW'
-2023-08-16 13:12:32,040 - mylogger - WARNING - 'AW'
-2023-08-16 13:13:05,519 - mylogger - WARNING - 'AW'
-2023-08-16 13:13:05,519 - mylogger - WARNING - 'AW'
-2023-08-16 13:13:05,519 - mylogger - WARNING - 'AW'
-2023-08-16 13:13:39,234 - mylogger - WARNING - 'AW'
-2023-08-16 13:13:39,234 - mylogger - WARNING - 'AW'
-2023-08-16 13:13:39,234 - mylogger - WARNING - 'AW'
-2023-08-16 13:14:12,887 - mylogger - WARNING - 'AW'
-2023-08-16 13:14:12,887 - mylogger - WARNING - 'AW'
-2023-08-16 13:14:12,887 - mylogger - WARNING - 'AW'
-2023-08-16 13:14:46,624 - mylogger - WARNING - 'AW'
-2023-08-16 13:14:46,624 - mylogger - WARNING - 'AW'
-2023-08-16 13:14:46,624 - mylogger - WARNING - 'AW'
-2023-08-16 13:15:20,355 - mylogger - WARNING - 'AW'
-2023-08-16 13:15:20,355 - mylogger - WARNING - 'AW'
-2023-08-16 13:15:20,355 - mylogger - WARNING - 'AW'
-2023-08-16 13:15:54,029 - mylogger - WARNING - 'AW'
-2023-08-16 13:15:54,029 - mylogger - WARNING - 'AW'
-2023-08-16 13:15:54,029 - mylogger - WARNING - 'AW'
-2023-08-16 13:16:28,053 - mylogger - WARNING - 'AW'
-2023-08-16 13:16:28,053 - mylogger - WARNING - 'AW'
-2023-08-16 13:16:28,053 - mylogger - WARNING - 'AW'
-2023-08-16 13:17:01,516 - mylogger - WARNING - 'AW'
-2023-08-16 13:17:01,516 - mylogger - WARNING - 'AW'
-2023-08-16 13:17:01,516 - mylogger - WARNING - 'AW'
-2023-08-16 13:17:35,326 - mylogger - WARNING - 'AW'
-2023-08-16 13:17:35,326 - mylogger - WARNING - 'AW'
-2023-08-16 13:17:35,326 - mylogger - WARNING - 'AW'
-2023-08-16 13:18:09,193 - mylogger - WARNING - 'AW'
-2023-08-16 13:18:09,193 - mylogger - WARNING - 'AW'
-2023-08-16 13:18:09,193 - mylogger - WARNING - 'AW'
-2023-08-16 13:18:42,965 - mylogger - WARNING - 'AW'
-2023-08-16 13:18:42,965 - mylogger - WARNING - 'AW'
-2023-08-16 13:18:42,965 - mylogger - WARNING - 'AW'
-2023-08-16 13:19:16,795 - mylogger - WARNING - 'AW'
-2023-08-16 13:19:16,795 - mylogger - WARNING - 'AW'
-2023-08-16 13:19:16,795 - mylogger - WARNING - 'AW'
-2023-08-16 13:19:50,726 - mylogger - WARNING - 'AW'
-2023-08-16 13:19:50,726 - mylogger - WARNING - 'AW'
-2023-08-16 13:19:50,726 - mylogger - WARNING - 'AW'
-2023-08-16 13:20:24,841 - mylogger - WARNING - 'AW'
-2023-08-16 13:20:24,841 - mylogger - WARNING - 'AW'
-2023-08-16 13:20:24,841 - mylogger - WARNING - 'AW'
-2023-08-16 13:20:58,598 - mylogger - WARNING - 'AW'
-2023-08-16 13:20:58,598 - mylogger - WARNING - 'AW'
-2023-08-16 13:20:58,598 - mylogger - WARNING - 'AW'
-2023-08-16 13:21:32,445 - mylogger - WARNING - 'AW'
-2023-08-16 13:21:32,445 - mylogger - WARNING - 'AW'
-2023-08-16 13:21:32,445 - mylogger - WARNING - 'AW'
-2023-08-16 13:22:06,228 - mylogger - WARNING - 'AW'
-2023-08-16 13:22:06,228 - mylogger - WARNING - 'AW'
-2023-08-16 13:22:06,228 - mylogger - WARNING - 'AW'
-2023-08-16 13:22:40,220 - mylogger - WARNING - 'AW'
-2023-08-16 13:22:40,220 - mylogger - WARNING - 'AW'
-2023-08-16 13:22:40,220 - mylogger - WARNING - 'AW'
-2023-08-16 13:24:21,536 - mylogger - INFO - {'order': 538040739, 'customComment': 'ema_st', 'sl': 15814.3, 'price': 15827.1, 'symbol': 'DE30', 'volume': 0.07, 'tp': 0.0, 'type': 3}
-2023-08-16 13:24:21,536 - mylogger - INFO - {'order': 538040739, 'customComment': 'ema_st', 'sl': 15814.3, 'price': 15827.1, 'symbol': 'DE30', 'volume': 0.07, 'tp': 0.0, 'type': 3}
-2023-08-16 13:24:21,536 - mylogger - INFO - {'order': 538040739, 'customComment': 'ema_st', 'sl': 15814.3, 'price': 15827.1, 'symbol': 'DE30', 'volume': 0.07, 'tp': 0.0, 'type': 3}
-2023-08-16 13:30:33,323 - mylogger - INFO - {'order': 538040739, 'customComment': 'ema_st', 'sl': 15815.4, 'price': 15827.1, 'symbol': 'DE30', 'volume': 0.07, 'tp': 0.0, 'type': 3}
-2023-08-16 13:30:33,323 - mylogger - INFO - {'order': 538040739, 'customComment': 'ema_st', 'sl': 15815.4, 'price': 15827.1, 'symbol': 'DE30', 'volume': 0.07, 'tp': 0.0, 'type': 3}
-2023-08-16 13:30:33,323 - mylogger - INFO - {'order': 538040739, 'customComment': 'ema_st', 'sl': 15815.4, 'price': 15827.1, 'symbol': 'DE30', 'volume': 0.07, 'tp': 0.0, 'type': 3}
-2023-08-16 13:31:07,466 - mylogger - INFO - {'order': 538040739, 'customComment': 'ema_st', 'sl': 15815.5, 'price': 15825.4, 'symbol': 'DE30', 'volume': 0.07, 'tp': 0.0, 'type': 3}
-2023-08-16 13:31:07,466 - mylogger - INFO - {'order': 538040739, 'customComment': 'ema_st', 'sl': 15815.5, 'price': 15825.4, 'symbol': 'DE30', 'volume': 0.07, 'tp': 0.0, 'type': 3}
-2023-08-16 13:31:07,466 - mylogger - INFO - {'order': 538040739, 'customComment': 'ema_st', 'sl': 15815.5, 'price': 15825.4, 'symbol': 'DE30', 'volume': 0.07, 'tp': 0.0, 'type': 3}
-2023-08-16 13:34:30,984 - mylogger - INFO - {'cmd': 0, 'customComment': 'AW_pivot_st1004', 'expiration': 1692189270771, 'offset': 0, 'price': 15887.0, 'sl': 15808.0, 'symbol': 'DE30', 'tp': 0, 'type': 0, 'volume': 0.01, 'resp': {'status': True, 'returnData': {'order': 538047021}}, 'comment': 'AW_pivot_st1004', '_id': ObjectId('64dcb44638ea203200277117')}
-2023-08-16 13:34:30,984 - mylogger - INFO - {'cmd': 0, 'customComment': 'AW_pivot_st1004', 'expiration': 1692189270771, 'offset': 0, 'price': 15887.0, 'sl': 15808.0, 'symbol': 'DE30', 'tp': 0, 'type': 0, 'volume': 0.01, 'resp': {'status': True, 'returnData': {'order': 538047021}}, 'comment': 'AW_pivot_st1004', '_id': ObjectId('64dcb44638ea203200277117')}
-2023-08-16 13:34:30,984 - mylogger - INFO - {'cmd': 0, 'customComment': 'AW_pivot_st1004', 'expiration': 1692189270771, 'offset': 0, 'price': 15887.0, 'sl': 15808.0, 'symbol': 'DE30', 'tp': 0, 'type': 0, 'volume': 0.01, 'resp': {'status': True, 'returnData': {'order': 538047021}}, 'comment': 'AW_pivot_st1004', '_id': ObjectId('64dcb44638ea203200277117')}
-2023-08-16 13:34:31,097 - mylogger - INFO - {'order': 538040739, 'customComment': 'ema_st', 'sl': 15818.8, 'price': 15827.0, 'symbol': 'DE30', 'volume': 0.07, 'tp': 0.0, 'type': 3}
-2023-08-16 13:34:31,097 - mylogger - INFO - {'order': 538040739, 'customComment': 'ema_st', 'sl': 15818.8, 'price': 15827.0, 'symbol': 'DE30', 'volume': 0.07, 'tp': 0.0, 'type': 3}
-2023-08-16 13:34:31,097 - mylogger - INFO - {'order': 538040739, 'customComment': 'ema_st', 'sl': 15818.8, 'price': 15827.0, 'symbol': 'DE30', 'volume': 0.07, 'tp': 0.0, 'type': 3}
-2023-08-16 13:35:05,095 - mylogger - INFO - {'order': 538046963, 'customComment': 'AW_pivot_st1004', 'sl': 15825.7, 'price': 15827.1, 'symbol': 'DE30', 'volume': 0.01, 'tp': 0.0, 'type': 3}
-2023-08-16 13:35:05,095 - mylogger - INFO - {'order': 538046963, 'customComment': 'AW_pivot_st1004', 'sl': 15825.7, 'price': 15827.1, 'symbol': 'DE30', 'volume': 0.01, 'tp': 0.0, 'type': 3}
-2023-08-16 13:35:05,095 - mylogger - INFO - {'order': 538046963, 'customComment': 'AW_pivot_st1004', 'sl': 15825.7, 'price': 15827.1, 'symbol': 'DE30', 'volume': 0.01, 'tp': 0.0, 'type': 3}
-2023-08-16 13:35:05,216 - mylogger - INFO - {'order': 538040739, 'customComment': 'ema_st', 'sl': 15824.8, 'price': 15827.1, 'symbol': 'DE30', 'volume': 0.07, 'tp': 0.0, 'type': 3}
-2023-08-16 13:35:05,216 - mylogger - INFO - {'order': 538040739, 'customComment': 'ema_st', 'sl': 15824.8, 'price': 15827.1, 'symbol': 'DE30', 'volume': 0.07, 'tp': 0.0, 'type': 3}
-2023-08-16 13:35:05,216 - mylogger - INFO - {'order': 538040739, 'customComment': 'ema_st', 'sl': 15824.8, 'price': 15827.1, 'symbol': 'DE30', 'volume': 0.07, 'tp': 0.0, 'type': 3}
-2023-08-16 13:36:13,090 - mylogger - INFO - {'order': 538040739, 'customComment': 'ema_st', 'sl': 15827.4, 'price': 15829.1, 'symbol': 'DE30', 'volume': 0.07, 'tp': 0.0, 'type': 3}
-2023-08-16 13:36:13,090 - mylogger - INFO - {'order': 538040739, 'customComment': 'ema_st', 'sl': 15827.4, 'price': 15829.1, 'symbol': 'DE30', 'volume': 0.07, 'tp': 0.0, 'type': 3}
-2023-08-16 13:36:13,090 - mylogger - INFO - {'order': 538040739, 'customComment': 'ema_st', 'sl': 15827.4, 'price': 15829.1, 'symbol': 'DE30', 'volume': 0.07, 'tp': 0.0, 'type': 3}
-2023-08-16 13:37:20,702 - mylogger - INFO - {'order': 538040739, 'customComment': 'ema_st', 'sl': 15827.7, 'price': 15830.1, 'symbol': 'DE30', 'volume': 0.07, 'tp': 0.0, 'type': 3}
-2023-08-16 13:37:20,702 - mylogger - INFO - {'order': 538040739, 'customComment': 'ema_st', 'sl': 15827.7, 'price': 15830.1, 'symbol': 'DE30', 'volume': 0.07, 'tp': 0.0, 'type': 3}
-2023-08-16 13:37:20,702 - mylogger - INFO - {'order': 538040739, 'customComment': 'ema_st', 'sl': 15827.7, 'price': 15830.1, 'symbol': 'DE30', 'volume': 0.07, 'tp': 0.0, 'type': 3}
-2023-08-16 13:38:28,534 - mylogger - INFO - {'order': 538040739, 'customComment': 'ema_st', 'sl': 15828.6, 'price': 15829.9, 'symbol': 'DE30', 'volume': 0.07, 'tp': 0.0, 'type': 3}
-2023-08-16 13:38:28,534 - mylogger - INFO - {'order': 538040739, 'customComment': 'ema_st', 'sl': 15828.6, 'price': 15829.9, 'symbol': 'DE30', 'volume': 0.07, 'tp': 0.0, 'type': 3}
-2023-08-16 13:38:28,534 - mylogger - INFO - {'order': 538040739, 'customComment': 'ema_st', 'sl': 15828.6, 'price': 15829.9, 'symbol': 'DE30', 'volume': 0.07, 'tp': 0.0, 'type': 3}
-2023-08-16 13:40:10,234 - mylogger - INFO - {'order': 538040739, 'customComment': 'ema_st', 'sl': 15829.0, 'price': 15834.1, 'symbol': 'DE30', 'volume': 0.07, 'tp': 0.0, 'type': 3}
-2023-08-16 13:40:10,234 - mylogger - INFO - {'order': 538040739, 'customComment': 'ema_st', 'sl': 15829.0, 'price': 15834.1, 'symbol': 'DE30', 'volume': 0.07, 'tp': 0.0, 'type': 3}
-2023-08-16 13:40:10,234 - mylogger - INFO - {'order': 538040739, 'customComment': 'ema_st', 'sl': 15829.0, 'price': 15834.1, 'symbol': 'DE30', 'volume': 0.07, 'tp': 0.0, 'type': 3}
-2023-08-16 13:41:18,223 - mylogger - INFO - {'order': 538040739, 'customComment': 'ema_st', 'sl': 15829.6, 'price': 15836.9, 'symbol': 'DE30', 'volume': 0.07, 'tp': 0.0, 'type': 3}
-2023-08-16 13:41:18,223 - mylogger - INFO - {'order': 538040739, 'customComment': 'ema_st', 'sl': 15829.6, 'price': 15836.9, 'symbol': 'DE30', 'volume': 0.07, 'tp': 0.0, 'type': 3}
-2023-08-16 13:41:18,223 - mylogger - INFO - {'order': 538040739, 'customComment': 'ema_st', 'sl': 15829.6, 'price': 15836.9, 'symbol': 'DE30', 'volume': 0.07, 'tp': 0.0, 'type': 3}
-2023-08-16 13:42:25,800 - mylogger - INFO - {'order': 538040739, 'customComment': 'ema_st', 'sl': 15833.5, 'price': 15838.6, 'symbol': 'DE30', 'volume': 0.07, 'tp': 0.0, 'type': 3}
-2023-08-16 13:42:25,800 - mylogger - INFO - {'order': 538040739, 'customComment': 'ema_st', 'sl': 15833.5, 'price': 15838.6, 'symbol': 'DE30', 'volume': 0.07, 'tp': 0.0, 'type': 3}
-2023-08-16 13:42:25,800 - mylogger - INFO - {'order': 538040739, 'customComment': 'ema_st', 'sl': 15833.5, 'price': 15838.6, 'symbol': 'DE30', 'volume': 0.07, 'tp': 0.0, 'type': 3}
-2023-08-16 13:43:33,429 - mylogger - INFO - {'order': 538040739, 'customComment': 'ema_st', 'sl': 15834.5, 'price': 15839.0, 'symbol': 'DE30', 'volume': 0.07, 'tp': 0.0, 'type': 3}
-2023-08-16 13:43:33,429 - mylogger - INFO - {'order': 538040739, 'customComment': 'ema_st', 'sl': 15834.5, 'price': 15839.0, 'symbol': 'DE30', 'volume': 0.07, 'tp': 0.0, 'type': 3}
-2023-08-16 13:43:33,429 - mylogger - INFO - {'order': 538040739, 'customComment': 'ema_st', 'sl': 15834.5, 'price': 15839.0, 'symbol': 'DE30', 'volume': 0.07, 'tp': 0.0, 'type': 3}
+2023-08-18 12:02:14,772 - mylogger - INFO - {'status': True, 'streamSessionId': '005056fffeb96ad7-00374e0e-015cf88b-264ca34ea083fb1f-17481350'}
+2023-08-18 12:02:14,772 - mylogger - INFO - {'status': True, 'streamSessionId': '005056fffeb96ad7-00374e0e-015cf88b-264ca34ea083fb1f-17481350'}
+2023-08-18 12:03:59,874 - mylogger - WARNING - 'AW'
+2023-08-18 12:03:59,874 - mylogger - WARNING - 'AW'
+2023-08-18 12:03:59,874 - mylogger - WARNING - 'AW'
+2023-08-18 12:03:59,874 - mylogger - WARNING - 'AW'
+2023-08-18 12:03:59,874 - mylogger - WARNING - 'AW'
+2023-08-18 12:03:59,874 - mylogger - WARNING - 'AW'
+2023-08-18 12:04:33,372 - mylogger - WARNING - 'AW'
+2023-08-18 12:04:33,372 - mylogger - WARNING - 'AW'
+2023-08-18 12:04:33,372 - mylogger - WARNING - 'AW'
+2023-08-18 12:04:33,372 - mylogger - WARNING - 'AW'
+2023-08-18 12:04:33,372 - mylogger - WARNING - 'AW'
+2023-08-18 12:04:33,372 - mylogger - WARNING - 'AW'
+2023-08-18 12:05:06,731 - mylogger - WARNING - 'AW'
+2023-08-18 12:05:06,731 - mylogger - WARNING - 'AW'
+2023-08-18 12:05:06,731 - mylogger - WARNING - 'AW'
+2023-08-18 12:05:06,731 - mylogger - WARNING - 'AW'
+2023-08-18 12:05:06,731 - mylogger - WARNING - 'AW'
+2023-08-18 12:05:06,731 - mylogger - WARNING - 'AW'
+2023-08-18 12:05:40,070 - mylogger - WARNING - 'AW'
+2023-08-18 12:05:40,070 - mylogger - WARNING - 'AW'
+2023-08-18 12:05:40,070 - mylogger - WARNING - 'AW'
+2023-08-18 12:05:40,070 - mylogger - WARNING - 'AW'
+2023-08-18 12:05:40,070 - mylogger - WARNING - 'AW'
+2023-08-18 12:05:40,070 - mylogger - WARNING - 'AW'
+2023-08-18 12:06:13,443 - mylogger - WARNING - 'AW'
+2023-08-18 12:06:13,443 - mylogger - WARNING - 'AW'
+2023-08-18 12:06:13,443 - mylogger - WARNING - 'AW'
+2023-08-18 12:06:13,443 - mylogger - WARNING - 'AW'
+2023-08-18 12:06:13,443 - mylogger - WARNING - 'AW'
+2023-08-18 12:06:13,443 - mylogger - WARNING - 'AW'
+2023-08-18 12:06:46,748 - mylogger - WARNING - 'AW'
+2023-08-18 12:06:46,748 - mylogger - WARNING - 'AW'
+2023-08-18 12:06:46,748 - mylogger - WARNING - 'AW'
+2023-08-18 12:06:46,748 - mylogger - WARNING - 'AW'
+2023-08-18 12:06:46,748 - mylogger - WARNING - 'AW'
+2023-08-18 12:06:46,748 - mylogger - WARNING - 'AW'
+2023-08-18 12:07:20,082 - mylogger - WARNING - 'AW'
+2023-08-18 12:07:20,082 - mylogger - WARNING - 'AW'
+2023-08-18 12:07:20,082 - mylogger - WARNING - 'AW'
+2023-08-18 12:07:20,082 - mylogger - WARNING - 'AW'
+2023-08-18 12:07:20,082 - mylogger - WARNING - 'AW'
+2023-08-18 12:07:20,082 - mylogger - WARNING - 'AW'
+2023-08-18 12:07:53,372 - mylogger - WARNING - 'AW'
+2023-08-18 12:07:53,372 - mylogger - WARNING - 'AW'
+2023-08-18 12:07:53,372 - mylogger - WARNING - 'AW'
+2023-08-18 12:07:53,372 - mylogger - WARNING - 'AW'
+2023-08-18 12:07:53,372 - mylogger - WARNING - 'AW'
+2023-08-18 12:07:53,372 - mylogger - WARNING - 'AW'
+2023-08-18 12:13:47,909 - mylogger - INFO - {'status': True, 'streamSessionId': '005056fffeb96ad7-00374e0e-015d287f-f83bf42b65b88eb4-ddeb0cfe'}
+2023-08-18 12:13:47,909 - mylogger - INFO - {'status': True, 'streamSessionId': '005056fffeb96ad7-00374e0e-015d287f-f83bf42b65b88eb4-ddeb0cfe'}
