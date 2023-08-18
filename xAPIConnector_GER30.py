@@ -200,7 +200,7 @@ async def majDatAall(logger, email, client, symbol, db):
                      "ticks": 0}})
         data_H4 = json.dumps(json_data_H4)
         dataH4Download = json.loads(data_H4)
-        await insertData(logger, email, db["H4"], dataH4Download, lastBougie)
+        await insertData(logger, email, db["M15"], dataH4Download, lastBougie)
 
         # MAJ Minute : 1 mois max------------------------------------------------------------------------
         lastBougie = db["M01"].find_one({}, sort=[('ctm', -1)])
