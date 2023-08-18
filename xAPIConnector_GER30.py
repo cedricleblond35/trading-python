@@ -517,14 +517,14 @@ async def AW_pivot_st1004(logger, o, tick, spM05_1003T0, spM01_1005T0,
         if orderExist is False:
             print("-- Aucun ordre  AW_pivot_st1004 ********************")
             if tick > spM01_1005T0 and bougie1M01.get("close") > spM01_1005T0 and bougie0M05.get(
-                    "close") > spM05_1003T0 and tick > spM05_1003T0:
+                    "close") > spM05_1003T0 and tick > spM05_1003T0 and bougie1M01.get("AW") > bougie2M01.get("AW"):
                 sl = spM05_1003T0 - 2
                 tp = 0
                 price = tick + 10
                 o.buyNow(sl, tp, price, balance, VNL, "AW_pivot_st1004")
 
             elif tick < spM01_1005T0 and bougie1M01.get("close") < spM01_1005T0 and bougie0M05.get(
-                    "close") < spM05_1003T0 and tick < spM05_1003T0:
+                    "close") < spM05_1003T0 and tick < spM05_1003T0 and bougie1M01.get("AW") < bougie2M01.get("AW"):
                 sl = spM05_1003T0 + 2
                 tp = 0
                 price = tick - 10
