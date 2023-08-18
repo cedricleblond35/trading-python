@@ -443,6 +443,50 @@ async def SMMA200_M1_EMA70(o, tick, bougie1M01, superM05_5003T1, zone, balance, 
 
         print("ordre en cours   END...........................................")
 
+async def ema30_st15(logger, o, tick, spM15_1006T0, spM15_1006T1, balance, tradeOpen, tradeOpenDic, bougie0M15):
+    try:
+        orderExist = False
+        # move order
+        if len(tradeOpen['returnData']) > 0:
+            for trade in tradeOpenDic['returnData']:
+                print("trade['customComment']:", trade['customComment'])
+                print("trade['cmd']:", trade['cmd'])
+                if TransactionSide.BUY_LIMIT == trade['cmd'] and trade['customComment'] == "ema30_st15":
+                    orderExist = True
+                    sl = spM15_1006T0
+                    tp = 0
+                    price = bougie0M15.get("EMA30")
+                    o.movebuyLimitWait(trade, sl, tp, price, balance, VNL)
+                elif TransactionSide.BUY == trade['cmd'] and trade['customComment'] == "ema30_st15":
+                    orderExist = True
+                    if trade['sl'] < spM15_1006T0 < tick:
+                        o.moveStopBuy(trade, spM15_1006T0, tick)
+                elif TransactionSide.SELL_LIMIT == trade['cmd'] and trade['customComment'] == "ema30_st15":
+                    orderExist = True
+                    sl = spM15_1006T0
+                    price = bougie0M15.get("EMA30")
+                    tp = 0
+                    o.moveSellLimitWait(trade, sl, tp, price, balance, VNL)
+                elif TransactionSide.SELL == trade['cmd'] and trade['customComment'] == "ema30_st15":
+                    orderExist = True
+                    if trade['sl'] > spM15_1006T0 > tick:
+                        o.moveStopBuy(trade, spM15_1006T0, tick)
+
+        if orderExist is False:
+            if tick > bougie0M15.get("EMA30") > spM15_1006T0:
+                sl = spM15_1006T0
+                tp = 0
+                price = bougie0M15.get("EMA30")
+                o.buyLimit(sl, tp, price, balance, VNL, "ema30_st15")
+            elif tick < bougie0M15.get("EMA30") < spM15_1006T0:
+                sl = spM15_1006T0
+                tp = 0
+                price = bougie0M15.get("EMA30")
+                o.sellLimit(sl, tp, price, balance, VNL, "ema30_st15")
+
+    except Exception as exc:
+        logger.warning(exc)
+
 async def ema_st(logger, o, tick, spM01_4005T0, balance, tradeOpen, tradeOpenDic, bougie1M01):
     try:
         orderExist = False
@@ -566,6 +610,7 @@ async def main():
         # # # moyen mobile ##################################################################################################
         moyMobil_05 = MM(SYMBOL, "M05", 0)
         moyMobil_01 = MM(SYMBOL, "M01", 0)
+        moyMobil_15 = MM(SYMBOL, "M15", 0)
 
         # # Awesome ##################################################################################################
         ao05 = Awesome(SYMBOL, "M05")
@@ -585,7 +630,6 @@ async def main():
                 logger.info("!!!!!!!!! client deconnecté, reconnection en cours !!!!!!!!!!!!!!!!!!!")
                 sclient, c, client = connectionAPI(logger)
 
-            zone = await pivot()
             c.getTick()
 
             candles = c.getCandles()
@@ -601,8 +645,11 @@ async def main():
             await moyMobil_01.EMA(70, 1)
             await moyMobil_01.EMA(200, 1)
 
+            await moyMobil_15.EMA(30, 1)
+
             await moyMobil_01.EMA(26, 1)
             #
+            zone = await pivot()
             # # AO ###################################################################################
             await ao05.calculLastCandle(10)
             #
@@ -615,6 +662,9 @@ async def main():
 
             spM01_4005 = Supertrend(SYMBOL, "M01",40, 5)
             spM01_4005T0, spM01_4005T1, spM01_4005T2 = spM01_4005.getST()
+
+            spM15_1006 = Supertrend(SYMBOL, "M15",10, 6)
+            spM15_1006T0, spM15_1006T1, spM15_1006T2 = spM15_1006.getST()
 
             if c.getTick() is not None:
                 print("jour:", j, " h:", todayPlus2Hours.hour)
@@ -641,6 +691,8 @@ async def main():
 
                     bougie0M05 = db["M05"].find({}, sort=[('ctm', -1)]).limit(1).skip(0)[0]
                     bougie1M05 = db["M05"].find({}, sort=[('ctm', -1)]).limit(1).skip(1)[0]
+
+                    bougie0M15 = db["M15"].find({}, sort=[('ctm', -1)]).limit(1).skip(0)[0]
 
                     ###############################################################################################################
                     # balance
@@ -686,6 +738,8 @@ async def main():
                                           bougie2M01)
 
                     await ema_st(logger, o, tick, spM01_4005T0, balance, tradeOpen, tradeOpenDic, bougie1M01)
+
+                    await ema30_st15(logger, o, tick, spM15_1006T0, spM15_1006T1, balance, tradeOpen, tradeOpenDic, bougie0M15)
             time.sleep(30)
 
     except Exception as exc:
