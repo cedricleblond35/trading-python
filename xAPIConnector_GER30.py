@@ -516,6 +516,9 @@ async def AW_pivot_st1004(logger, o, tick, spM05_1003T0, spM01_1005T0,
 
         if orderExist is False:
             print("-- Aucun ordre  AW_pivot_st1004 ********************")
+            print("-- bougie1M01.get(AW) :", bougie1M01.get("AW"))
+            print("-- bougie2M01.get(AW) :", bougie2M01.get("AW"))
+            print("-- Aucun ordre  AW_pivot_st1004 ********************")
             if tick > spM01_1005T0 and bougie1M01.get("close") > spM01_1005T0 and bougie0M05.get(
                     "close") > spM05_1003T0 and tick > spM05_1003T0 and bougie1M01.get("AW") > bougie2M01.get("AW"):
                 sl = spM05_1003T0 - 2
