@@ -188,6 +188,20 @@ async def majDatAall(logger, email, client, symbol, db):
         dataH4Download = json.loads(data_H4)
         await insertData(logger, email,db["H4"], dataH4Download, lastBougie)
 
+        # MAJ H4 : 13 mois max------------------------------------------------------------------------
+        lastBougie = db["M15"].find_one({}, sort=[('ctm', -1)])
+        startTime = int(round(time.time() * 1000)) - (60 * 60 * 24 * 45) * 1000
+        if lastBougie is not None:
+            startTime = lastBougie["ctm"] - (60 * 60 * 8) * 1000
+
+        json_data_H4 = client.commandExecute('getChartRangeRequest', {
+            "info": {"start": startTime, "end": endTime, "period": 15,
+                     "symbol": symbol,
+                     "ticks": 0}})
+        data_H4 = json.dumps(json_data_H4)
+        dataH4Download = json.loads(data_H4)
+        await insertData(logger, email, db["H4"], dataH4Download, lastBougie)
+
         # MAJ Minute : 1 mois max------------------------------------------------------------------------
         lastBougie = db["M01"].find_one({}, sort=[('ctm', -1)])
         startTime = int(round(time.time() * 1000)) - (60 * 60 * 24 * 5) * 1000
