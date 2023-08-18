@@ -192,7 +192,7 @@ async def majDatAall(logger, email, client, symbol, db):
         lastBougie = db["M15"].find_one({}, sort=[('ctm', -1)])
         startTime = int(round(time.time() * 1000)) - (60 * 60 * 24 * 45) * 1000
         if lastBougie is not None:
-            startTime = lastBougie["ctm"] - (60 * 60 * 8) * 1000
+            startTime = lastBougie["ctm"] - (60 * 15) * 1000
 
         json_data_H4 = client.commandExecute('getChartRangeRequest', {
             "info": {"start": startTime, "end": endTime, "period": 15,
