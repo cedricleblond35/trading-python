@@ -173,6 +173,7 @@ async def majDatAall(logger, email, client, symbol, db):
             {"info": {"start": startTime, "end": endTime, "period": 1440, "symbol": symbol, "ticks": 0}})
         dataDAY = json.dumps(json_data_Day)
         dataDAYDownload = json.loads(dataDAY)
+        print("D")
         await insertData(logger, email, db["D"], dataDAYDownload, lastBougie)
 
         # MAJ H4 : 13 mois max------------------------------------------------------------------------
@@ -187,6 +188,7 @@ async def majDatAall(logger, email, client, symbol, db):
                      "ticks": 0}})
         data_H4 = json.dumps(json_data_H4)
         dataH4Download = json.loads(data_H4)
+        print("H4")
         await insertData(logger, email,db["H4"], dataH4Download, lastBougie)
 
         # MAJ H4 : 13 mois max------------------------------------------------------------------------
@@ -201,6 +203,7 @@ async def majDatAall(logger, email, client, symbol, db):
                      "ticks": 0}})
         data_H4 = json.dumps(json_data_H4)
         dataH4Download = json.loads(data_H4)
+        print("M15")
         await insertData(logger, email, db["M15"], dataH4Download, lastBougie)
 
         # MAJ Minute : 1 mois max------------------------------------------------------------------------
@@ -215,7 +218,7 @@ async def majDatAall(logger, email, client, symbol, db):
                      "ticks": 0}})
         dataM01 = json.dumps(json_data_M01)
         dataDownload = json.loads(dataM01)
-
+        print("M01")
         await insertData(logger, email, db["M01"], dataDownload, lastBougie)
 
         # MAJ 5 min ------------------------------------------------------------------------
@@ -230,7 +233,7 @@ async def majDatAall(logger, email, client, symbol, db):
                      "ticks": 0}})
         dataM05 = json.dumps(json_data_M05)
         dataM05Download = json.loads(dataM05)
-
+        print("M05")
         await insertData(logger, email,db["M05"], dataM05Download, lastBougie)
         print("maj fini")
     except Exception as exc:
