@@ -386,34 +386,18 @@ async def main():
             # ####################################################################################################
             await majDatAall(logger, email, client, SYMBOL, db)
             # ####################################################################################################
-            await moyMobil_05.EMA(70, 1)
-            await moyMobil_05.SMMA(200, 1)
+            await moyMobil_05.EMA(70, 5)
 
-            await moyMobil_01.SMMA(200, 1)
-            await moyMobil_01.EMA(40, 1)
-            await moyMobil_01.EMA(70, 1)
-            await moyMobil_01.EMA(200, 1)
+            await moyMobil_01.EMA(70, 5)
+            await moyMobil_01.EMA(200, 5)
 
-            await moyMobil_15.EMA(30, 1)
+            await moyMobil_15.EMA(30, 5)
 
-            await moyMobil_01.EMA(26, 1)
+            await moyMobil_01.EMA(26, 5)
             #
             zone = await pivot()
             # # AO ###################################################################################
             await ao05.calculLastCandle(10)
-            #
-            # # supertrend ###################################################################################
-            spM05_1003 = Supertrend(SYMBOL, "M05", 10, 3)
-            superM05_1003T0, superM05_1003T1, superM05_1003T2 = spM05_1003.getST()
-
-            spM01_1005 = Supertrend(SYMBOL, "M01", 10, 5)
-            spM01_1005T0, spM01_1005T1, spM01_1005T2 = spM01_1005.getST()
-
-            spM01_4005 = Supertrend(SYMBOL, "M01",40, 5)
-            spM01_4005T0, spM01_4005T1, spM01_4005T2 = spM01_4005.getST()
-
-            spM15_1006 = Supertrend(SYMBOL, "M15",10, 6)
-            spM15_1006T0, spM15_1006T1, spM15_1006T2 = spM15_1006.getST()
 
             if c.getTick() is not None:
                 print("jour:", j, " h:", todayPlus2Hours.hour)
