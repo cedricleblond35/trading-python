@@ -447,7 +447,7 @@ async def main():
                 if len(tradeOpen['returnData']) > 0:
                     for trade in tradeOpenDic['returnData']:
                         order.append(trade['customComment'])
-
+            print("=================> calcul fini")
             time.sleep(30)
 
     except Exception as exc:
