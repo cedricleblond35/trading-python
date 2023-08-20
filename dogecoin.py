@@ -399,38 +399,6 @@ async def main():
             # # AO ###################################################################################
             await ao05.calculLastCandle(10)
 
-            if c.getTick() is not None:
-                print("jour:", j, " h:", todayPlus2Hours.hour)
-
-                print("dans le if !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-                tick = c.getTick()["ask"]
-
-                ###############################################################################################################
-                # order
-                ###############################################################################################################
-                tradeOpenDic = findopenOrder(client)
-                tradeOpen = json.loads(json.dumps(tradeOpenDic))
-
-
-                ###############################################################################################################
-                # balance
-                ###############################################################################################################
-                balance = c.getBalance()
-                if c.getBalance() == 0:
-                    resp = client.commandExecute('getMarginLevel')
-                    balance = resp["returnData"]["margin_free"]
-                else:
-                    balance = balance["marginFree"]
-
-                ###############################################################################################################
-                # start order
-                ###############################################################################################################
-                print("tick:", tick)
-                print("--------------------------------------")
-                print("tradeOpen", tradeOpen['returnData'])
-                if len(tradeOpen['returnData']) > 0:
-                    for trade in tradeOpenDic['returnData']:
-                        order.append(trade['customComment'])
             print("=================> calcul fini")
             time.sleep(30)
 
