@@ -84,6 +84,7 @@ async def insertData(logger, email, collection, dataDownload, lastBougieDB):
     try:
         if dataDownload['status'] and len(dataDownload["returnData"]['rateInfos']) > 0:
             for value in dataDownload["returnData"]['rateInfos']:
+                print(value)
                 ctm = value['ctm']
                 close = (value['open'] + value['close']) / 10.0
                 high = (value['open'] + value['high']) / 10.0
@@ -231,7 +232,7 @@ async def majDatAall(logger, email, client, symbol, db):
         dataM05Download = json.loads(dataM05)
 
         await insertData(logger, email,db["M05"], dataM05Download, lastBougie)
-
+        print("maj fini")
     except Exception as exc:
         logger.warning(exc)
         client.disconnect()
