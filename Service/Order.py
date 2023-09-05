@@ -390,16 +390,18 @@ def NbrLot(logger,balance, position, stp, vnl):
         valeurContrat = position*vnl*1       #valeur_contrat pour 1 lot
         levier = 20
 
-        print("perteAcceptable :", perteAcceptable)
         print("position :", position)
         print("stp :", stp)
+        print("perteAcceptable :", perteAcceptable)
         print("vnl :", vnl)
         ecartPip = abs((position - stp)*10000)
 
         print("ecart type :", ecartPip)
         #nbrelot = round(perteAcceptable / ecartPip / vnl, 2 )
-        nbrelot = round( perteAcceptable/(vln*ecartPip), 2)
+        nb = perteAcceptable/(vln*ecartPip)
 
+        nbrelot = round( nb, 2)
+        print("nbrelot:", nbrelot)
         #lotMaxPossible = round_down(balance * levier / valeurContrat, 2)
         #print("lotMaxPossible :", lotMaxPossible)
         #if nbrelot > lotMaxPossible:
