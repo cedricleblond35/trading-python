@@ -454,7 +454,7 @@ async def ema_st(logger, o, tick, spM01_4005T1, balance, tradeOpen, tradeOpenDic
                 if TransactionSide.BUY_LIMIT == trade['cmd'] and trade['customComment'] == "ema_st":
                     orderExist = True
                     sl = spM01_4005T1
-                    price = bougie1M01.get("EMA200")
+                    price = bougie1M01.get("EMA40")
                     tp = 0
                     o.movebuyLimitWait(trade, sl, tp, price, balance, VNL)
                 elif TransactionSide.BUY == trade['cmd'] and trade['customComment'] == "ema_st":
@@ -464,7 +464,7 @@ async def ema_st(logger, o, tick, spM01_4005T1, balance, tradeOpen, tradeOpenDic
                 elif TransactionSide.SELL_LIMIT == trade['cmd'] and trade['customComment'] == "ema_st":
                     orderExist = True
                     sl = spM01_4005T1
-                    price = bougie1M01.get("EMA200")
+                    price = bougie1M01.get("EMA40")
                     tp = 0
                     o.moveSellLimitWait(trade, sl, tp, price, balance, VNL)
                 elif TransactionSide.SELL == trade['cmd'] and trade['customComment'] == "ema_st":
@@ -480,14 +480,14 @@ async def ema_st(logger, o, tick, spM01_4005T1, balance, tradeOpen, tradeOpenDic
                 sl = spM01_4005T1
                 print("SL:", sl)
                 tp = 0
-                price = round(bougie1M01.get("EMA200"), ARRONDI_INDIC)
+                price = round(bougie1M01.get("EMA40"), ARRONDI_INDIC)
                 o.buyLimit(sl, tp, price, balance, VNL, "ema_st")
             elif tick < bougie1M01.get("EMA40") < bougie1M01.get("EMA200") and tick < spM01_4005T1:
                 sl = spM01_4005T1
 
                 print("SL:", sl)
                 tp = 0
-                price = round(bougie1M01.get("EMA200"), ARRONDI_INDIC)
+                price = round(bougie1M01.get("EMA40"), ARRONDI_INDIC)
                 o.sellLimit(sl, tp, price, balance, VNL, "ema_st")
 
         print("------------- ema_st end --------------------------")
