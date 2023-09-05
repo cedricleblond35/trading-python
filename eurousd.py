@@ -232,6 +232,7 @@ async def majDatAall(logger, email, client, symbol, db):
         dataDAY = json.dumps(json_data_Day)
         dataDAYDownload = json.loads(dataDAY)
         await insertData(logger, email, db["D"], dataDAYDownload, lastBougie)
+        print("maj D FINI")
 
         # MAJ H4 : 13 mois max------------------------------------------------------------------------
         lastBougie = db["H4"].find_one({}, sort=[('ctm', -1)])
@@ -246,6 +247,7 @@ async def majDatAall(logger, email, client, symbol, db):
         data_H4 = json.dumps(json_data_H4)
         dataH4Download = json.loads(data_H4)
         await insertData(logger, email,db["H4"], dataH4Download, lastBougie)
+        print("maj H4 FINI")
 
         # MAJ H4 : 13 mois max------------------------------------------------------------------------
         lastBougie = db["M15"].find_one({}, sort=[('ctm', -1)])
@@ -260,6 +262,7 @@ async def majDatAall(logger, email, client, symbol, db):
         data_H4 = json.dumps(json_data_H4)
         dataH4Download = json.loads(data_H4)
         await insertData(logger, email, db["M15"], dataH4Download, lastBougie)
+        print("maj M15 FINI")
 
         # MAJ Minute : 1 mois max------------------------------------------------------------------------
         lastBougie = db["M01"].find_one({}, sort=[('ctm', -1)])
@@ -273,6 +276,7 @@ async def majDatAall(logger, email, client, symbol, db):
                      "ticks": 0}})
         dataM01 = json.dumps(json_data_M01)
         dataDownload = json.loads(dataM01)
+        print("maj M01 FINI")
 
         await insertData(logger, email, db["M01"], dataDownload, lastBougie)
 
@@ -290,6 +294,7 @@ async def majDatAall(logger, email, client, symbol, db):
         dataM05Download = json.loads(dataM05)
 
         await insertData(logger, email,db["M05"], dataM05Download, lastBougie)
+        print("maj M05 FINI")
 
     except Exception as exc:
         logger.warning(exc)
