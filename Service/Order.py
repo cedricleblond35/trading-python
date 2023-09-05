@@ -400,10 +400,10 @@ def NbrLot(logger,balance, position, stp, vnl):
         #nbrelot = round(perteAcceptable / ecartPip / vnl, 2 )
         nbrelot = round( perteAcceptable/(vln*ecartPip), 2)
 
-        lotMaxPossible = round_down(balance * levier / valeurContrat, 2)
-        print("lotMaxPossible :", lotMaxPossible)
-        if nbrelot > lotMaxPossible:
-            nbrelot = lotMaxPossible
+        #lotMaxPossible = round_down(balance * levier / valeurContrat, 2)
+        #print("lotMaxPossible :", lotMaxPossible)
+        #if nbrelot > lotMaxPossible:
+        #    nbrelot = lotMaxPossible
 
         """
         qtMax = self.round_down((balance["equityFX"] / 20000), 2)
