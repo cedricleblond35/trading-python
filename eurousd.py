@@ -472,6 +472,9 @@ async def ema_st(logger, o, tick, spM01_4005T0, balance, tradeOpen, tradeOpenDic
                         o.moveStopBuy(trade, spM01_4005T0, tick)
 
         if orderExist is False:
+            print("ema40:", bougie1M01.get("EMA40"))
+            print("ema200:", bougie1M01.get("EMA200"))
+            print("spM01_4005T0:", spM01_4005T0)
             if tick > bougie1M01.get("EMA40") > bougie1M01.get("EMA200") > spM01_4005T0:
                 sl = spM01_4005T0 - 0.002
                 print("SL:", sl)
