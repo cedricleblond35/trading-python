@@ -442,7 +442,7 @@ async def ema30_st15(logger, o, tick, spM15_1006T0, spM15_1006T1, balance, trade
     except Exception as exc:
         logger.warning(exc)
 
-async def ema_st(logger, o, tick, spM01_4005T0, balance, tradeOpen, tradeOpenDic, bougie1M01):
+async def ema_st(logger, o, tick, spM01_4005T1, balance, tradeOpen, tradeOpenDic, bougie1M01):
     try:
         orderExist = False
         # move order
@@ -453,37 +453,37 @@ async def ema_st(logger, o, tick, spM01_4005T0, balance, tradeOpen, tradeOpenDic
                 print("trade['cmd']:", trade['cmd'])
                 if TransactionSide.BUY_LIMIT == trade['cmd'] and trade['customComment'] == "ema_st":
                     orderExist = True
-                    sl = spM01_4005T0 - 0.002
+                    sl = spM01_4005T1 - 0.002
                     price = bougie1M01.get("EMA200")+0.001
                     tp = 0
                     o.movebuyLimitWait(trade, sl, tp, price, balance, VNL)
                 elif TransactionSide.BUY == trade['cmd'] and trade['customComment'] == "ema_st":
                     orderExist = True
-                    if trade['sl'] < spM01_4005T0 < tick:
-                        o.moveStopBuy(trade, spM01_4005T0, tick)
+                    if trade['sl'] < spM01_4005T1 < tick:
+                        o.moveStopBuy(trade, spM01_4005T1, tick)
                 elif TransactionSide.SELL_LIMIT == trade['cmd'] and trade['customComment'] == "ema_st":
                     orderExist = True
-                    sl = spM01_4005T0 + 0.002
+                    sl = spM01_4005T1 + 0.002
                     price = bougie1M01.get("EMA200")-0.001
                     tp = 0
                     o.moveSellLimitWait(trade, sl, tp, price, balance, VNL)
                 elif TransactionSide.SELL == trade['cmd'] and trade['customComment'] == "ema_st":
                     orderExist = True
-                    if trade['sl'] > spM01_4005T0 > tick:
-                        o.moveStopBuy(trade, spM01_4005T0, tick)
+                    if trade['sl'] > spM01_4005T1 > tick:
+                        o.moveStopBuy(trade, spM01_4005T1, tick)
 
         if orderExist is False:
             print("ema40:", bougie1M01.get("EMA40"))
             print("ema200:", bougie1M01.get("EMA200"))
-            print("spM01_4005T0:", spM01_4005T0)
-            if tick > bougie1M01.get("EMA40") > bougie1M01.get("EMA200") > spM01_4005T0:
-                sl = spM01_4005T0 - 0.002
+            print("spM01_4005T1:", spM01_4005T1)
+            if tick > bougie1M01.get("EMA40") > bougie1M01.get("EMA200") > spM01_4005T1:
+                sl = spM01_4005T1 - 0.002
                 print("SL:", sl)
                 tp = 0
                 price = round(bougie1M01.get("EMA200")+0.001, ARRONDI_INDIC)
                 o.buyLimit(sl, tp, price, balance, VNL, "ema_st")
-            elif tick < bougie1M01.get("EMA40") < bougie1M01.get("EMA200") and tick < spM01_4005T0:
-                sl = spM01_4005T0 + 0.002
+            elif tick < bougie1M01.get("EMA40") < bougie1M01.get("EMA200") and tick < spM01_4005T1:
+                sl = spM01_4005T1 + 0.002
 
                 print("SL:", sl)
                 tp = 0
@@ -709,7 +709,7 @@ async def main():
                                           balance, tradeOpen, tradeOpenDic, bougie1M05, bougie0M05, bougie1M01,
                                           bougie2M01)
 
-                    await ema_st(logger, o, tick, spM01_4005T0, balance, tradeOpen, tradeOpenDic, bougie1M01)
+                    await ema_st(logger, o, tick, spM01_4005T1, balance, tradeOpen, tradeOpenDic, bougie1M01)
 
                     await ema30_st15(logger, o, tick, spM15_1006T0, spM15_1006T1, balance, tradeOpen, tradeOpenDic, bougie0M15)
             time.sleep(30)
