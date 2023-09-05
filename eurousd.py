@@ -454,7 +454,7 @@ async def ema_st(logger, o, tick, spM01_4005T1, balance, tradeOpen, tradeOpenDic
                 if TransactionSide.BUY_LIMIT == trade['cmd'] and trade['customComment'] == "ema_st":
                     orderExist = True
                     sl = spM01_4005T1 - 0.002
-                    price = bougie1M01.get("EMA200")+0.001
+                    price = bougie1M01.get("EMA200")+0.0001
                     tp = 0
                     o.movebuyLimitWait(trade, sl, tp, price, balance, VNL)
                 elif TransactionSide.BUY == trade['cmd'] and trade['customComment'] == "ema_st":
@@ -463,8 +463,8 @@ async def ema_st(logger, o, tick, spM01_4005T1, balance, tradeOpen, tradeOpenDic
                         o.moveStopBuy(trade, spM01_4005T1, tick)
                 elif TransactionSide.SELL_LIMIT == trade['cmd'] and trade['customComment'] == "ema_st":
                     orderExist = True
-                    sl = spM01_4005T1 + 0.002
-                    price = bougie1M01.get("EMA200")-0.001
+                    sl = spM01_4005T1 + 0.0002
+                    price = bougie1M01.get("EMA200")-0.0001
                     tp = 0
                     o.moveSellLimitWait(trade, sl, tp, price, balance, VNL)
                 elif TransactionSide.SELL == trade['cmd'] and trade['customComment'] == "ema_st":
@@ -477,13 +477,13 @@ async def ema_st(logger, o, tick, spM01_4005T1, balance, tradeOpen, tradeOpenDic
             print("ema200:", bougie1M01.get("EMA200"))
             print("spM01_4005T1:", spM01_4005T1)
             if tick > bougie1M01.get("EMA40") > bougie1M01.get("EMA200") > spM01_4005T1:
-                sl = spM01_4005T1 - 0.002
+                sl = spM01_4005T1 - 0.0002
                 print("SL:", sl)
                 tp = 0
                 price = round(bougie1M01.get("EMA200")+0.001, ARRONDI_INDIC)
                 o.buyLimit(sl, tp, price, balance, VNL, "ema_st")
             elif tick < bougie1M01.get("EMA40") < bougie1M01.get("EMA200") and tick < spM01_4005T1:
-                sl = spM01_4005T1 + 0.002
+                sl = spM01_4005T1 + 0.0002
 
                 print("SL:", sl)
                 tp = 0
