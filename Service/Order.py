@@ -417,7 +417,7 @@ def NbrLot(logger,balance, position, stp, vnl):
             "calcul du nombre de lot #############################################################################")
 
 
-        return nbrelot
+        return 0.01
 
 
     except Exception as exc:
