@@ -67,13 +67,6 @@ repnse
 }
 
 
-
-
-
-
-
-
-
 Strategie
 
 Periode 5 min :
@@ -83,16 +76,24 @@ B) Acheter
     et  Prix a touché S2 de Woodie
 : Position achat: EAM25  stop au plus bas des 10 derniers periodes si supertrend est ko sinon faire  avec super tr
 
+Calcul de lot
+---------------
+1 lot Forex équivaut à 100 000
+Un pip sur la paire de devises EUR/USD vaut 20 USD par lot.
 
+si l euro/usd vaut 1.0745 donc le VNL = 1 lot/1.0745€/10 = 9.30€
 
+9.30€ / pip / lot
+pip 0.0001
 
+18.6 pip cout 173 pour 1 lot
+VLN*nbre de pip= valeur
+9.30*18.1 = 172.9€
 
+pour 0.5 lot
+9.30*18.5*0.5= 86.5€
 
-
-
-
-
-
+90€/(9.30*18.5pip) = 0.52
 
 '''
 
@@ -108,7 +109,7 @@ BALANCE = 0
 TICK = False
 PROFIT = False
 SYMBOL = "EURUSD"
-VNL = 25
+VNL = 9.30
 SPREAD = 0.0001
 ARRONDI= 100000.0
 ARRONDI_INDIC=5
@@ -678,6 +679,7 @@ async def main():
                     # start order
                     ###############################################################################################################
                     print("tick:", tick)
+
                     print("smma200 M1:", bougie1M01.get("SMMA200"))
                     print("--------------------------------------")
                     print("smma200 M1:", bougie1M01.get("SMMA200"))

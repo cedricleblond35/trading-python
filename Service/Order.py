@@ -362,11 +362,31 @@ def NbrLot(logger,balance, position, stp, vnl):
     NASDAQ : 2,5 de perte, Stop loss : 10, vaLeur nominale du lot : 20 $  mettre 35
     calcul : 2,5 / 10 / 35 =
 
+    Calcul de lot EURO/USD
+    ---------------
+    1 lot Forex équivaut à 100 000
+    Un pip sur la paire de devises EUR/USD vaut 20 USD par lot.
+
+    si l euro/usd vaut 1.0745 donc le VNL = 1 lot/1.0745€/10 = 9.30€
+
+    9.30€ / pip / lot
+    pip 0.0001
+
+    18.6 pip cout 173 pour 1 lot
+    VLN*nbre de pip= valeur
+    9.30*18.1 = 172.9€
+
+    pour 0.5 lot:
+    9.30*18.5*0.5= 86.5€
+    nombre de lot pour 90€ de perte:  90€/(9.30*18.5pip) = 0.52
+
     '''
     try:
         print("calcul du nombre de lot #############################################################################")
         print("balance :", balance)
         perteAcceptable = round(balance * 0.03, 0)
+        vln = round(1/position/10, 2)
+
         valeurContrat = position*vnl*1       #valeur_contrat pour 1 lot
         levier = 20
 
@@ -377,7 +397,8 @@ def NbrLot(logger,balance, position, stp, vnl):
         ecartPip = abs((position - stp))
 
         print("ecart type :", ecartPip)
-        nbrelot = round(perteAcceptable / ecartPip / vnl, 2 )
+        #nbrelot = round(perteAcceptable / ecartPip / vnl, 2 )
+        nbrelot = perteAcceptable/(vln*ecartPip)
 
         lotMaxPossible = round_down(balance * levier / valeurContrat, 2)
         print("lotMaxPossible :", lotMaxPossible)
