@@ -398,7 +398,7 @@ def NbrLot(logger,balance, position, stp, vnl):
 
         print("ecart type :", ecartPip)
         #nbrelot = round(perteAcceptable / ecartPip / vnl, 2 )
-        nbrelot = perteAcceptable/(vln*ecartPip)
+        nbrelot = round( perteAcceptable/(vln*ecartPip), 2)
 
         lotMaxPossible = round_down(balance * levier / valeurContrat, 2)
         print("lotMaxPossible :", lotMaxPossible)
