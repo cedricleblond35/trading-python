@@ -474,12 +474,12 @@ async def ema_st(logger, o, tick, spM01_4005T0, balance, tradeOpen, tradeOpenDic
             if tick > bougie1M01.get("EMA40") > bougie1M01.get("EMA200") > spM01_4005T0:
                 sl = spM01_4005T0 - 0.002
                 tp = 0
-                price = bougie1M01.get("EMA200")+0.001
+                price = round(bougie1M01.get("EMA200")+0.001, ARRONDI_INDIC)
                 o.buyLimit(sl, tp, price, balance, VNL, "ema_st")
             elif tick < bougie1M01.get("EMA40") < bougie1M01.get("EMA200") < spM01_4005T0:
                 sl = spM01_4005T0 + 0.002
                 tp = 0
-                price = bougie1M01.get("EMA200") - 0.001
+                price = round(bougie1M01.get("EMA200") - 0.001, ARRONDI_INDIC)
                 o.sellLimit(sl, tp, price, balance, VNL, "ema_st")
 
     except Exception as exc:
