@@ -616,16 +616,16 @@ async def main():
             await ao05.calculLastCandle(10)
             #
             # # supertrend ###################################################################################
-            spM05_1003 = Supertrend(SYMBOL, "M05", 10, 3)
+            spM05_1003 = Supertrend(SYMBOL, "M05", 10, 3, ARRONDI_INDIC)
             superM05_1003T0, superM05_1003T1, superM05_1003T2 = spM05_1003.getST()
 
-            spM01_1005 = Supertrend(SYMBOL, "M01", 10, 5)
+            spM01_1005 = Supertrend(SYMBOL, "M01", 10, 5, ARRONDI_INDIC)
             spM01_1005T0, spM01_1005T1, spM01_1005T2 = spM01_1005.getST()
 
-            spM01_4005 = Supertrend(SYMBOL, "M01",40, 5)
+            spM01_4005 = Supertrend(SYMBOL, "M01",40, 5, ARRONDI_INDIC)
             spM01_4005T0, spM01_4005T1, spM01_4005T2 = spM01_4005.getST()
 
-            spM15_1006 = Supertrend(SYMBOL, "M15",10, 6)
+            spM15_1006 = Supertrend(SYMBOL, "M15",10, 6, ARRONDI_INDIC)
             spM15_1006T0, spM15_1006T1, spM15_1006T2 = spM15_1006.getST()
 
             if c.getTick() is not None:
