@@ -2,8 +2,6 @@
 # python3 -m pip install pymongo==3.5.1
 import json
 import time
-import os
-import sys
 import asyncio
 import math as math
 import numpy as np
