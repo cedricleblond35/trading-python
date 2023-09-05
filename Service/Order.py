@@ -394,7 +394,7 @@ def NbrLot(logger,balance, position, stp, vnl):
         print("position :", position)
         print("stp :", stp)
         print("vnl :", vnl)
-        ecartPip = abs((position - stp))
+        ecartPip = abs((position - stp)*10000)
 
         print("ecart type :", ecartPip)
         #nbrelot = round(perteAcceptable / ecartPip / vnl, 2 )
