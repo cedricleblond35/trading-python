@@ -6,11 +6,12 @@ pd.options.mode.chained_assignment = None  # default='warn'
 
 
 class Awesome(Price):
-    def __init__(self, symbol, timeframe, MMS1=5, MMS2=34, shift=0):
+    def __init__(self, symbol, timeframe, MMS1=5, MMS2=34, arrondi=3, shift=0):
         Price.__init__(self, symbol, timeframe)
         self.__symbol = symbol
         self.__timeframe = timeframe
         self.__shift = shift
+        self.__arrondi = arrondi
         self.__MMS1 = MMS1
         self.__MMS2 = MMS2
         l = Log()
@@ -40,14 +41,14 @@ class Awesome(Price):
                     pointMedian = 0
                     for v in list1:
                         pointMedian = pointMedian + v["pointMedian"]
-                    MMS2 = round((pointMedian / self.__MMS2), 3)
+                    MMS2 = round((pointMedian / self.__MMS2), self.__arrondi)
                     pointMedian = 0
                     a = np.array(list1)
                     new_listData = np.delete(a, range(0, self.__MMS2 - self.__MMS1))
                     for v in new_listData:
                         pointMedian = pointMedian + v["pointMedian"]
-                    MMS1 = round((pointMedian / self.__MMS1), 3)
-                    ao = round(MMS1 - MMS2, 3)
+                    MMS1 = round((pointMedian / self.__MMS1), self.__arrondi)
+                    ao = round(MMS1 - MMS2, self.__arrondi)
                     # mise à jour du document
                     newvalues = {
                         "$set": {

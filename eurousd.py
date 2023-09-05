@@ -567,7 +567,7 @@ async def main():
         moyMobil_15 = MM(SYMBOL, "M15", 0)
 
         # # Awesome ##################################################################################################
-        ao05 = Awesome(SYMBOL, "M05")
+        ao05 = Awesome(SYMBOL, "M05", ARRONDI_INDIC)
         await ao05.calculAllCandles()
         #
         o = Order(SYMBOL, dbStreaming, client, db["trade"])
@@ -604,7 +604,7 @@ async def main():
 
             await moyMobil_01.EMA(26, ARRONDI_INDIC)
             # # Awesome ##################################################################################################
-            ao05 = Awesome(SYMBOL, "M05")
+            ao05 = Awesome(SYMBOL, "M05", ARRONDI_INDIC)
             await ao05.calculAllCandles()
             #
             zone = await pivot()
