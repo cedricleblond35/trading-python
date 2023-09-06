@@ -173,6 +173,7 @@ async def majDatAall(logger, email, client, symbol, db):
     '''
     # print("**************************************** mise à jour majDatAall ****************************************")
     try:
+        logger.info("majDatAall")
         # ctmRefStart = db["D"].find().sort("ctm", -1).skip(1).limit(1)
         endTime = int(round(time.time() * 1000)) + (6 * 60 * 1000)
 
@@ -548,6 +549,7 @@ async def main():
             today = datetime.now()
             todayPlus2Hours = today + timedelta(hours=2)
             print("mise à jour :", todayPlus2Hours)
+            logger.info("mise à jour :", todayPlus2Hours)
 
             if client.is_socket_closed():
                 logger.info("!!!!!!!!! client deconnecté, reconnection en cours !!!!!!!!!!!!!!!!!!!")
@@ -555,7 +557,10 @@ async def main():
 
             c.getTick()
 
+
+
             candles = c.getCandles()
+            logger.info("candles :", candles)
             print("=================> candles:", candles)
             # ####################################################################################################
             await majDatAall(logger, email, client, SYMBOL, db)
