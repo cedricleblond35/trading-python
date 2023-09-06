@@ -637,6 +637,7 @@ async def main():
             if c.getTick() is not None:
                 print("jour:", j, " h:", todayPlus2Hours.hour)
                 if 0 <= j < 5 and 2 < todayPlus2Hours.hour < 22:
+                    """
                     print("Horaire de Trading ok")
                     tick = c.getTick()["ask"]
 
@@ -666,6 +667,7 @@ async def main():
                     ###############################################################################################################
                     # balance
                     ###############################################################################################################
+                    
                     balance = c.getBalance()
                     if c.getBalance() == 0:
                         resp = client.commandExecute('getMarginLevel')
@@ -708,9 +710,10 @@ async def main():
 
                     #await AW_pivot_st1004(logger, o, tick, superM05_1003T0, spM01_1005T0, balance, tradeOpen, tradeOpenDic, bougie1M05, bougie0M05, bougie1M01,                            bougie2M01)
 
-                    #await ema_st(logger, o, tick, spM01_4005T1, balance, tradeOpen, tradeOpenDic, bougie1M01)
+                    await ema_st(logger, o, tick, spM01_4005T1, balance, tradeOpen, tradeOpenDic, bougie1M01)
 
                     #await ema30_st15(logger, o, tick, spM15_1006T0, spM15_1006T1, balance, tradeOpen, tradeOpenDic, bougie0M15)
+                    """
             time.sleep(30)
 
     except Exception as exc:
