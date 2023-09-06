@@ -3,8 +3,9 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from Service.Email import Email
-from Configuration.Log import Log
+
 from Service.TransactionSide import TransactionSide
+import logging
 
 
 
@@ -16,8 +17,14 @@ class Order:
         self.dbStreaming = dbStreaming
         self.dbTrade = dbTrade
         self.client = client
-        l = Log()
-        self.logger = l.getLogger()
+
+        self.logger = logging.getLogger('Info')
+        handler = logging.FileHandler('mylogINFO.log')
+        formatter = logging.Formatter(
+            '%(asctime)s~%(levelname)s~%(message)s~module:%(module)s~function:%(module)s')
+        handler.setFormatter(formatter)
+        self.logger.addHandler(handler)
+        self.logger.setLevel(logging.INFO)
 
     ################## ordre avec limit #################################################
     def buyLimit(self,  sl, tp, price, balance, vnl, comment="buyLimit"):
@@ -77,7 +84,14 @@ class Order:
             print("retour dee l ordre:", resp)
             self.logger.info(detail)
         except Exception as exc:
-            self.logger.warning(exc)
+            logger = logging.getLogger('ORDER')
+            handler = logging.FileHandler('mylog.log')
+            formatter = logging.Formatter(
+                '%(asctime)s~%(levelname)s~%(message)s~module:%(module)s~function:%(module)s')
+            handler.setFormatter(formatter)
+            logger.addHandler(handler)
+            logger.setLevel(logging.WARNING)
+            logger.warning(exc)
 
     ################### ordre direct ##################################################
     def sellNow(self, sl, tp, price, balance, vnl, comment=""):
@@ -173,7 +187,14 @@ class Order:
                 print("retour dee l ordre:", resp)
                 self.logger.info(detail)
         except Exception as exc:
-            self.logger.warning(exc)
+            logger = logging.getLogger('ORDER')
+            handler = logging.FileHandler('mylog.log')
+            formatter = logging.Formatter(
+                '%(asctime)s~%(levelname)s~%(message)s~module:%(module)s~function:%(module)s')
+            handler.setFormatter(formatter)
+            logger.addHandler(handler)
+            logger.setLevel(logging.WARNING)
+            logger.warning(exc)
 
     ###############################################################
 
@@ -205,7 +226,14 @@ class Order:
             print("retour dee l ordre:", resp)
             #self.logger.info("resp :", resp)
         except Exception as exc:
-            self.logger.warning(exc)
+            logger = logging.getLogger('ORDER')
+            handler = logging.FileHandler('mylog.log')
+            formatter = logging.Formatter(
+                '%(asctime)s~%(levelname)s~%(message)s~module:%(module)s~function:%(module)s')
+            handler.setFormatter(formatter)
+            logger.addHandler(handler)
+            logger.setLevel(logging.WARNING)
+            logger.warning(exc)
 
     def movebuyLimitWait(self,trade, sl, tp, price, balance, vnl, comment=""):
         try:
@@ -274,7 +302,14 @@ class Order:
 
             #self.logger.info("resp :", resp)
         except Exception as exc:
-            self.logger.warning(exc)
+            logger = logging.getLogger('ORDER')
+            handler = logging.FileHandler('mylog.log')
+            formatter = logging.Formatter(
+                '%(asctime)s~%(levelname)s~%(message)s~module:%(module)s~function:%(module)s')
+            handler.setFormatter(formatter)
+            logger.addHandler(handler)
+            logger.setLevel(logging.WARNING)
+            logger.warning(exc)
 
     def moveSellLimitWait(self,trade, sl , tp, price, balance, vnl):
         self.logger.info("------------- moveSellLimit ************************-----------------")
@@ -421,6 +456,13 @@ def NbrLot(logger,balance, position, stp, vnl):
 
 
     except Exception as exc:
+        logger = logging.getLogger('ORDER')
+        handler = logging.FileHandler('mylog.log')
+        formatter = logging.Formatter(
+            '%(asctime)s~%(levelname)s~%(message)s~module:%(module)s~function:%(module)s')
+        handler.setFormatter(formatter)
+        logger.addHandler(handler)
+        logger.setLevel(logging.WARNING)
         logger.warning(exc)
 
 

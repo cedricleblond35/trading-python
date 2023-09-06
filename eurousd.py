@@ -18,7 +18,8 @@ from Indicators.Supertrend import Supertrend
 from Service.TransactionSide import TransactionSide
 from Service.Email import Email
 
-from Configuration.Log import Log
+import logging
+
 
 '''
 
@@ -512,8 +513,13 @@ async def AW_pivot_st1004(logger, o, tick, spM05_1003T0, spM01_1005T0,
         logger.warning(exc)
 
 async def main():
-    l = Log()
-    logger = l.getLogger()
+    logger = logging.getLogger('Main')
+    handler = logging.FileHandler('mylog.log')
+    formatter = logging.Formatter(
+            '%(asctime)s~%(levelname)s~%(message)s~module:%(module)s~function:%(module)s')
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+    logger.setLevel(logging.WARNING)
     email = Email()
 
     order = []
