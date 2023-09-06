@@ -513,12 +513,8 @@ async def AW_pivot_st1004(logger, o, tick, spM05_1003T0, spM01_1005T0,
         logger.warning(exc)
 
 async def main():
-    logger = logging.getLogger('main')
-    handler = logging.FileHandler('mylog.log')
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
-    logger.setLevel(logging.WARNING)
+    l = Log()
+    logger = l.getLogger()
 
     email = Email()
 
