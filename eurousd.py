@@ -190,12 +190,12 @@ async def majDatAall(logger, email, client, symbol, db):
         if lastBougie is not None:
             startTime = lastBougie["ctm"] - (60 * 2) * 1000
 
-        json = {
+        jsonData = {
             "info": {"start": startTime, "end": endTime, "period": 1,
                      "symbol": symbol,
                      "ticks": 0}}
-        print(json)
-        json_data_M01 = client.commandExecute('getChartRangeRequest', json)
+        print(jsonData)
+        json_data_M01 = client.commandExecute('getChartRangeRequest', jsonData)
         print(json_data_M01)
         dataM01 = json.dumps(json_data_M01)
         dataDownload = json.loads(dataM01)
