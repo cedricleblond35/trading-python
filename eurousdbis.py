@@ -21,6 +21,51 @@ from Service.Email import Email
 from Configuration.Log import Log
 
 '''
+Grace à lza liste des trade enregistrés ds la table trade
+ex : 
+{ 
+    "_id" : ObjectId("62cec201e4feeb03898d9fec"), "cmd" : 3, "customComment" : "Vente limit", "expiration" : NumberLong("1657720849600"), 
+    "offset" : 0, "price" : 11711.52, "sl" : 11682.49, "symbol" : "US100", "tp" : 0, "type" : 0, "volume" : 0.07, 
+    "resp" : { "status" : true, "returnData" : { "order" : 404426012 } } 
+}
+
+Prendre l ensemble des trades pour stocker le details des trades ds la table : details
+{
+	"command": "getTradeRecords",
+	"arguments": {
+		"orders": [404426012, 7489841, ...]
+	}
+}
+repnse
+{
+	"close_price": 1.3256,
+	"close_time": null,
+	"close_timeString": null,
+	"closed": false,
+	"cmd": 0,
+	"comment": "Web Trader",
+	"commission": 0.0,
+	"customComment": "Some text",
+	"digits": 4,
+	"expiration": null,
+	"expirationString": null,
+	"margin_rate": 0.0,
+	"offset": 0,
+	"open_price": 1.4,
+	"open_time": 1272380927000,
+	"open_timeString": "Fri Jan 11 10:03:36 CET 2013",
+	"order": 7497776,
+	"order2": 1234567,
+	"position": 1234567,
+	"profit": -2196.44,
+	"sl": 0.0,
+	"storage": -4.46,
+	"symbol": "EURUSD",
+	"timestamp": 1272540251000,
+	"tp": 0.0,
+	"volume": 0.10
+}
+
 
 Strategie
 
@@ -523,9 +568,7 @@ async def main():
         db = connection[SYMBOL]
         dbStreaming = connection["STREAMING"]
 
-        logger.info("mise à jour")
         await majDatAall(logger, email, client, SYMBOL, db)
-        logger.info("mise à jour fini")
 
         # # # moyen mobile ##################################################################################################
         moyMobil_05 = MM(SYMBOL, "M05", 0)
@@ -533,11 +576,9 @@ async def main():
         moyMobil_15 = MM(SYMBOL, "M15", 0)
 
         # # Awesome ##################################################################################################
-        logger.info("calcul Awesome")
         ao05 = Awesome(SYMBOL, "M05", ARRONDI_INDIC)
         await ao05.calculAllCandles()
         #
-        logger.info("reception des ordres en cours")
         o = Order(SYMBOL, dbStreaming, client, db["trade"])
 
         while True:
