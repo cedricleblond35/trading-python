@@ -712,7 +712,7 @@ async def main():
 
                     await ema_st(logger, o, tick, spM01_4005T1, balance, tradeOpen, tradeOpenDic, bougie1M01)
 
-                    await ema30_st15(logger, o, tick, spM15_1006T0, spM15_1006T1, balance, tradeOpen, tradeOpenDic, bougie0M15)
+                    #await ema30_st15(logger, o, tick, spM15_1006T0, spM15_1006T1, balance, tradeOpen, tradeOpenDic, bougie0M15)
             time.sleep(30)
 
     except Exception as exc:
