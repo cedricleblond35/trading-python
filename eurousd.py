@@ -537,7 +537,7 @@ async def main():
         #
         logger.info("calcul Awesome")
         o = Order(SYMBOL, dbStreaming, client, db["trade"])
-
+        time.sleep(30)
         while True:
             print(
                 "*****************************************************************************************************")
