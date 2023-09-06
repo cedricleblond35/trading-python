@@ -1,10 +1,11 @@
 from Indicators.Price import Price
-from Configuration.Log import Log
+from Configuration.Log import getmylogger
 import pandas as pd
 import numpy as np
 pd.options.mode.chained_assignment = None  # default='warn'
 
 
+logger = getmylogger(__name__)
 class Awesome(Price):
     def __init__(self, symbol, timeframe, MMS1=5, MMS2=34, arrondi=3, shift=0):
         Price.__init__(self, symbol, timeframe)
@@ -14,8 +15,6 @@ class Awesome(Price):
         self.__arrondi = arrondi
         self.__MMS1 = MMS1
         self.__MMS2 = MMS2
-        l = Log()
-        self.logger = l.getLogger()
 
     async def calculLastCandle(self, howMuch=1, skipValue=0):
         self._prepareListData(self.__MMS2 + howMuch, skipValue)
@@ -57,4 +56,4 @@ class Awesome(Price):
                     myquery = {"ctm": list(list1)[-1]["ctm"]}
                     self._db[self.__timeframe].update_one(myquery, newvalues)
         except Exception as exc:
-            self.logger.warning(exc)
+            logger.warning(exc)
