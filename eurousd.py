@@ -584,22 +584,7 @@ async def main():
         o = Order(SYMBOL, dbStreaming, client, db["trade"])
         """
         while True:
-            print(
-                "*****************************************************************************************************")
-            ############### gestion des jours et heures de trading ##########################""
-            j = datetime.today().weekday()  # 0:lundi ; 4 vendredi
-            today = datetime.now()
-            todayPlus2Hours = today + timedelta(hours=2)
-            print("mise à jour :", todayPlus2Hours)
 
-            if client.is_socket_closed():
-                logger.info("!!!!!!!!! client deconnecté, reconnection en cours !!!!!!!!!!!!!!!!!!!")
-                sclient, c, client = connectionAPI(logger)
-
-            c.getTick()
-
-            candles = c.getCandles()
-            print("=================> candles:", candles)
             # ####################################################################################################
             await majDatAall(logger, email, client, SYMBOL, db)
             # ####################################################################################################
@@ -641,9 +626,10 @@ async def main():
 
             """
             if c.getTick() is not None:
+                """
                 print("jour:", j, " h:", todayPlus2Hours.hour)
                 if 0 <= j < 5 and 2 < todayPlus2Hours.hour < 22:
-                    """
+                    
                     print("Horaire de Trading ok")
                     tick = c.getTick()["ask"]
 
