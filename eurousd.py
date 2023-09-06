@@ -706,9 +706,7 @@ async def main():
                     print("stategie start ----")
                     # await SMMA200_M1_EMA70(o, tick, bougie1M01, superM05_1003T1, zone, balance, tradeOpen, tradeOpenDic, bougie0M05, bougie1M05)
 
-                    await AW_pivot_st1004(logger, o, tick, superM05_1003T0, spM01_1005T0,
-                                          balance, tradeOpen, tradeOpenDic, bougie1M05, bougie0M05, bougie1M01,
-                                          bougie2M01)
+                    #await AW_pivot_st1004(logger, o, tick, superM05_1003T0, spM01_1005T0, balance, tradeOpen, tradeOpenDic, bougie1M05, bougie0M05, bougie1M01,                            bougie2M01)
 
                     await ema_st(logger, o, tick, spM01_4005T1, balance, tradeOpen, tradeOpenDic, bougie1M01)
 
