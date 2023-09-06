@@ -532,7 +532,15 @@ async def main():
         logger.info("mise à jour")
         await majDatAall(logger, email, client, SYMBOL, db)
         logger.info("mise à jour fini")
-
+        # # # moyen mobile ##################################################################################################
+        moyMobil_05 = MM(SYMBOL, "M05", 0)
+        moyMobil_01 = MM(SYMBOL, "M01", 0)
+        await moyMobil_01.EMA(13, ARRONDI_INDIC)
+        await moyMobil_01.EMA(26, ARRONDI_INDIC)
+        await moyMobil_01.EMA(70, ARRONDI_INDIC)
+        await moyMobil_05.EMA(13, ARRONDI_INDIC)
+        await moyMobil_05.EMA(26, ARRONDI_INDIC)
+        await moyMobil_05.EMA(70, ARRONDI_INDIC)
 
         #
         logger.info("calcul Awesome")
