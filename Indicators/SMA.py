@@ -1,5 +1,5 @@
 from Indicators.Price import Price
-from Configuration.Log import Log
+import logging
 
 
 class MM(Price):
@@ -13,8 +13,13 @@ class MM(Price):
         """
         self.__timeframe = timeframe
         self.__duration = duration
-        l = Log()
-        self.logger = l.getLogger()
+        logger = logging.getLogger('Awesome')
+        handler = logging.FileHandler('mylogAwesome.log')
+        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        handler.setFormatter(formatter)
+        logger.addHandler(handler)
+        logger.setLevel(logging.WARNING)
+        self.logger= logger
 
     #La première valeur de cette moyenne mobile lissée est calculée par analogie avec la moyenne mobile simple (SMA).
     # SUM1 = SUM(CLOSE, N)

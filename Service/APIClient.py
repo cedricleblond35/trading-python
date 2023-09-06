@@ -1,13 +1,11 @@
 from Service.JsonSocket import JsonSocket
 from Configuration.Config import Config
 from Service.Command import Command
-from Configuration.Log import Log
 
 
 class APIClient(JsonSocket):
     def __init__(self, address=Config.DEFAULT_XAPI_ADDRESS, port=Config.DEFAULT_XAPI_PORT, encrypt=True):
         super(APIClient, self).__init__(address, port, encrypt)
-        self.log = Log().logger
         self._command = Command()
         if not self.connect():
             raise Exception(
