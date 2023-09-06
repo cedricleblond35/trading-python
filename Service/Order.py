@@ -3,12 +3,11 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from Service.Email import Email
-from Configuration.Log import getmylogger
+from Configuration.Log import Log
 from Service.TransactionSide import TransactionSide
 
 
 
-logger = getmylogger(__name__)
 
 class Order:
     def __init__(self, symbol, dbStreaming, client, dbTrade):
@@ -17,6 +16,8 @@ class Order:
         self.dbStreaming = dbStreaming
         self.dbTrade = dbTrade
         self.client = client
+        l = Log()
+        self.logger = l.getLogger()
 
     ################## ordre avec limit #################################################
     def buyLimit(self,  sl, tp, price, balance, vnl, comment="buyLimit"):
@@ -74,9 +75,9 @@ class Order:
             detail['resp'] = resp
             self.dbTrade.insert_one(detail)
             print("retour dee l ordre:", resp)
-            logger.info(detail)
+            self.logger.info(detail)
         except Exception as exc:
-            logger.warning(exc)
+            self.logger.warning(exc)
 
     ################### ordre direct ##################################################
     def sellNow(self, sl, tp, price, balance, vnl, comment=""):
@@ -99,7 +100,7 @@ class Order:
         detail['resp'] = resp
         detail['comment'] = comment
         self.dbTrade.insert_one(detail)
-        logger.info(detail)
+        self.logger.info(detail)
         '''
         respString = json.dumps(resp) + "forex robot Action"
         detailString = json.dumps(detail)
@@ -128,7 +129,7 @@ class Order:
         detail['resp'] = resp
         detail['comment'] = comment
         self.dbTrade.insert_one(detail)
-        logger.info(detail)
+        self.logger.info(detail)
 
     ############################ move stop après ordre executé ###########################
 
@@ -149,10 +150,10 @@ class Order:
                 print("moveStopBuy :", detail)
                 resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
                 print("retour dee l ordre:", resp)
-                logger.info(detail)
+                self.logger.info(detail)
 
         except Exception as exc:
-            logger.warning(exc)
+            self.logger.warning(exc)
 
     def moveStopSell(self, trade, sl, tick):
         try:
@@ -170,9 +171,9 @@ class Order:
                 print("moveStopSell :", detail)
                 resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
                 print("retour dee l ordre:", resp)
-                logger.info(detail)
+                self.logger.info(detail)
         except Exception as exc:
-            logger.warning(exc)
+            self.logger.warning(exc)
 
     ###############################################################
 
@@ -202,9 +203,9 @@ class Order:
             print("movebuyLimit :", detail)
             resp = self.client.commandExecute('tradeTransaction',  {"tradeTransInfo": detail })
             print("retour dee l ordre:", resp)
-            #logger.info("resp :", resp)
+            #self.logger.info("resp :", resp)
         except Exception as exc:
-            logger.warning(exc)
+            self.logger.warning(exc)
 
     def movebuyLimitWait(self,trade, sl, tp, price, balance, vnl, comment=""):
         try:
@@ -271,12 +272,12 @@ class Order:
                 print("retour dee l ordre:", resp)
                 self.dbTrade.insert_one(detail)
 
-            #logger.info("resp :", resp)
+            #self.logger.info("resp :", resp)
         except Exception as exc:
-            logger.warning(exc)
+            self.logger.warning(exc)
 
     def moveSellLimitWait(self,trade, sl , tp, price, balance, vnl):
-        logger.info("------------- moveSellLimit ************************-----------------")
+        self.logger.info("------------- moveSellLimit ************************-----------------")
         print("trade :", trade)
         # tp = round(tp, 1)
         # sl = round(sl, 1)
@@ -335,7 +336,7 @@ class Order:
                 "volume": nbrelot
             }
             print("sell limit :", detail)
-            # logger.info"detail :", detail)
+            # self.logger.info"detail :", detail)
             resp = self.client.commandExecute('tradeTransaction', {"tradeTransInfo": detail})
             detail['resp'] = resp
             print("retour dee l ordre:", resp)
