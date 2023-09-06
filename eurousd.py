@@ -576,11 +576,12 @@ async def main():
         moyMobil_15 = MM(SYMBOL, "M15", 0)
 
         # # Awesome ##################################################################################################
+        """
         ao05 = Awesome(SYMBOL, "M05", ARRONDI_INDIC)
         await ao05.calculAllCandles()
         #
         o = Order(SYMBOL, dbStreaming, client, db["trade"])
-
+        """
         while True:
             print(
                 "*****************************************************************************************************")
@@ -601,6 +602,7 @@ async def main():
             # ####################################################################################################
             await majDatAall(logger, email, client, SYMBOL, db)
             # ####################################################################################################
+            """
             await moyMobil_05.EMA(70, ARRONDI_INDIC)
             await moyMobil_05.SMMA(200, ARRONDI_INDIC)
 
@@ -617,8 +619,9 @@ async def main():
             await ao05.calculAllCandles()
             #
             zone = await pivot()
+            """
             # # AO ###################################################################################
-            await ao05.calculLastCandle(10)
+            #await ao05.calculLastCandle(10)
             #
             # # supertrend ###################################################################################
             """
