@@ -18,7 +18,7 @@ from Indicators.Supertrend import Supertrend
 from Service.TransactionSide import TransactionSide
 from Service.Email import Email
 
-from Configuration.Log import Log
+from Configuration.Log import getmylogger
 
 '''
 
@@ -68,6 +68,8 @@ VNL = 9.30
 SPREAD = 0.0001
 ARRONDI= 100000.0
 ARRONDI_INDIC=5
+
+logger = getmylogger(__name__)
 
 # 1 pips 25€ pour 1 lots
 
@@ -513,8 +515,6 @@ async def AW_pivot_st1004(logger, o, tick, spM05_1003T0, spM01_1005T0,
         logger.warning(exc)
 
 async def main():
-    l = Log()
-    logger = l.getLogger()
     email = Email()
 
     order = []
