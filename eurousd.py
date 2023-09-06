@@ -621,6 +621,7 @@ async def main():
             await ao05.calculLastCandle(10)
             #
             # # supertrend ###################################################################################
+            """
             spM05_1003 = Supertrend(SYMBOL, "M05", 10, 3, ARRONDI_INDIC)
             superM05_1003T0, superM05_1003T1, superM05_1003T2 = spM05_1003.getST()
 
@@ -634,6 +635,7 @@ async def main():
             spM15_1006 = Supertrend(SYMBOL, "M15",10, 6, ARRONDI_INDIC)
             spM15_1006T0, spM15_1006T1, spM15_1006T2 = spM15_1006.getST()
 
+            """
             if c.getTick() is not None:
                 print("jour:", j, " h:", todayPlus2Hours.hour)
                 if 0 <= j < 5 and 2 < todayPlus2Hours.hour < 22:
