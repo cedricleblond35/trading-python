@@ -560,10 +560,10 @@ async def main():
 
 
             candles = c.getCandles()
-            logger.info("candles :", candles)
             print("=================> candles:", candles)
             # ####################################################################################################
             await majDatAall(logger, email, client, SYMBOL, db)
+            logger.info("mise a jour fini")
             # ####################################################################################################
             await moyMobil_05.EMA(70, ARRONDI_INDIC)
             await moyMobil_05.SMMA(200, ARRONDI_INDIC)
