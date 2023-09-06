@@ -89,53 +89,6 @@ def updatePivot():
         return False
 
 
-async def insertData(logger, email, collection, dataDownload, lastBougieDB):
-    '''
-    Insertion des données dans l base de donnée ou mise à jour de a dernière donnée de la collection
-    :param collection: collection à la quelle on insere des données
-    :param dataDownload: (dict) données
-    :param listDataDB: dernière ligne de données provenant de la collection
-    :return: time traité
-    '''
-
-    try:
-        if dataDownload['status'] and len(dataDownload["returnData"]['rateInfos']) > 0:
-            for value in dataDownload["returnData"]['rateInfos']:
-                ctm = value['ctm']
-                close = (value['open'] + value['close']) / ARRONDI
-                high = (value['open'] + value['high']) / ARRONDI
-                low = (value['open'] + value['low']) / ARRONDI
-                pointMedian = round((high + low) / 2, 2)
-                # print(value['ctm'] ,">", lastBougieDB['ctm'])
-                if lastBougieDB is None or value['ctm'] > lastBougieDB['ctm']:
-                    open = value['open'] / ARRONDI
-                    newvalues = {
-                        "ctm": ctm,
-                        "ctmString": value['ctmString'],
-                        "open": open,
-                        "close": close,
-                        "high": high,
-                        "low": low,
-                        "vol": value['vol'],
-                        "pointMedian": pointMedian
-                    }
-                    collection.insert_one(newvalues)
-                elif value['ctm'] == lastBougieDB['ctm']:
-                    myquery = {"ctm": value['ctm']}
-                    newvalues = {
-                        "$set": {
-                            "close": close,
-                            "high": high,
-                            "low": low,
-                            "vol": value['vol'],
-                            "pointMedian": pointMedian
-                        }}
-                    collection.update_many(myquery, newvalues)
-
-    except Exception as exc:
-        logger.warning(exc)
-        email.sendMail(exc)
-
 
 def findTradesHistory(client, start):
     '''
@@ -159,106 +112,6 @@ def findopenOrder(client):
     return json.loads(tradeOpenJson)
 
 
-async def majDatAall(logger, email, client, symbol, db):
-    '''
-    Mise à jour de la base de données
-    Limitations: there are limitations in charts data availability. Detailed ranges for charts data, what can be accessed with specific period, are as follows:
-    PERIOD_M1 --- <0-1) month, i.e. one month time
-    PERIOD_M30 --- <1-7) month, six months time
-    PERIOD_H4 --- <7-13) month, six months time
-    PERIOD_D1 --- 13 month, and earlier on
-    :param client: parametre de connexion
-    :param startTime: date de départ en ms
-    :param symbol: Indice
-    :param db: collection selectionné selon symbol
-    :return:
-    '''
-    # print("**************************************** mise à jour majDatAall ****************************************")
-    try:
-        logger.info("majDatAall")
-        # ctmRefStart = db["D"].find().sort("ctm", -1).skip(1).limit(1)
-        endTime = int(round(time.time() * 1000)) + (6 * 60 * 1000)
-
-        # MAJ DAY : 13 mois------------------------------------------------------------------------
-        lastBougie = db["D"].find_one({}, sort=[('ctm', -1)])
-        startTime = int(round(time.time() * 1000)) - (60 * 60 * 24 * 30 * 13) * 1000
-        if lastBougie is not None:
-            startTime = lastBougie["ctm"] - (60 * 60 * 24) * 1000
-
-        json_data_Day = client.commandExecute(
-            'getChartRangeRequest',
-            {"info": {"start": startTime, "end": endTime, "period": 1440, "symbol": symbol, "ticks": 0}})
-        dataDAY = json.dumps(json_data_Day)
-        dataDAYDownload = json.loads(dataDAY)
-        await insertData(logger, email, db["D"], dataDAYDownload, lastBougie)
-        print("maj D FINI")
-
-        # MAJ H4 : 13 mois max------------------------------------------------------------------------
-        lastBougie = db["H4"].find_one({}, sort=[('ctm', -1)])
-        startTime = int(round(time.time() * 1000)) - (60 * 60 * 24 * 30 * 13) * 1000
-        if lastBougie is not None:
-            startTime = lastBougie["ctm"] - (60 * 60 * 8) * 1000
-
-        json_data_H4 = client.commandExecute('getChartRangeRequest', {
-            "info": {"start": startTime, "end": endTime, "period": 240,
-                     "symbol": symbol,
-                     "ticks": 0}})
-        data_H4 = json.dumps(json_data_H4)
-        dataH4Download = json.loads(data_H4)
-        await insertData(logger, email,db["H4"], dataH4Download, lastBougie)
-        print("maj H4 FINI")
-
-        # MAJ H4 : 13 mois max------------------------------------------------------------------------
-        lastBougie = db["M15"].find_one({}, sort=[('ctm', -1)])
-        startTime = int(round(time.time() * 1000)) - (60 * 60 * 24 * 45) * 1000
-        if lastBougie is not None:
-            startTime = lastBougie["ctm"] - (60 * 15) * 1000
-
-        json_data_H4 = client.commandExecute('getChartRangeRequest', {
-            "info": {"start": startTime, "end": endTime, "period": 15,
-                     "symbol": symbol,
-                     "ticks": 0}})
-        data_H4 = json.dumps(json_data_H4)
-        dataH4Download = json.loads(data_H4)
-        await insertData(logger, email, db["M15"], dataH4Download, lastBougie)
-        print("maj M15 FINI")
-
-        # MAJ Minute : 1 mois max------------------------------------------------------------------------
-        lastBougie = db["M01"].find_one({}, sort=[('ctm', -1)])
-        startTime = int(round(time.time() * 1000)) - (60 * 60 * 24 * 5) * 1000
-        if lastBougie is not None:
-            startTime = lastBougie["ctm"] - (60 * 2) * 1000
-
-        json_data_M01 = client.commandExecute('getChartRangeRequest', {
-            "info": {"start": startTime, "end": endTime, "period": 1,
-                     "symbol": symbol,
-                     "ticks": 0}})
-        dataM01 = json.dumps(json_data_M01)
-        dataDownload = json.loads(dataM01)
-        print("maj M01 FINI")
-
-        await insertData(logger, email, db["M01"], dataDownload, lastBougie)
-
-        # MAJ 5 min ------------------------------------------------------------------------
-        lastBougie = db["M05"].find_one({}, sort=[('ctm', -1)])
-        startTime = int(round(time.time() * 1000)) - (60 * 60 * 24 * 45) * 1000
-        if lastBougie is not None:
-            startTime = lastBougie["ctm"] - (60 * 5) * 1000
-
-        json_data_M05 = client.commandExecute('getChartRangeRequest', {
-            "info": {"start": startTime, "end": endTime, "period": 5,
-                     "symbol": symbol,
-                     "ticks": 0}})
-        dataM05 = json.dumps(json_data_M05)
-        dataM05Download = json.loads(dataM05)
-
-        await insertData(logger, email,db["M05"], dataM05Download, lastBougie)
-        print("maj M05 FINI")
-
-    except Exception as exc:
-        logger.warning(exc)
-        client.disconnect()
-        exit(0)
 
 def round_up(n, decimals=0):
     '''
@@ -335,16 +188,8 @@ def subscribe(loginResponse):
 
     return sclient, c
 
-async def pivot():
-    P = Pivot(SYMBOL, "D")
-    PPF, R1F, R2F, R3F, S1F, S2F, S3F = await P.fibonacci()  # valeurs ok
-    R1D, S1D = await P.demark()  # valeurs ok
-    PPW, R1W, R2W, S1W, S2W = await P.woodie()  # valeurs ok
-    # PPC, R1C, R2C, R3C, R4C, S1C, S2C, S3C, S4C = await P.camarilla()  # valeurs ok
-    zone = np.array([R1W, R2W, S1W, S2W, R1D, S1D, PPF, R1F, R2F, R3F, S1F, S2F, S3F])
-    return np.sort(zone)
 
-async def connectionAPI(logger):
+async def connectionAPI():
     client = APIClient()  # create & connect to RR socket
     loginResponse = client.identification()  # connect to RR socket, login
     logger.info(str(loginResponse))
@@ -356,176 +201,19 @@ async def connectionAPI(logger):
     sclient, c = subscribe(loginResponse)
     return sclient, c, client
 
-async def ema30_st15(logger, o, tick, spM15_1006T0, spM15_1006T1, balance, tradeOpen, tradeOpenDic, bougie0M15):
-    try:
-        orderExist = False
-        # move order
-        if len(tradeOpen['returnData']) > 0:
-            for trade in tradeOpenDic['returnData']:
-                print("trade['customComment']:", trade['customComment'])
-                print("trade['cmd']:", trade['cmd'])
-                if TransactionSide.BUY_LIMIT == trade['cmd'] and trade['customComment'] == "ema30_st15":
-                    orderExist = True
-                    sl = spM15_1006T0
-                    tp = 0
-                    price = bougie0M15.get("EMA30")
-                    o.movebuyLimitWait(trade, sl, tp, price, balance, VNL)
-                elif TransactionSide.BUY == trade['cmd'] and trade['customComment'] == "ema30_st15":
-                    orderExist = True
-                    if trade['sl'] < spM15_1006T0 < tick:
-                        o.moveStopBuy(trade, spM15_1006T0, tick)
-                elif TransactionSide.SELL_LIMIT == trade['cmd'] and trade['customComment'] == "ema30_st15":
-                    orderExist = True
-                    sl = spM15_1006T0
-                    price = bougie0M15.get("EMA30")
-                    tp = 0
-                    o.moveSellLimitWait(trade, sl, tp, price, balance, VNL)
-                elif TransactionSide.SELL == trade['cmd'] and trade['customComment'] == "ema30_st15":
-                    orderExist = True
-                    if trade['sl'] > spM15_1006T0 > tick:
-                        o.moveStopBuy(trade, spM15_1006T0, tick)
-
-        if orderExist is False:
-            if tick > bougie0M15.get("EMA30") > spM15_1006T0:
-                sl = spM15_1006T0
-                tp = 0
-                price = bougie0M15.get("EMA30")
-                o.buyLimit(sl, tp, price, balance, VNL, "ema30_st15")
-            elif tick < bougie0M15.get("EMA30") < spM15_1006T0:
-                sl = spM15_1006T0
-                tp = 0
-                price = bougie0M15.get("EMA30")
-                o.sellLimit(sl, tp, price, balance, VNL, "ema30_st15")
-
-    except Exception as exc:
-        logger.warning(exc)
-
-async def ema_st(logger, o, tick, spM01_4005T1, balance, tradeOpen, tradeOpenDic, bougie1M01):
-    try:
-        orderExist = False
-        # move order
-        print("------------- ema_st --------------------------")
-        if len(tradeOpen['returnData']) > 0:
-            for trade in tradeOpenDic['returnData']:
-                print("trade['customComment']:", trade['customComment'])
-                print("trade['cmd']:", trade['cmd'])
-                if TransactionSide.BUY_LIMIT == trade['cmd'] and trade['customComment'] == "ema_st":
-                    orderExist = True
-                    sl = spM01_4005T1
-                    price = bougie1M01.get("EMA40")
-                    tp = 0
-                    o.movebuyLimitWait(trade, sl, tp, price, balance, VNL)
-                elif TransactionSide.BUY == trade['cmd'] and trade['customComment'] == "ema_st":
-                    orderExist = True
-                    if trade['sl'] < spM01_4005T1 < tick:
-                        o.moveStopBuy(trade, spM01_4005T1, tick)
-                elif TransactionSide.SELL_LIMIT == trade['cmd'] and trade['customComment'] == "ema_st":
-                    orderExist = True
-                    sl = spM01_4005T1
-                    price = bougie1M01.get("EMA40")
-                    tp = 0
-                    o.moveSellLimitWait(trade, sl, tp, price, balance, VNL)
-                elif TransactionSide.SELL == trade['cmd'] and trade['customComment'] == "ema_st":
-                    orderExist = True
-                    if trade['sl'] > spM01_4005T1 > tick:
-                        o.moveStopBuy(trade, spM01_4005T1, tick)
-
-        if orderExist is False:
-            print("ema40:", bougie1M01.get("EMA40"))
-            print("ema200:", bougie1M01.get("EMA200"))
-            print("spM01_4005T1:", spM01_4005T1)
-            if tick > bougie1M01.get("EMA40") > bougie1M01.get("EMA200") > spM01_4005T1:
-                sl = spM01_4005T1
-                print("SL:", sl)
-                tp = 0
-                price = round(bougie1M01.get("EMA40"), ARRONDI_INDIC)
-                o.buyLimit(sl, tp, price, balance, VNL, "ema_st")
-            elif tick < bougie1M01.get("EMA40") < bougie1M01.get("EMA200") and tick < spM01_4005T1:
-                sl = spM01_4005T1
-
-                print("SL:", sl)
-                tp = 0
-                price = round(bougie1M01.get("EMA40"), ARRONDI_INDIC)
-                o.sellLimit(sl, tp, price, balance, VNL, "ema_st")
-
-        print("------------- ema_st end --------------------------")
-    except Exception as exc:
-        logger.warning(exc)
-
-async def AW_pivot_st1004(logger, o, tick, spM05_1003T0, spM01_1005T0,
-                          balance, tradeOpen, tradeOpenDic, bougie1M05, bougie0M05, bougie1M01, bougie2M01):
-    try:
-        orderExist = False
-        # move order
-        if len(tradeOpen['returnData']) > 0:
-            for trade in tradeOpenDic['returnData']:
-                print("trade['customComment']:", trade['customComment'])
-                print("trade['cmd']:", trade['cmd'])
-                if TransactionSide.BUY == trade['cmd'] and trade['customComment'] == "AW_pivot_st1004":
-                    orderExist = True
-                    print("ordre en cours :", trade['customComment'])
-                    # Pour garantir pas de perte : monter le stop  a 5pip de benef :
-                    #   Si cours en dessus de l ouverture avec ecart 20pip
-                    #   Et si AW change de tendance
-                    # Si il touche une resistance et AW change de tendance, monter le stop  au ST01 ?? A FAIRE ???????
-                    if trade['sl'] < trade['open_price'] and tick > trade['open_price'] + 25 and \
-                            bougie1M01['AW'] < bougie2M01['AW']:
-                        sl = trade['open_price'] + 2
-                        o.moveStopBuy(trade, sl, tick)
-
-                    elif bougie1M05.get("AW") > 20 and trade['sl'] < spM01_1005T0 < tick:
-                        o.moveStopBuy(trade, spM01_1005T0, tick)
-                    elif bougie1M05.get("AW") < 20 and trade['sl'] < spM05_1003T0 < tick:
-                        o.moveStopBuy(trade, spM05_1003T0, tick)
-
-                elif TransactionSide.SELL == trade['cmd'] and trade['customComment'] == "AW_pivot_st1004":
-                    orderExist = True
-                    # descendre le stop  a 5pip de benef :
-                    #   Si cours en dessous de l ouverture avec ecart 20pip
-                    #   Et si AW change de tendance
-                    if trade['sl'] > trade['open_price'] and tick < trade['open_price'] - 25 and \
-                            bougie1M01['AW'] < bougie2M01['AW']:
-                        sl = trade['open_price'] - 2
-                        o.moveStopSell(trade, sl, tick)
-
-                    elif bougie1M05.get("AW") > -20 and trade['sl'] > spM01_1005T0 > tick:
-                        o.moveStopSell(trade, spM01_1005T0, tick)
-                    elif bougie1M05.get("AW") < -20 and trade['sl'] > spM05_1003T0 > tick:
-                        o.moveStopSell(trade, spM05_1003T0, tick)
-
-        if orderExist is False:
-            print("-- Aucun ordre  AW_pivot_st1004 ********************")
-            print("-- bougie1M01.get(AW) :", bougie0M05.get("AW"))
-            print("-- bougie2M01.get(AW) :", bougie1M05.get("AW"))
-            print("-- Aucun ordre  AW_pivot_st1004 ********************")
-            if tick > spM01_1005T0 and bougie1M01.get("close") > spM01_1005T0 and bougie0M05.get(
-                    "close") > spM05_1003T0 and tick > spM05_1003T0 and bougie1M01.get("AW") > bougie2M01.get("AW"):
-                sl = spM05_1003T0 - 2
-                tp = 0
-                price = tick + 10
-                o.buyNow(sl, tp, price, balance, VNL, "AW_pivot_st1004")
-
-            elif tick < spM01_1005T0 and bougie1M01.get("close") < spM01_1005T0 and bougie0M05.get(
-                    "close") < spM05_1003T0 and tick < spM05_1003T0 and bougie1M01.get("AW") < bougie2M01.get("AW"):
-                sl = spM05_1003T0 + 2
-                tp = 0
-                price = tick - 10
-                o.sellNow(sl, tp, price, balance, VNL, "AW_pivot_st1004")
-    except Exception as exc:
-        logger.warning(exc)
 
 async def main():
     email = Email()
 
     order = []
     try:
-        sclient, c, client = await connectionAPI(logger)
+        sclient, c, client = await connectionAPI()
         connection = MongoClient('localhost', 27017)
         db = connection[SYMBOL]
         dbStreaming = connection["STREAMING"]
 
         logger.info("mise à jour")
-        await majDatAall(logger, email, client, SYMBOL, db)
+
         logger.info("mise à jour fini")
 
 
