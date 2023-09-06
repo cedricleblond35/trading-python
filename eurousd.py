@@ -587,6 +587,7 @@ async def main():
             #await ao05.calculLastCandle(10)
             #
             # # supertrend ###################################################################################
+            logger.info("calcul ST")
             spM05_1003 = Supertrend(SYMBOL, "M05", 10, 3, ARRONDI_INDIC)
             superM05_1003T0, superM05_1003T1, superM05_1003T2 = spM05_1003.getST()
 
@@ -602,6 +603,7 @@ async def main():
 
             if c.getTick() is not None:
                 print("jour:", j, " h:", todayPlus2Hours.hour)
+                logger.info("verif les heures")
                 if 0 <= j < 5 and 2 < todayPlus2Hours.hour < 22:
                     print("Horaire de Trading ok")
                     tick = c.getTick()["ask"]
