@@ -1,21 +1,14 @@
 # -*- coding: utf-8 -*-
 # python3 -m pip install pymongo==3.5.1
 import json
-import time
 import asyncio
 import math as math
-import numpy as np
 from datetime import datetime, timedelta
 from pymongo import MongoClient
-from Indicators.Awesome import Awesome
 from Service.Order import Order
-from Indicators.Pivot import Pivot
-from Indicators.SMA import MM
 from Service.APIClient import APIClient
 from Service.APIStreamClient import APIStreamClient
 from Service.Command import Command
-from Indicators.Supertrend import Supertrend
-from Service.TransactionSide import TransactionSide
 from Service.Email import Email
 
 from Configuration.Log import getmylogger
