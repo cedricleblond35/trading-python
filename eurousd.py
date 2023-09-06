@@ -528,10 +528,6 @@ async def main():
         await majDatAall(logger, email, client, SYMBOL, db)
         logger.info("mise à jour fini")
 
-        # # # moyen mobile ##################################################################################################
-        moyMobil_05 = MM(SYMBOL, "M05", 0)
-        moyMobil_01 = MM(SYMBOL, "M01", 0)
-        moyMobil_15 = MM(SYMBOL, "M15", 0)
 
         # # Awesome ##################################################################################################
         logger.info("calcul Awesome")
