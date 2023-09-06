@@ -194,6 +194,7 @@ async def majDatAall(logger, email, client, symbol, db):
             "info": {"start": startTime, "end": endTime, "period": 1,
                      "symbol": symbol,
                      "ticks": 0}})
+        print(json_data_M01)
         dataM01 = json.dumps(json_data_M01)
         dataDownload = json.loads(dataM01)
         print("maj M01:", dataDownload)
