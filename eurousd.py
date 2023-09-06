@@ -582,9 +582,9 @@ async def main():
         await ao05.calculAllCandles()
         #
         o = Order(SYMBOL, dbStreaming, client, db["trade"])
-        
+        """
         while True:
-            
+            """
             print(
                 "*****************************************************************************************************")
             ############### gestion des jours et heures de trading ##########################""
@@ -602,9 +602,9 @@ async def main():
             candles = c.getCandles()
             print("=================> candles:", candles)
             # ####################################################################################################
-            
+            """
             await majDatAall(logger, email, client, SYMBOL, db)
-            
+            """
             # ####################################################################################################
             
             await moyMobil_05.EMA(70, ARRONDI_INDIC)
@@ -623,12 +623,12 @@ async def main():
             await ao05.calculAllCandles()
             #
             zone = await pivot()
-            """
+        
             # # AO ###################################################################################
             #await ao05.calculLastCandle(10)
             #
             # # supertrend ###################################################################################
-            """
+            
             spM05_1003 = Supertrend(SYMBOL, "M05", 10, 3, ARRONDI_INDIC)
             superM05_1003T0, superM05_1003T1, superM05_1003T2 = spM05_1003.getST()
 
