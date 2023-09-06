@@ -3,6 +3,8 @@
 import json
 import asyncio
 import math as math
+
+import time
 from datetime import datetime, timedelta
 from pymongo import MongoClient
 from Service.Order import Order
@@ -10,6 +12,7 @@ from Service.APIClient import APIClient
 from Service.APIStreamClient import APIStreamClient
 from Service.Command import Command
 from Service.Email import Email
+from datetime import datetime, timedelta
 
 from Configuration.Log import getmylogger
 
@@ -194,6 +197,153 @@ async def connectionAPI():
     sclient, c = subscribe(loginResponse)
     return sclient, c, client
 
+async def insertData(logger, email, collection, dataDownload, lastBougieDB):
+    '''
+    Insertion des données dans l base de donnée ou mise à jour de a dernière donnée de la collection
+    :param collection: collection à la quelle on insere des données
+    :param dataDownload: (dict) données
+    :param listDataDB: dernière ligne de données provenant de la collection
+    :return: time traité
+    '''
+
+    try:
+        if dataDownload['status'] and len(dataDownload["returnData"]['rateInfos']) > 0:
+            for value in dataDownload["returnData"]['rateInfos']:
+                ctm = value['ctm']
+                close = (value['open'] + value['close']) / ARRONDI
+                high = (value['open'] + value['high']) / ARRONDI
+                low = (value['open'] + value['low']) / ARRONDI
+                pointMedian = round((high + low) / 2, 2)
+                # print(value['ctm'] ,">", lastBougieDB['ctm'])
+                if lastBougieDB is None or value['ctm'] > lastBougieDB['ctm']:
+                    open = value['open'] / ARRONDI
+                    newvalues = {
+                        "ctm": ctm,
+                        "ctmString": value['ctmString'],
+                        "open": open,
+                        "close": close,
+                        "high": high,
+                        "low": low,
+                        "vol": value['vol'],
+                        "pointMedian": pointMedian
+                    }
+                    collection.insert_one(newvalues)
+                elif value['ctm'] == lastBougieDB['ctm']:
+                    myquery = {"ctm": value['ctm']}
+                    newvalues = {
+                        "$set": {
+                            "close": close,
+                            "high": high,
+                            "low": low,
+                            "vol": value['vol'],
+                            "pointMedian": pointMedian
+                        }}
+                    collection.update_many(myquery, newvalues)
+
+    except Exception as exc:
+        logger.warning(exc)
+        email.sendMail(exc)
+
+async def majDatAall(logger, email, client, symbol, db):
+    '''
+    Mise à jour de la base de données
+    Limitations: there are limitations in charts data availability. Detailed ranges for charts data, what can be accessed with specific period, are as follows:
+    PERIOD_M1 --- <0-1) month, i.e. one month time
+    PERIOD_M30 --- <1-7) month, six months time
+    PERIOD_H4 --- <7-13) month, six months time
+    PERIOD_D1 --- 13 month, and earlier on
+    :param client: parametre de connexion
+    :param startTime: date de départ en ms
+    :param symbol: Indice
+    :param db: collection selectionné selon symbol
+    :return:
+    '''
+    # print("**************************************** mise à jour majDatAall ****************************************")
+    try:
+        # ctmRefStart = db["D"].find().sort("ctm", -1).skip(1).limit(1)
+        endTime = int(round(time.time() * 1000)) + (6 * 60 * 1000)
+
+        # MAJ DAY : 13 mois------------------------------------------------------------------------
+        lastBougie = db["D"].find_one({}, sort=[('ctm', -1)])
+        startTime = int(round(time.time() * 1000)) - (60 * 60 * 24 * 30 * 13) * 1000
+        if lastBougie is not None:
+            startTime = lastBougie["ctm"] - (60 * 60 * 24) * 1000
+
+        json_data_Day = client.commandExecute(
+            'getChartRangeRequest',
+            {"info": {"start": startTime, "end": endTime, "period": 1440, "symbol": symbol, "ticks": 0}})
+        dataDAY = json.dumps(json_data_Day)
+        dataDAYDownload = json.loads(dataDAY)
+        await insertData(logger, email, db["D"], dataDAYDownload, lastBougie)
+        print("maj D FINI")
+
+        # MAJ H4 : 13 mois max------------------------------------------------------------------------
+        lastBougie = db["H4"].find_one({}, sort=[('ctm', -1)])
+        startTime = int(round(time.time() * 1000)) - (60 * 60 * 24 * 30 * 13) * 1000
+        if lastBougie is not None:
+            startTime = lastBougie["ctm"] - (60 * 60 * 8) * 1000
+
+        json_data_H4 = client.commandExecute('getChartRangeRequest', {
+            "info": {"start": startTime, "end": endTime, "period": 240,
+                     "symbol": symbol,
+                     "ticks": 0}})
+        data_H4 = json.dumps(json_data_H4)
+        dataH4Download = json.loads(data_H4)
+        await insertData(logger, email,db["H4"], dataH4Download, lastBougie)
+        print("maj H4 FINI")
+
+        # MAJ H4 : 13 mois max------------------------------------------------------------------------
+        lastBougie = db["M15"].find_one({}, sort=[('ctm', -1)])
+        startTime = int(round(time.time() * 1000)) - (60 * 60 * 24 * 45) * 1000
+        if lastBougie is not None:
+            startTime = lastBougie["ctm"] - (60 * 15) * 1000
+
+        json_data_H4 = client.commandExecute('getChartRangeRequest', {
+            "info": {"start": startTime, "end": endTime, "period": 15,
+                     "symbol": symbol,
+                     "ticks": 0}})
+        data_H4 = json.dumps(json_data_H4)
+        dataH4Download = json.loads(data_H4)
+        await insertData(logger, email, db["M15"], dataH4Download, lastBougie)
+        print("maj M15 FINI")
+
+        # MAJ Minute : 1 mois max------------------------------------------------------------------------
+        lastBougie = db["M01"].find_one({}, sort=[('ctm', -1)])
+        startTime = int(round(time.time() * 1000)) - (60 * 60 * 24 * 5) * 1000
+        if lastBougie is not None:
+            startTime = lastBougie["ctm"] - (60 * 2) * 1000
+
+        json_data_M01 = client.commandExecute('getChartRangeRequest', {
+            "info": {"start": startTime, "end": endTime, "period": 1,
+                     "symbol": symbol,
+                     "ticks": 0}})
+        dataM01 = json.dumps(json_data_M01)
+        dataDownload = json.loads(dataM01)
+        print("maj M01 FINI")
+
+        await insertData(logger, email, db["M01"], dataDownload, lastBougie)
+
+        # MAJ 5 min ------------------------------------------------------------------------
+        lastBougie = db["M05"].find_one({}, sort=[('ctm', -1)])
+        startTime = int(round(time.time() * 1000)) - (60 * 60 * 24 * 45) * 1000
+        if lastBougie is not None:
+            startTime = lastBougie["ctm"] - (60 * 5) * 1000
+
+        json_data_M05 = client.commandExecute('getChartRangeRequest', {
+            "info": {"start": startTime, "end": endTime, "period": 5,
+                     "symbol": symbol,
+                     "ticks": 0}})
+        dataM05 = json.dumps(json_data_M05)
+        dataM05Download = json.loads(dataM05)
+
+        await insertData(logger, email,db["M05"], dataM05Download, lastBougie)
+        print("maj M05 FINI")
+
+    except Exception as exc:
+        logger.warning(exc)
+        client.disconnect()
+        exit(0)
+
 
 async def main():
     email = Email()
@@ -217,6 +367,7 @@ async def main():
         #
         logger.info("reception des ordres en cours")
         o = Order(SYMBOL, dbStreaming, client, db["trade"])
+        await majDatAall(logger, email, client, SYMBOL, db)
 
 
 
