@@ -535,8 +535,8 @@ async def main():
 
         # # Awesome ##################################################################################################
         logger.info("calcul Awesome")
-        ao05 = Awesome(SYMBOL, "M05", ARRONDI_INDIC)
-        await ao05.calculAllCandles()
+        #ao05 = Awesome(SYMBOL, "M05", ARRONDI_INDIC)
+        #await ao05.calculAllCandles()
         #
         logger.info("reception des ordres en cours")
         o = Order(SYMBOL, dbStreaming, client, db["trade"])
@@ -579,8 +579,8 @@ async def main():
             await moyMobil_01.EMA(26, ARRONDI_INDIC)
             # # Awesome ##################################################################################################
             logger.info("calcul de Awesome")
-            ao05 = Awesome(SYMBOL, "M05", ARRONDI_INDIC)
-            await ao05.calculAllCandles()
+            #ao05 = Awesome(SYMBOL, "M05", ARRONDI_INDIC)
+            #await ao05.calculAllCandles()
             #
             #zone = await pivot()
             # # AO ###################################################################################
