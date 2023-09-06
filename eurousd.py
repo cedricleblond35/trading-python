@@ -571,10 +571,11 @@ async def main():
         await majDatAall(logger, email, client, SYMBOL, db)
 
         # # # moyen mobile ##################################################################################################
+        """
         moyMobil_05 = MM(SYMBOL, "M05", 0)
         moyMobil_01 = MM(SYMBOL, "M01", 0)
         moyMobil_15 = MM(SYMBOL, "M15", 0)
-
+        """
         # # Awesome ##################################################################################################
         """
         ao05 = Awesome(SYMBOL, "M05", ARRONDI_INDIC)
