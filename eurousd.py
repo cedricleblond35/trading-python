@@ -513,8 +513,8 @@ async def AW_pivot_st1004(logger, o, tick, spM05_1003T0, spM01_1005T0,
         logger.warning(exc)
 
 async def main():
-    logger = logging.getLogger('Awesome')
-    handler = logging.FileHandler('mylogAwesome.log')
+    logger = logging.getLogger('main')
+    handler = logging.FileHandler('mylog.log')
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     handler.setFormatter(formatter)
     logger.addHandler(handler)
@@ -533,15 +533,7 @@ async def main():
         await majDatAall(logger, email, client, SYMBOL, db)
         logger.info("mise à jour fini")
 
-        # # # moyen mobile ##################################################################################################
-        moyMobil_05 = MM(SYMBOL, "M05", 0)
-        moyMobil_01 = MM(SYMBOL, "M01", 0)
-        moyMobil_15 = MM(SYMBOL, "M15", 0)
 
-        # # Awesome ##################################################################################################
-        logger.info("calcul Awesome")
-        ao05 = Awesome(SYMBOL, "M05", ARRONDI_INDIC)
-        await ao05.calculAllCandles()
         #
         logger.info("calcul Awesome")
         o = Order(SYMBOL, dbStreaming, client, db["trade"])
@@ -566,38 +558,7 @@ async def main():
             # ####################################################################################################
             await majDatAall(logger, email, client, SYMBOL, db)
             # ####################################################################################################
-            await moyMobil_05.EMA(70, ARRONDI_INDIC)
-            await moyMobil_05.SMMA(200, ARRONDI_INDIC)
 
-            await moyMobil_01.SMMA(200, ARRONDI_INDIC)
-            await moyMobil_01.EMA(40, ARRONDI_INDIC)
-            await moyMobil_01.EMA(70, ARRONDI_INDIC)
-            await moyMobil_01.EMA(200, ARRONDI_INDIC)
-
-            await moyMobil_15.EMA(30, ARRONDI_INDIC)
-
-            await moyMobil_01.EMA(26, ARRONDI_INDIC)
-            # # Awesome ##################################################################################################
-            ao05 = Awesome(SYMBOL, "M05", ARRONDI_INDIC)
-            await ao05.calculAllCandles()
-            #
-            zone = await pivot()
-            # # AO ###################################################################################
-            await ao05.calculLastCandle(10)
-            #
-            # # supertrend ###################################################################################
-            spM05_1003 = Supertrend(SYMBOL, "M05", 10, 3, ARRONDI_INDIC)
-            superM05_1003T0, superM05_1003T1, superM05_1003T2 = spM05_1003.getST()
-
-            spM01_1005 = Supertrend(SYMBOL, "M01", 10, 5, ARRONDI_INDIC)
-            spM01_1005T0, spM01_1005T1, spM01_1005T2 = spM01_1005.getST()
-
-            spM01_4005 = Supertrend(SYMBOL, "M01",30, 5, ARRONDI_INDIC)
-            spM01_4005T0, spM01_4005T1, spM01_4005T2 = spM01_4005.getST()
-            print("***spM01_4005T1:", spM01_4005T1)
-
-            spM15_1006 = Supertrend(SYMBOL, "M15",10, 6, ARRONDI_INDIC)
-            spM15_1006T0, spM15_1006T1, spM15_1006T2 = spM15_1006.getST()
 
             if c.getTick() is not None:
                 print("jour:", j, " h:", todayPlus2Hours.hour)
@@ -612,72 +573,6 @@ async def main():
                     tradeOpen = json.loads(json.dumps(tradeOpenDic))
 
                     print("tradeOpen:", tradeOpen)
-                    ###############################################################################################################
-                    # bougie
-                    ###############################################################################################################
-                    # minutes-------------------------------------------------------
-                    bougie0M01 = db["M01"].find({}, sort=[('ctm', -1)]).limit(1).skip(0)[0]
-                    bougie1M01 = db["M01"].find({}, sort=[('ctm', -1)]).limit(1).skip(1)[0]
-                    bougie2M01 = db["M01"].find({}, sort=[('ctm', -1)]).limit(1).skip(2)[0]
-                    bougie3M01 = db["M01"].find({}, sort=[('ctm', -1)]).limit(1).skip(3)[0]
-                    bougie4M01 = db["M01"].find({}, sort=[('ctm', -1)]).limit(1).skip(4)[0]
-                    bougie5M01 = db["M01"].find({}, sort=[('ctm', -1)]).limit(1).skip(5)[0]
-
-                    bougie0M05 = db["M05"].find({}, sort=[('ctm', -1)]).limit(1).skip(0)[0]
-                    bougie1M05 = db["M05"].find({}, sort=[('ctm', -1)]).limit(1).skip(1)[0]
-
-                    bougie0M15 = db["M15"].find({}, sort=[('ctm', -1)]).limit(1).skip(0)[0]
-
-                    ###############################################################################################################
-                    # balance
-                    ###############################################################################################################
-                    balance = c.getBalance()
-                    if c.getBalance() == 0:
-                        resp = client.commandExecute('getMarginLevel')
-                        balance = resp["returnData"]["margin_free"]
-                    else:
-                        balance = balance["marginFree"]
-
-                    print("balance:", balance)
-                    ###############################################################################################################
-                    # ecart entre bougie
-                    ###############################################################################################################
-                    ecart = abs(round(bougie0M01["high"] - bougie0M01["low"], 2)) \
-                            + abs(round(bougie1M01["high"] - bougie1M01["low"], 2)) \
-                            + abs(round(bougie2M01["high"] - bougie2M01["low"], 2)) \
-                            + abs(round(bougie3M01["high"] - bougie3M01["low"], 2)) \
-                            + abs(round(bougie4M01["high"] - bougie2M01["low"], 2)) \
-                            + abs(round(bougie5M01["high"] - bougie3M01["low"], 2))
-
-                    ###############################################################################################################
-                    # start order
-                    ###############################################################################################################
-                    print("tick:", tick)
-
-                    print("smma200 M1:", bougie1M01.get("SMMA200"))
-                    print("--------------------------------------")
-                    print("smma200 M1:", bougie1M01.get("SMMA200"))
-                    print("superM05_1003T1:", superM05_1003T1)
-                    print("--------------------------------------")
-                    print("ema70 M1", bougie1M01.get("EMA70"))
-                    print("smma200 M1:", bougie1M01.get("SMMA200"))
-                    print("--------------------------------------")
-                    print("tradeOpen", tradeOpen['returnData'])
-                    if len(tradeOpen['returnData']) > 0:
-                        for trade in tradeOpenDic['returnData']:
-                            order.append(trade['customComment'])
-
-                    print("ordre en cours:", len(tradeOpen['returnData']))
-                    print("stategie start ----")
-                    # await SMMA200_M1_EMA70(o, tick, bougie1M01, superM05_1003T1, zone, balance, tradeOpen, tradeOpenDic, bougie0M05, bougie1M05)
-
-                    await AW_pivot_st1004(logger, o, tick, superM05_1003T0, spM01_1005T0,
-                                          balance, tradeOpen, tradeOpenDic, bougie1M05, bougie0M05, bougie1M01,
-                                          bougie2M01)
-
-                    await ema_st(logger, o, tick, spM01_4005T1, balance, tradeOpen, tradeOpenDic, bougie1M01)
-
-                    await ema30_st15(logger, o, tick, spM15_1006T0, spM15_1006T1, balance, tradeOpen, tradeOpenDic, bougie0M15)
             time.sleep(30)
 
     except Exception as exc:
