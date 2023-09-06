@@ -404,28 +404,10 @@ async def main():
     logger = l.getLogger()
     email = Email()
 
-    order = []
+
     try:
         sclient, c, client = await connectionAPI(logger)
         connection = MongoClient('localhost', 27017)
-        db = connection[SYMBOL]
-        dbStreaming = connection["STREAMING"]
-
-        #await majDatAall(logger, email, client, SYMBOL, db)
-
-        # # # moyen mobile ##################################################################################################
-        """
-        moyMobil_05 = MM(SYMBOL, "M05", 0)
-        moyMobil_01 = MM(SYMBOL, "M01", 0)
-        moyMobil_15 = MM(SYMBOL, "M15", 0)
-        """
-        # # Awesome ##################################################################################################
-        """
-        ao05 = Awesome(SYMBOL, "M05", ARRONDI_INDIC)
-        await ao05.calculAllCandles()
-        #
-        o = Order(SYMBOL, dbStreaming, client, db["trade"])
-        """
 
     except Exception as exc:
         logger.warning(exc)
