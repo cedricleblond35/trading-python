@@ -582,9 +582,9 @@ async def main():
         await ao05.calculAllCandles()
         #
         o = Order(SYMBOL, dbStreaming, client, db["trade"])
-        """
+        
         while True:
-            """
+            
             print(
                 "*****************************************************************************************************")
             ############### gestion des jours et heures de trading ##########################""
@@ -602,9 +602,9 @@ async def main():
             candles = c.getCandles()
             print("=================> candles:", candles)
             # ####################################################################################################
-            """
+            
             await majDatAall(logger, email, client, SYMBOL, db)
-            """
+            
             # ####################################################################################################
             
             await moyMobil_05.EMA(70, ARRONDI_INDIC)
