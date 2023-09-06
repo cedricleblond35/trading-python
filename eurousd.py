@@ -530,7 +530,7 @@ async def main():
         dbStreaming = connection["STREAMING"]
 
         logger.info("mise à jour")
-        await majDatAall(logger, email, client, SYMBOL, db)
+        #await majDatAall(logger, email, client, SYMBOL, db)
         logger.info("mise à jour fini")
 
 
