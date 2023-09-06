@@ -548,7 +548,7 @@ async def main():
             j = datetime.today().weekday()  # 0:lundi ; 4 vendredi
             today = datetime.now()
             todayPlus2Hours = today + timedelta(hours=2)
-            print("mise à jour :", todayPlus2Hours)
+            print("mise à jour :", str(todayPlus2Hours))
             logger.info("mise à jour :", todayPlus2Hours)
 
             if client.is_socket_closed():
@@ -565,6 +565,7 @@ async def main():
             await majDatAall(logger, email, client, SYMBOL, db)
             logger.info("mise a jour fini")
             # ####################################################################################################
+            logger.info("calcul de moyenne mobile")
             await moyMobil_05.EMA(70, ARRONDI_INDIC)
             await moyMobil_05.SMMA(200, ARRONDI_INDIC)
 
@@ -577,12 +578,13 @@ async def main():
 
             await moyMobil_01.EMA(26, ARRONDI_INDIC)
             # # Awesome ##################################################################################################
+            logger.info("calcul de Awesome")
             ao05 = Awesome(SYMBOL, "M05", ARRONDI_INDIC)
             await ao05.calculAllCandles()
             #
-            zone = await pivot()
+            #zone = await pivot()
             # # AO ###################################################################################
-            await ao05.calculLastCandle(10)
+            #await ao05.calculLastCandle(10)
             #
             # # supertrend ###################################################################################
             spM05_1003 = Supertrend(SYMBOL, "M05", 10, 3, ARRONDI_INDIC)
