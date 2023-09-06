@@ -685,12 +685,7 @@ async def main():
         logger.warning(exc)
         email.sendMail(exc)
         client.disconnect()
-        exit(0)
-
-    except OSError as exc:
-        logger.warning(exc)
-        email.sendMail(exc)
-        client.disconnect()
+        sclient.disconnect()
         exit(0)
 
     client.disconnect()
