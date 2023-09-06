@@ -568,7 +568,7 @@ async def main():
         db = connection[SYMBOL]
         dbStreaming = connection["STREAMING"]
 
-        await majDatAall(logger, email, client, SYMBOL, db)
+        #await majDatAall(logger, email, client, SYMBOL, db)
 
         # # # moyen mobile ##################################################################################################
         """
@@ -603,7 +603,7 @@ async def main():
             print("=================> candles:", candles)
             # ####################################################################################################
             """
-            await majDatAall(logger, email, client, SYMBOL, db)
+            #await majDatAall(logger, email, client, SYMBOL, db)
             """
             # ####################################################################################################
             
