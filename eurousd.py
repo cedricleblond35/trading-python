@@ -534,6 +534,7 @@ async def main():
         await moyMobil_01.EMA(13, ARRONDI_INDIC)
         await moyMobil_01.EMA(40, ARRONDI_INDIC)
         await moyMobil_01.EMA(64, ARRONDI_INDIC)
+
         await moyMobil_05.EMA(13, ARRONDI_INDIC)
         await moyMobil_05.EMA(40, ARRONDI_INDIC)
         await moyMobil_05.EMA(64, ARRONDI_INDIC)
@@ -565,6 +566,7 @@ async def main():
             await moyMobil_01.EMA(13, ARRONDI_INDIC)
             await moyMobil_01.EMA(40, ARRONDI_INDIC)
             await moyMobil_01.EMA(64, ARRONDI_INDIC)
+
             await moyMobil_05.EMA(13, ARRONDI_INDIC)
             await moyMobil_05.EMA(40, ARRONDI_INDIC)
             await moyMobil_05.EMA(64, ARRONDI_INDIC)
@@ -580,8 +582,47 @@ async def main():
                     ###############################################################################################################
                     tradeOpenDic = findopenOrder(client)
                     tradeOpen = json.loads(json.dumps(tradeOpenDic))
-
                     print("tradeOpen:", tradeOpen)
+                    ###############################################################################################################
+                    # balance
+                    ###############################################################################################################
+                    balance = c.getBalance()
+                    if c.getBalance() == 0:
+                        resp = client.commandExecute('getMarginLevel')
+                        balance = resp["returnData"]["margin_free"]
+                    else:
+                        balance = balance["marginFree"]
+                    print("balance:", balance)
+                    ###############################################################################################################
+                    # bougie
+                    ###############################################################################################################
+                    # minutes-------------------------------------------------------
+                    bougie1M01 = db["M01"].find({}, sort=[('ctm', -1)]).limit(1).skip(1)[0]
+                    bougie2M01 = db["M01"].find({}, sort=[('ctm', -1)]).limit(1).skip(2)[0]
+
+                    bougie0M05 = db["M05"].find({}, sort=[('ctm', -1)]).limit(1).skip(0)[0]
+                    bougie1M05 = db["M05"].find({}, sort=[('ctm', -1)]).limit(1).skip(1)[0]
+                    ###############################################################################################################
+                    # ST
+                    ###############################################################################################################
+
+                    spM05_1003 = Supertrend(SYMBOL, "M05", 10, 3, ARRONDI_INDIC)
+                    superM05_1003T0, superM05_1003T1, superM05_1003T2 = spM05_1003.getST()
+
+                    spM01_4005 = Supertrend(SYMBOL, "M01", 30, 5, ARRONDI_INDIC)
+                    spM01_4005T0, spM01_4005T1, spM01_4005T2 = spM01_4005.getST()
+                    print("***spM01_4005T1:", spM01_4005T1)
+
+                    ###############################################################################################################
+                    # start order
+                    ###############################################################################################################
+                    print("tick:", tick)
+
+                    if len(tradeOpen['returnData']) > 0:
+                        for trade in tradeOpenDic['returnData']:
+                            order.append(trade['customComment'])
+                    #await ema_st(logger, o, tick, spM01_4005T1, balance, tradeOpen, tradeOpenDic, bougie1M01)
+
             time.sleep(30)
 
     except Exception as exc:
