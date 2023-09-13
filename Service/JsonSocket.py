@@ -133,12 +133,11 @@ class JsonSocket(object):
             if result:
                 print("client deconnecté")
                 return True
-            else:
-                print("client connecté")
-                return False
+
+            return False
         except Exception as exc:
             print("connexion non stable")
-            time.sleep(3)
+            time.sleep(10)
             self.is_socket_closed()
 
 

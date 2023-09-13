@@ -133,7 +133,7 @@ async def insertData(logger, email, collection, dataDownload, lastBougieDB):
 
     except Exception as exc:
         logger.warning(exc)
-        email.sendMail(exc)
+        email.sendMail("erreur python insertData",exc)
 
 
 def findTradesHistory(client, start):
@@ -350,7 +350,8 @@ async def connectionAPI(logger):
     # check if user logged in correctly
     if not loginResponse['status']:
         print('Login failed. Error code: {0}'.format(loginResponse['errorCode']))
-        return
+        return None, None, None
+
     sclient, c = subscribe(loginResponse)
     return sclient, c, client
 
@@ -521,6 +522,7 @@ async def main():
     order = []
     try:
         sclient, c, client = await connectionAPI(logger)
+
         connection = MongoClient('localhost', 27017)
         db = connection[SYMBOL]
         dbStreaming = connection["STREAMING"]
@@ -552,9 +554,15 @@ async def main():
             todayPlus2Hours = today + timedelta(hours=2)
             print("mise à jour :", todayPlus2Hours)
 
+
             if client.is_socket_closed():
-                logger.info("!!!!!!!!! client deconnecté, reconnection en cours !!!!!!!!!!!!!!!!!!!")
-                sclient, c, client = connectionAPI(logger)
+                while client.is_socket_closed():
+                    logger.info("!!!!!!!!! client deconnecté, reconnection en cours !!!!!!!!!!!!!!!!!!!")
+                    sclient, c, client = await connectionAPI(logger)
+                    if sclient is None:
+                        email.sendMail("erreur python", "client deconnecté, reconnection en cours")
+                        time.sleep(10)
+
 
             c.getTick()
 
@@ -627,13 +635,13 @@ async def main():
 
     except Exception as exc:
         logger.warning(exc)
-        email.sendMail(exc)
+        email.sendMail("erreur python",exc)
         client.disconnect()
         exit(0)
 
     except OSError as exc:
         logger.warning(exc)
-        email.sendMail(exc)
+        email.sendMail("erreur python",exc)
         client.disconnect()
         exit(0)
 
