@@ -189,7 +189,6 @@ async def majDatAall(logger, email, client, symbol, db):
         dataDAY = json.dumps(json_data_Day)
         dataDAYDownload = json.loads(dataDAY)
         await insertData(logger, email, db["D"], dataDAYDownload, lastBougie)
-        print("maj D FINI")
 
         # MAJ H4 : 13 mois max------------------------------------------------------------------------
         lastBougie = db["H4"].find_one({}, sort=[('ctm', -1)])
@@ -204,7 +203,6 @@ async def majDatAall(logger, email, client, symbol, db):
         data_H4 = json.dumps(json_data_H4)
         dataH4Download = json.loads(data_H4)
         await insertData(logger, email,db["H4"], dataH4Download, lastBougie)
-        print("maj H4 FINI")
 
         # MAJ H4 : 13 mois max------------------------------------------------------------------------
         lastBougie = db["M15"].find_one({}, sort=[('ctm', -1)])
@@ -219,7 +217,6 @@ async def majDatAall(logger, email, client, symbol, db):
         data_H4 = json.dumps(json_data_H4)
         dataH4Download = json.loads(data_H4)
         await insertData(logger, email, db["M15"], dataH4Download, lastBougie)
-        print("maj M15 FINI")
 
         # MAJ Minute : 1 mois max------------------------------------------------------------------------
         lastBougie = db["M01"].find_one({}, sort=[('ctm', -1)])
@@ -233,7 +230,6 @@ async def majDatAall(logger, email, client, symbol, db):
                      "ticks": 0}})
         dataM01 = json.dumps(json_data_M01)
         dataDownload = json.loads(dataM01)
-        print("maj M01 FINI")
 
         await insertData(logger, email, db["M01"], dataDownload, lastBougie)
 
@@ -251,7 +247,6 @@ async def majDatAall(logger, email, client, symbol, db):
         dataM05Download = json.loads(dataM05)
 
         await insertData(logger, email,db["M05"], dataM05Download, lastBougie)
-        print("maj M05 FINI")
 
     except Exception as exc:
         logger.warning(exc)
@@ -399,7 +394,7 @@ async def ema30_st15(logger, o, tick, spM15_1006T0, spM15_1006T1, balance, trade
     except Exception as exc:
         logger.warning(exc)
 
-async def ema_st(logger, o, tick, spM01_4005T1, balance, tradeOpen, tradeOpenDic, bougie1M01):
+async def ema_st(logger, o, tick, spM01, balance, tradeOpen, tradeOpenDic, bougie1M01):
     try:
         orderExist = False
         # move order
@@ -410,37 +405,38 @@ async def ema_st(logger, o, tick, spM01_4005T1, balance, tradeOpen, tradeOpenDic
                 print("trade['cmd']:", trade['cmd'])
                 if TransactionSide.BUY_LIMIT == trade['cmd'] and trade['customComment'] == "ema_st":
                     orderExist = True
-                    sl = spM01_4005T1
-                    price = bougie1M01.get("EMA40")
+                    sl = spM01
+                    price = bougie1M01.get("EMA13")
                     tp = 0
                     o.movebuyLimitWait(trade, sl, tp, price, balance, VNL)
                 elif TransactionSide.BUY == trade['cmd'] and trade['customComment'] == "ema_st":
                     orderExist = True
-                    if trade['sl'] < spM01_4005T1 < tick:
-                        o.moveStopBuy(trade, spM01_4005T1, tick)
+                    if trade['sl'] < spM01 < tick:
+                        o.moveStopBuy(trade, spM01, tick)
                 elif TransactionSide.SELL_LIMIT == trade['cmd'] and trade['customComment'] == "ema_st":
                     orderExist = True
-                    sl = spM01_4005T1
-                    price = bougie1M01.get("EMA40")
+                    sl = spM01
+                    price = bougie1M01.get("EMA13")
                     tp = 0
                     o.moveSellLimitWait(trade, sl, tp, price, balance, VNL)
                 elif TransactionSide.SELL == trade['cmd'] and trade['customComment'] == "ema_st":
                     orderExist = True
-                    if trade['sl'] > spM01_4005T1 > tick:
-                        o.moveStopBuy(trade, spM01_4005T1, tick)
+                    if trade['sl'] > spM01 > tick:
+                        o.moveStopBuy(trade, spM01, tick)
 
         if orderExist is False:
+            print("ema13:", bougie1M01.get("EMA13"))
             print("ema40:", bougie1M01.get("EMA40"))
-            print("ema200:", bougie1M01.get("EMA200"))
-            print("spM01_4005T1:", spM01_4005T1)
-            if tick > bougie1M01.get("EMA40") > bougie1M01.get("EMA200") > spM01_4005T1:
-                sl = spM01_4005T1
+            print("EMA64:", bougie1M01.get("EMA64"))
+            print("spM01:", spM01)
+            if tick > bougie1M01.get("EMA13") > bougie1M01.get("EMA40") > bougie1M01.get("EMA64") > spM01:
+                sl = spM01
                 print("SL:", sl)
                 tp = 0
-                price = round(bougie1M01.get("EMA40"), ARRONDI_INDIC)
+                price = round(bougie1M01.get("EMA13"), ARRONDI_INDIC)
                 o.buyLimit(sl, tp, price, balance, VNL, "ema_st")
-            elif tick < bougie1M01.get("EMA40") < bougie1M01.get("EMA200") and tick < spM01_4005T1:
-                sl = spM01_4005T1
+            elif tick < bougie1M01.get("EMA13") < bougie1M01.get("EMA40") < bougie1M01.get("EMA64") < spM01:
+                sl = spM01
 
                 print("SL:", sl)
                 tp = 0
@@ -546,8 +542,6 @@ async def main():
         o = Order(SYMBOL, dbStreaming, client, db["trade"])
         time.sleep(30)
         while True:
-            print(
-                "*****************************************************************************************************")
             ############### gestion des jours et heures de trading ##########################""
             j = datetime.today().weekday()  # 0:lundi ; 4 vendredi
             today = datetime.now()
@@ -567,7 +561,6 @@ async def main():
             c.getTick()
 
             candles = c.getCandles()
-            print("=================> candles:", candles)
             # ####################################################################################################
             await majDatAall(logger, email, client, SYMBOL, db)
             # ####################################################################################################
@@ -582,7 +575,6 @@ async def main():
             if c.getTick() is not None:
                 print("jour:", j, " h:", todayPlus2Hours.hour)
                 if 0 <= j < 5 and 2 < todayPlus2Hours.hour < 22:
-                    print("Horaire de Trading ok")
                     tick = c.getTick()["ask"]
 
                     ###############################################################################################################
@@ -619,17 +611,16 @@ async def main():
 
                     spM01_4005 = Supertrend(SYMBOL, "M01", 30, 5, ARRONDI_INDIC)
                     spM01_4005T0, spM01_4005T1, spM01_4005T2 = spM01_4005.getST()
-                    print("***spM01_4005T1:", spM01_4005T1)
 
                     ###############################################################################################################
                     # start order
                     ###############################################################################################################
-                    print("tick:", tick)
+
 
                     if len(tradeOpen['returnData']) > 0:
                         for trade in tradeOpenDic['returnData']:
                             order.append(trade['customComment'])
-                    #await ema_st(logger, o, tick, spM01_4005T1, balance, tradeOpen, tradeOpenDic, bougie1M01)
+                    await ema_st(logger, o, tick, spM01_4005T1, balance, tradeOpen, tradeOpenDic, bougie1M01)
 
             time.sleep(30)
 
