@@ -398,11 +398,9 @@ async def ema_st(logger, o, tick, spM01, balance, tradeOpen, tradeOpenDic, bougi
     try:
         orderExist = False
         # move order
-        print("------------- ema_st --------------------------")
         if len(tradeOpen['returnData']) > 0:
             for trade in tradeOpenDic['returnData']:
-                print("trade['customComment']:", trade['customComment'])
-                print("trade['cmd']:", trade['cmd'])
+                print("type ordre:", trade['customComment'], " nbre d ordre:",trade['cmd'])
                 if TransactionSide.BUY_LIMIT == trade['cmd'] and trade['customComment'] == "ema_st":
                     orderExist = True
                     sl = spM01
@@ -443,7 +441,6 @@ async def ema_st(logger, o, tick, spM01, balance, tradeOpen, tradeOpenDic, bougi
                 price = round(bougie1M01.get("EMA40"), ARRONDI_INDIC)
                 o.sellLimit(sl, tp, price, balance, VNL, "ema_st")
 
-        print("------------- ema_st end --------------------------")
     except Exception as exc:
         logger.warning(exc)
 
