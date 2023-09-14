@@ -556,8 +556,8 @@ async def main():
                         time.sleep(10)
 
 
-            c.getTick()
-
+            print("tick:", c.getTick())
+            print("candles:", c.getCandles())
             candles = c.getCandles()
             # ####################################################################################################
             await majDatAall(logger, email, client, SYMBOL, db)
