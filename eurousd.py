@@ -401,6 +401,7 @@ async def ema_st(logger, o, tick, spM01, balance, tradeOpen, tradeOpenDic, bougi
         if len(tradeOpen['returnData']) > 0:
             for trade in tradeOpenDic['returnData']:
                 print("type ordre:", trade['customComment'], " nbre d ordre:",trade['cmd'])
+                print("spM01:", spM01)
                 if TransactionSide.BUY_LIMIT == trade['cmd'] and trade['customComment'] == "ema_st":
                     orderExist = True
                     sl = spM01
