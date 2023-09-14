@@ -52,7 +52,7 @@ class Command:
         self.news = dataDownload['data']
 
     def procCandles(self, msg):
-        print("==================================== candles: ", msg)
+        #print("==================================== candles: ", msg)
         dataDownload = json.loads(json.dumps(msg))
         self.candles = dataDownload['data']
 

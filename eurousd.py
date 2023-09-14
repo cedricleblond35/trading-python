@@ -400,7 +400,7 @@ async def ema_st(logger, o, tick, spM01, balance, tradeOpen, tradeOpenDic, bougi
         # move order
         if len(tradeOpen['returnData']) > 0:
             for trade in tradeOpenDic['returnData']:
-                print("strategie:", trade['customComment'], " | ordre en cours:",trade['cmd']," | spM01:", spM01, " | tick:", tick)
+                print("strategie:", trade['customComment'], " | type d ordre en cours:",trade['cmd']," | spM01:", spM01, " | tick:", tick)
                 if TransactionSide.BUY_LIMIT == trade['cmd'] and trade['customComment'] == "ema_st":
                     orderExist = True
                     sl = spM01
@@ -556,7 +556,7 @@ async def main():
 
 
             print("tick:", c.getTick())
-            print("candles:", c.getCandles())
+            #print("candles:", c.getCandles())
             candles = c.getCandles()
             # ####################################################################################################
             await majDatAall(logger, email, client, SYMBOL, db)
@@ -573,6 +573,7 @@ async def main():
                 print("jour:", j, " h:", todayPlus2Hours.hour)
                 if 0 <= j < 5 and 2 < todayPlus2Hours.hour < 22:
                     tick = c.getTick()["ask"]
+                    print(c.getNews())
 
                     ###############################################################################################################
                     # order
