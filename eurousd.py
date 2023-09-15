@@ -404,7 +404,7 @@ async def ema_st(logger, o, tick, spM01, balance, tradeOpen, tradeOpenDic, bougi
                 if TransactionSide.BUY_LIMIT == trade['cmd'] and trade['customComment'] == "ema_st":
                     orderExist = True
                     sl = spM01
-                    price = bougie1M01.get("EMA13")
+                    price = bougie1M01.get("EMA40")
                     tp = 0
                     o.movebuyLimitWait(trade, sl, tp, price, balance, VNL)
                 elif TransactionSide.BUY == trade['cmd'] and trade['customComment'] == "ema_st":
@@ -414,7 +414,7 @@ async def ema_st(logger, o, tick, spM01, balance, tradeOpen, tradeOpenDic, bougi
                 elif TransactionSide.SELL_LIMIT == trade['cmd'] and trade['customComment'] == "ema_st":
                     orderExist = True
                     sl = spM01
-                    price = bougie1M01.get("EMA13")
+                    price = bougie1M01.get("EMA40")
                     tp = 0
                     o.moveSellLimitWait(trade, sl, tp, price, balance, VNL)
                 elif TransactionSide.SELL == trade['cmd'] and trade['customComment'] == "ema_st":
@@ -432,7 +432,7 @@ async def ema_st(logger, o, tick, spM01, balance, tradeOpen, tradeOpenDic, bougi
                 sl = spM01-tick['spreadRaw']
                 print("SL:", sl)
                 tp = 0
-                price = round(bougie1M01.get("EMA13"), ARRONDI_INDIC)
+                price = round(bougie1M01.get("EMA40"), ARRONDI_INDIC)
                 o.buyLimit(sl, tp, price, balance, VNL, "ema_st")
             elif tick < bougie1M01.get("EMA13") < bougie1M01.get("EMA40") < bougie1M01.get("EMA64") < spM01:
                 sl = spM01+tick['spreadRaw']
