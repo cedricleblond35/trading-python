@@ -421,7 +421,7 @@ async def ema_st(logger, o, tick, spM01, balance, tradeOpen, tradeOpenDic, bougi
                     orderExist = True
                     print("sl=", trade['sl'], " spM01=", spM01, " tick", tick )
                     if trade['sl'] > spM01 > tick:
-                        o.moveStopBuy(trade, spM01, tick)
+                        o.moveStopSell(trade, spM01, tick)
 
         if orderExist is False:
             print("ema13:", bougie1M01.get("EMA13"))

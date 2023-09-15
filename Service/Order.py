@@ -155,7 +155,7 @@ class Order:
                      "order": trade['order'],
                     "customComment": trade["customComment"],
                      "sl": sl,
-                     "price":  tick,
+                     "price":  tick-5,
                      "symbol": trade["symbol"],
                      "volume": trade["volume"],
                      "tp": trade["tp"],
