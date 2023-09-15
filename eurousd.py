@@ -424,18 +424,24 @@ async def ema_st(logger, o, tick, spM01, balance, tradeOpen, tradeOpenDic, bougi
                         o.moveStopSell(trade, spM01+tick['spreadRaw'], tick)
 
         if orderExist is False:
+            print("aucun ordre ------------------------------------------------------------------------------")
             print("ema13:", bougie1M01.get("EMA13"))
             print("ema40:", bougie1M01.get("EMA40"))
             print("EMA64:", bougie1M01.get("EMA64"))
             print("spM01:", spM01)
+            print("strategie:", trade['customComment'], " | type d ordre en cours:", trade['cmd'], " | spM01:", spM01,
+                  " | tick:", tick)
             if tick > bougie1M01.get("EMA13") > bougie1M01.get("EMA40") > bougie1M01.get("EMA64") > spM01:
-                sl = spM01-tick['spreadRaw']
+                print("ordre achat demandé ------------------------------------------------------------------------------")
+                sl = spM01
                 print("SL:", sl)
                 tp = 0
                 price = round(bougie1M01.get("EMA40"), ARRONDI_INDIC)
                 o.buyLimit(sl, tp, price, balance, VNL, "ema_st")
             elif tick < bougie1M01.get("EMA13") < bougie1M01.get("EMA40") < bougie1M01.get("EMA64") < spM01:
-                sl = spM01+tick['spreadRaw']
+                print(
+                    "ordre vente demandé ------------------------------------------------------------------------------")
+                sl = spM01
                 print("SL:", sl)
                 tp = 0
                 price = round(bougie1M01.get("EMA40"), ARRONDI_INDIC)
