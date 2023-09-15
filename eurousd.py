@@ -419,6 +419,7 @@ async def ema_st(logger, o, tick, spM01, balance, tradeOpen, tradeOpenDic, bougi
                     o.moveSellLimitWait(trade, sl, tp, price, balance, VNL)
                 elif TransactionSide.SELL == trade['cmd'] and trade['customComment'] == "ema_st":
                     orderExist = True
+                    print("sl=", trade['sl'], " spM01=", spM01, " tick", tick )
                     if trade['sl'] > spM01 > tick:
                         o.moveStopBuy(trade, spM01, tick)
 

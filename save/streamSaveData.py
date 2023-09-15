@@ -395,6 +395,7 @@ def main():
     # subscribe for prices
     # collecter en direct tous les ordres pour une paire
     #sclient.subscribePrices(['EURUSD', 'EURGBP', 'EURJPY'])
+    # TICK:  {'command': 'tickPrices', 'data': {'symbol': 'EURUSD', 'ask': 1.06684, 'bid': 1.06674, 'high': 1.07516, 'low': 1.06549, 'askVolume': 900000, 'bidVolume': 800000, 'timestamp': 1694695262158, 'level': 1, 'quoteId': 5, 'spreadTable': 1.0, 'spreadRaw': 0.0001}}
     sclient.subscribePrice('EURUSD')
 
     # subscribe for profits
