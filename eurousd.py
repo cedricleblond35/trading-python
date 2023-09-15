@@ -435,7 +435,7 @@ async def ema_st(logger, o, tick, spM01, balance, tradeOpen, tradeOpenDic, bougi
                 price = round(bougie1M01.get("EMA13"), ARRONDI_INDIC)
                 o.buyLimit(sl, tp, price, balance, VNL, "ema_st")
             elif tick < bougie1M01.get("EMA13") < bougie1M01.get("EMA40") < bougie1M01.get("EMA64") < spM01:
-                sl = spM01+-tick['spreadRaw']
+                sl = spM01+tick['spreadRaw']
                 print("SL:", sl)
                 tp = 0
                 price = round(bougie1M01.get("EMA40"), ARRONDI_INDIC)
