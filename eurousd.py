@@ -406,17 +406,17 @@ async def ema_st(logger, o, tick, spM01, balance, tradeOpen, tradeOpenDic, bougi
                     sl = spM01
                     price = bougie1M01.get("EMA13")
                     tp = 0
-                    o.movebuyLimitWait(trade, sl-tick['spreadRaw'], tp, price, balance, VNL)
+                    o.movebuyLimitWait(trade, sl, tp, price, balance, VNL)
                 elif TransactionSide.BUY == trade['cmd'] and trade['customComment'] == "ema_st":
                     orderExist = True
                     if trade['sl'] < spM01 < tick:
-                        o.moveStopBuy(trade, spM01-tick['spreadRaw'], tick)
+                        o.moveStopBuy(trade, spM01, tick)
                 elif TransactionSide.SELL_LIMIT == trade['cmd'] and trade['customComment'] == "ema_st":
                     orderExist = True
                     sl = spM01
                     price = bougie1M01.get("EMA13")
                     tp = 0
-                    o.moveSellLimitWait(trade, sl+tick['spreadRaw'], tp, price, balance, VNL)
+                    o.moveSellLimitWait(trade, sl, tp, price, balance, VNL)
                 elif TransactionSide.SELL == trade['cmd'] and trade['customComment'] == "ema_st":
                     orderExist = True
                     print("sl=", trade['sl'], " spM01=", spM01, " tick", tick )
