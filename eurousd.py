@@ -429,8 +429,8 @@ async def ema_st(logger, o, tick, spM01, balance, tradeOpen, tradeOpenDic, bougi
             print("ema40:", bougie1M01.get("EMA40"))
             print("EMA64:", bougie1M01.get("EMA64"))
             print("spM01:", spM01)
-            print("strategie:", trade['customComment'], " | type d ordre en cours:", trade['cmd'], " | spM01:", spM01,
-                  " | tick:", tick)
+            print("tick:", tick)
+
             if tick > bougie1M01.get("EMA13") > bougie1M01.get("EMA40") > bougie1M01.get("EMA64") > spM01:
                 print("ordre achat demandé ------------------------------------------------------------------------------")
                 sl = spM01
