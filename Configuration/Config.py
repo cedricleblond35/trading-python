@@ -12,14 +12,14 @@ class Config:
     DEFAULT_XAPI_PORT = 5124
     DEFUALT_XAPI_STREAMING_PORT = 5125
     USER_ID = "15108702"
-    PASSWORD = "1976Drick!"
+    PASSWORD = "xxxxxxxxx"
 
     # ------Compte reel------------------------------------------------------
     #DEFAULT_XAPI_ADDRESS = 'xapi.xtb.com'
     #DEFAULT_XAPI_PORT = 5112
     #DEFUALT_XAPI_STREAMING_PORT = 5113
     #USER_ID = "1502064"
-    #PASSWORD = "1976Drick!"
+    #PASSWORD = "xxxxxxxxx"
 
     API_SEND_TIMEOUT = 100  # API inter-command timeout (in ms)
     API_MAX_CONN_TRIES = 3  # max connection tries
